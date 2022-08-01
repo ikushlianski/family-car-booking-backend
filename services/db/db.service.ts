@@ -10,8 +10,6 @@ export const AWS_REGION = 'eu-west-1';
 
 const client = new DynamoDBClient({ region: AWS_REGION });
 
-console.log('TABLE_NAME', TABLE_NAME);
-
 export const HondaTrackerDynamoService = new Service(
   {
     user: UserModel,

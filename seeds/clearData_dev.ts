@@ -1,5 +1,7 @@
-import {FAMILY_HONDA_CAR_NUMBER} from 'services/core/car/car.constants';
-import {HondaTrackerDynamoService} from 'services/db/db.service';
+// noinspection ES6PreferShortImport
+
+import { FAMILY_HONDA_CAR_NUMBER } from '../services/core/car/car.constants';
+import { HondaTrackerDynamoService } from '../services/db/db.service';
 
 (async () => {
   await Promise.all([
