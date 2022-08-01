@@ -47,4 +47,6 @@ To run tests in non-dev mode, e.g. as part of your pipeline, run `yarn test`. It
 ### Integration tests
 Integration testing covers the backend API. It is written in Gherkin using Cucumber.
 
-To run integration tests, do `yarn integration`
+To run integration tests, do `yarn integration`.
+
+It is recommended to run `yarn deploy:qa` to deploy the latest changes to the `qa` env where the integration tests will run.

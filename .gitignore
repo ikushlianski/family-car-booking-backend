@@ -18,3 +18,8 @@ seeds/unseed_*.sh
 
 # yarn
 yarn-error.log
+
+# generated javascript
+seeds/**/*.js
+services/**/*.js
+stacks/**/*.js

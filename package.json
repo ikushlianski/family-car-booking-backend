@@ -1,12 +1,13 @@
 {
   "name": "family-car-booking-app",
   "version": "0.0.0",
+  "license": "MIT",
   "scripts": {
     "start:dev": "AWS_PROFILE=family-car-booking sst start --stage dev",
     "build": "sst build",
     "deploy:dev": "AWS_PROFILE=family-car-booking sst deploy --stage dev --region eu-west-1",
     "deploy:qa": "AWS_PROFILE=family-car-booking sst deploy --stage qa --region eu-west-1",
-    "integration": "NODE_ENV=qa cucumber-js",
+    "integration": "tsc && AWS_PROFILE=family-car-booking NODE_ENV=qa cucumber-js",
     "remove:dev": "AWS_PROFILE=family-car-booking sst remove --stage dev --region eu-west-1",
     "remove:qa": "AWS_PROFILE=family-car-booking sst remove --stage qa --region eu-west-1",
     "console": "AWS_PROFILE=family-car-booking sst console --stage dev --region eu-west-1",
