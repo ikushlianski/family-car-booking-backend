@@ -28,7 +28,7 @@ DynamoDB is used for this project, a single-table design is attempted using [Ele
 ### Seed data
 Seed scripts are located at is located in unversioned files, as it contains secrets like passwords for initial users.
 
-After your stack is deployed, ensure you have these seeds in `./src/db/seeds/defaultData_<stage>.ts` and run `npm run seed:dev` to seed data in your <stage> (dev, qa, prod).
+After your stack is deployed, you can seed your DB in dev environment by running `npm run seed:dev`.
 
 ## Auth
 [//]: # (TODO add auth implementation docs)
@@ -36,26 +36,14 @@ Auth is very simple, no registration required, as this is a family-only app. Use
 
 ## Testing
 
-### Local Lambda testing
-For local testing of lambdas, use AWS SAM CLI. For example, to run a getBookingLambda, use this code:
-
-```
-NODE_ENV=dev cdk synth --no-staging \
-&& sam local invoke getUserLambda \
--e ./src/user/getUser.event.json \
--t ./cdk.out/userLambdaStack.template.json
-```
-
 ### Unit tests
-Jest is used as a testing framework.
+Vitest is used as a testing framework.
 
-To test a particular file run `npm run test:watch -- -- <your-file-regexp>`.
+To test a particular file run `yarn test:watch <your-file-regexp>`.
 
-The double `--` is because of how `concurrently` tool passes arguments and because of how `npm` scripts work.
-
-To run tests in non-dev mode, e.g. as part of your pipeline, run `npm run test`. It will build the project and run all Jest tests.
+To run tests in non-dev mode, e.g. as part of your pipeline, run `yarn test`. It will run all Vitest tests.
 
 ### Integration tests
 Integration testing covers the backend API. It is written in Gherkin using Cucumber.
 
-To run integration tests, do `npm run integration`
+To run integration tests, do `yarn integration`

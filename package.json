@@ -9,6 +9,7 @@
     "console": "sst console",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:watch": "vitest",
     "integration": "NODE_ENV=qa cucumber-js",
     "seed:dev": "NODE_ENV=dev ./seeds/seed_dev.sh",
     "unseed:dev": "NODE_ENV=dev ./seeds/unseed_dev.sh"
