@@ -23,3 +23,6 @@ yarn-error.log
 seeds/**/*.js
 services/**/*.js
 stacks/**/*.js
+
+# e2e tests
+features/.env.integration

@@ -17,7 +17,6 @@ module.exports = {
     username: 'correct-username1',
     password: 'incorrect-password',
   },
-  // todo replace this with env variable
-  loginUrl: 'https://hu2oeryjs4.execute-api.eu-west-1.amazonaws.com/login',
+  loginUrl: `${process.env.API_GATEWAY_ENDPOINT}/login`,
   TableName: TABLE_NAME,
 };
