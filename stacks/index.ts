@@ -1,4 +1,5 @@
-import { MyStack } from './MyStack';
+import { Database } from 'stacks/Database';
+import { MyStack } from 'stacks/MyStack';
 import { App } from '@serverless-stack/resources';
 
 export default function (app: App) {
@@ -10,5 +11,5 @@ export default function (app: App) {
     },
   });
 
-  app.stack(MyStack);
+  app.stack(MyStack).stack(Database);
 }

@@ -1,5 +1,6 @@
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
-const { AWS_REGION } = require('../../stacks/stack.constants');
+const { AWS_REGION } = require('../../services/db/db.service');
+const { TABLE_NAME } = require('../../services/db/db.constants');
 
 module.exports = {
   client: new DynamoDBClient({ region: AWS_REGION }),
@@ -18,5 +19,5 @@ module.exports = {
   },
   loginUrl:
     'https://xdcj0eimlj.execute-api.eu-west-1.amazonaws.com/qa/login',
-  TableName: 'honda_tracker_qa',
+  TableName: TABLE_NAME,
 };

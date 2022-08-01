@@ -1,13 +1,16 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { Service } from 'electrodb';
 
-import { AWS_REGION } from '../constants';
 import { TABLE_NAME } from './db.constants';
 import { BookingModel } from './entities/booking';
 import { CarModel } from './entities/car';
 import { UserModel } from './entities/user';
 
+export const AWS_REGION = 'eu-west-1';
+
 const client = new DynamoDBClient({ region: AWS_REGION });
+
+console.log('TABLE_NAME', TABLE_NAME);
 
 export const HondaTrackerDynamoService = new Service(
   {
@@ -17,6 +20,6 @@ export const HondaTrackerDynamoService = new Service(
   },
   {
     client,
-    table: `${TABLE_NAME}_${process.env.NODE_ENV}`,
+    table: TABLE_NAME,
   },
 );
