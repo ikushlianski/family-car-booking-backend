@@ -8,10 +8,10 @@ I started this project to practice hexagonal architecture, AWS SST (wrapper arou
 
 ## Useful commands
 
-* `npm start`       deploy main resources and start lambdas locally
-* `npm run watch`   watch for changes and compile
-* `npm run test`    perform the jest unit tests
-* `npm run deploy`  deploy this stack to your AWS account/region
+* `yarn start`      deploy main resources and start lambdas locally
+* `yarn deploy:dev` deploy code for dev env (similar for qa and prod)
+* `yarn test`       perform Vitest unit tests
+* `yarn seed:dev`   seed DB with dev data
 
 ## Project file structure
 Most folders inside `services/core` are business entities. Each entity contains the following elements:
@@ -20,7 +20,8 @@ Most folders inside `services/core` are business entities. Each entity contains 
 - {entity}.mapper.ts - mappers 1) network <-> business logic 2) business logic <-> database
 - {entity}.service.ts - business logic concerning this entity
 - {entity}.repository.ts - layer for DB queries and data mapping from and to the data access layer
-- {operation-with-entity}.handler.ts - a Lambda handler that knows about API Gateway event structure and delegates work to services and repositories
+
+Handlers are located in `services/handlers` directory. Each handler should be thin, know only about API Gateway event structure, and form responses. Otherwise, it merely delegates work to the services and repositories.
 
 ## Database
 DynamoDB is used for this project, a single-table design is attempted using [ElectroDB](https://github.com/tywalch/electrodb) for easier interaction with DynamoDB API.
@@ -28,7 +29,7 @@ DynamoDB is used for this project, a single-table design is attempted using [Ele
 ### Seed data
 Seed scripts are located at is located in unversioned files, as it contains secrets like passwords for initial users.
 
-After your stack is deployed, you can seed your DB in dev environment by running `npm run seed:dev`.
+After your stack is deployed, you can seed your DB in dev environment by running `yarn seed:dev`.
 
 ## Auth
 [//]: # (TODO add auth implementation docs)
