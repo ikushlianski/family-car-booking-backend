@@ -1,6 +1,6 @@
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
-const { AWS_REGION } = require('../../services/db/db.service');
 const { TABLE_NAME } = require('../../services/db/db.constants');
+const { AWS_REGION } = require('../../services/db/db.service');
 
 module.exports = {
   client: new DynamoDBClient({ region: AWS_REGION }),
@@ -17,7 +17,7 @@ module.exports = {
     username: 'correct-username1',
     password: 'incorrect-password',
   },
-  loginUrl:
-    'https://xdcj0eimlj.execute-api.eu-west-1.amazonaws.com/qa/login',
+  // todo replace this with env variable
+  loginUrl: 'https://hu2oeryjs4.execute-api.eu-west-1.amazonaws.com/login',
   TableName: TABLE_NAME,
 };

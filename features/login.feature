@@ -1,4 +1,4 @@
-Feature: Login
+Feature: Login API
   Background:
     Given the user is already registered
 

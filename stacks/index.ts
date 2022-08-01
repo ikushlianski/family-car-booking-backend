@@ -1,6 +1,6 @@
 import { Database } from 'stacks/Database';
 import { MyStack } from 'stacks/MyStack';
-import { App } from '@serverless-stack/resources';
+import { App, use } from '@serverless-stack/resources';
 
 export default function (app: App) {
   app.setDefaultFunctionProps({
@@ -11,5 +11,10 @@ export default function (app: App) {
     },
   });
 
-  app.stack(MyStack).stack(Database);
+  app.stack(Database).stack(MyStack);
+
+  const { table } = use(Database);
+  const { api } = use(MyStack);
+
+  api.attachPermissions([table]);
 }

@@ -3,7 +3,7 @@ import { RemovalPolicy } from 'aws-cdk-lib';
 import { TABLE_NAME } from 'services/db/db.constants';
 
 export function Database({ stack }: StackContext) {
-  return new Table(stack, TABLE_NAME, {
+  const table = new Table(stack, TABLE_NAME, {
     cdk: {
       table: {
         tableName: TABLE_NAME,
@@ -27,4 +27,8 @@ export function Database({ stack }: StackContext) {
       },
     },
   });
+
+  return {
+    table,
+  };
 }
