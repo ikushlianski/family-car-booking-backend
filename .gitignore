@@ -10,3 +10,7 @@ node_modules
 
 # local env files
 .env*.local
+
+# seeds
+seeds/seed_*.sh
+seeds/unseed_*.sh
