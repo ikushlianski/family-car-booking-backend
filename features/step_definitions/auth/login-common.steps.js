@@ -6,11 +6,13 @@ const { Given } = require('@cucumber/cucumber');
 const { correctCreds } = require('../test-data');
 const {
   HondaTrackerDynamoService,
-} = require('../../../src/db/db.service');
-const { UserRoles } = require('../../../src/user/user.constants');
+} = require('../../../services/db/db.service');
+const {
+  UserRoles,
+} = require('../../../services/core/user/user.constants');
 const {
   FAMILY_HONDA_CAR_NUMBER,
-} = require('../../../src/car/car.constants');
+} = require('../../../services/core/car/car.constants');
 
 Given('the user is already registered', async function () {
   await HondaTrackerDynamoService.entities.user

@@ -15,6 +15,7 @@
     "unseed:dev": "NODE_ENV=dev ./seeds/unseed_dev.sh"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.137.0",
     "@casl/ability": "^6.0.0",
     "aws-sdk": "^2.1185.0",
     "electrodb": "^1.11.1",

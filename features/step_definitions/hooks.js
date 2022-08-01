@@ -4,7 +4,9 @@ const {
   wrongUsernameCreds,
   wrongPasswordCreds,
 } = require('./test-data');
-const { HondaTrackerDynamoService } = require('../../src/db/db.service');
+const {
+  HondaTrackerDynamoService,
+} = require('../../services/db/db.service');
 
 Before(async () => {
   console.log('I am the BEFORE hook');
