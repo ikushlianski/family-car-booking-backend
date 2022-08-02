@@ -43,12 +43,30 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
     })
     .go();
 
-  const insertIlyaBooking = FamilyCarBookingApp.entities.booking
+  const insertIlyaPastBooking = FamilyCarBookingApp.entities.booking
     .create({
       username: 'ilya',
       carId: FAMILY_HONDA_CAR_NUMBER,
-      startTime: 1659420000,
-      description: 'Going to the country!',
+      startTime: 1654611000, // past event, relative to Aug 2 2022 (mock test time)
+      description: 'Ilya - past event',
+    })
+    .go();
+
+  const insertIlyaFutureBooking = FamilyCarBookingApp.entities.booking
+    .create({
+      username: 'ilya',
+      carId: FAMILY_HONDA_CAR_NUMBER,
+      startTime: 1659711000, // future event, relative to Aug 2 2022 (mock test time)
+      description: 'Ilya - future event',
+    })
+    .go();
+
+  const insertPapaFutureBooking = FamilyCarBookingApp.entities.booking
+    .create({
+      username: 'papa',
+      carId: FAMILY_HONDA_CAR_NUMBER,
+      startTime: 1659780000, // future event, relative to Aug 2 2022 (mock test time)
+      description: 'Papa - car repair',
     })
     .go();
 
@@ -56,7 +74,9 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
     insertCarHonda,
     insertUserPapa,
     insertUserIlya,
-    insertIlyaBooking,
+    insertIlyaPastBooking,
+    insertIlyaFutureBooking,
+    insertPapaFutureBooking,
   ]);
 
   console.log('Seeding done');

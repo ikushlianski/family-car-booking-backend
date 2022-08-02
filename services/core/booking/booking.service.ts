@@ -1,21 +1,56 @@
-import { errorGettingSingleBooking } from 'core/booking/booking.errors';
-import { BookingId } from 'core/booking/booking.types';
+import {
+  errorGettingBookingList,
+  errorGettingSingleBooking,
+} from 'core/booking/booking.errors';
+import {
+  BookingId,
+  GetBookingListOptions,
+} from 'core/booking/booking.types';
 import { FamilyCarBookingApp } from 'db/db.service';
 
 export class BookingService {
+  // could be made more flexible and accept `to` and `from` timestamps in a larger app
+  getNextWeeksBookings = async ({
+    username,
+    carId,
+  }: GetBookingListOptions) => {
+    const currentDateSeconds = Date.now() / 1000;
+    const oneWeekAheadSeconds = 60 * 60 * 24 * 7;
+    const maxDateTimestamp = currentDateSeconds + oneWeekAheadSeconds;
+
+    try {
+      const bookingList = await FamilyCarBookingApp.entities.booking.query
+        .bookings({ username, carId })
+        .where(
+          (attr, op) =>
+            `${op.gte(attr.startTime, currentDateSeconds)} AND ${op.lte(
+              attr.startTime,
+              maxDateTimestamp,
+            )}`,
+        )
+        .go();
+
+      return [null, bookingList];
+    } catch (e) {
+      console.error('Error querying booking list', e);
+
+      return [errorGettingBookingList, null];
+    }
+  };
+
   getBookingDetails = async ({
     username,
     carId,
     startTime,
   }: BookingId) => {
     try {
-      const booking = await FamilyCarBookingApp.entities.booking.query
-        .singleBooking({ username, carId, startTime })
+      const [booking] = await FamilyCarBookingApp.entities.booking.query
+        .bookings({ username, carId, startTime })
         .go();
 
       return [null, booking];
     } catch (e) {
-      console.log('Error when querying bookings', e);
+      console.error('Error when querying bookings', e);
       return [errorGettingSingleBooking, null];
     }
   };

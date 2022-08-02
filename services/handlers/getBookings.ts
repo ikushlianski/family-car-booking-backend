@@ -2,6 +2,7 @@ import { APIGatewayProxyHandlerV2 } from 'aws-lambda';
 import { unauthorizedError } from 'core/auth/auth.errors';
 import { CookieKeys, cookieService } from 'core/auth/cookie.service';
 import {
+  errorGettingBookingList,
   errorGettingSingleBooking,
   noBookingId,
 } from 'core/booking/booking.errors';
@@ -22,16 +23,45 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
 
   const query = event.queryStringParameters;
 
-  if (!query?.username || !query?.carId || !query?.startTime) {
+  if (!query?.username || !query?.carId) {
     return responderService.toErrorResponse(
       noBookingId,
       StatusCodes.BAD_REQUEST,
     );
   }
 
+  // this means we would like to get a list of bookings
+  if (!query.startTime) {
+    const { carId, username } = query;
+
+    const [bookingListError, bookings] =
+      await bookingService.getNextWeeksBookings({
+        username,
+        carId,
+      });
+
+    if (bookingListError) {
+      return responderService.toErrorResponse(
+        errorGettingBookingList,
+        StatusCodes.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    if (!bookings) {
+      return responderService.toErrorResponse(
+        errorGettingBookingList,
+        StatusCodes.NOT_FOUND,
+      );
+    }
+
+    return responderService.toSuccessResponse(bookings, undefined, [
+      cookieService.makeCookie(CookieKeys.SESSION_ID, sessionIdFromDb),
+    ]);
+  }
+
   const { carId, username, startTime } = query;
 
-  const [getBookingError, booking] =
+  const [bookingDetailsError, booking] =
     await bookingService.getBookingDetails({
       carId,
       username,
@@ -39,7 +69,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
       startTime: +startTime,
     });
 
-  if (getBookingError) {
+  if (bookingDetailsError) {
     return responderService.toErrorResponse(
       errorGettingSingleBooking,
       StatusCodes.INTERNAL_SERVER_ERROR,
@@ -47,6 +77,8 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
   }
 
   if (!booking) {
+    console.error('No booking with this ID found');
+
     return responderService.toErrorResponse(
       errorGettingSingleBooking,
       StatusCodes.NOT_FOUND,

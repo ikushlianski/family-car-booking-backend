@@ -7,6 +7,11 @@ export type BookingId = {
   startTime: number;
 };
 
+export type GetBookingListOptions = {
+  username: BookingOwner;
+  carId: CarId;
+};
+
 export type BookingStartTime = number;
 export type BookingEndTime = number;
 export type BookingDate = Date;

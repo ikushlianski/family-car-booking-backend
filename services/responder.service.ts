@@ -16,6 +16,7 @@ export class Responder {
       statusCode: code,
       headers: {
         ...headers,
+        'Content-Type': 'application/json',
       },
       isBase64Encoded: false,
       cookies,
@@ -30,19 +31,22 @@ export class Responder {
     error: unknown,
     code: StatusCodes,
     cookies: string[] = [],
+    headers = {},
   ): APIGatewayProxyStructuredResultV2 => {
     return error instanceof Error
       ? {
-        statusCode: code,
-        body: JSON.stringify({ status: error.message }),
-        cookies,
-      }
+          statusCode: code,
+          body: JSON.stringify({ status: error.message }),
+          headers: { ...headers, 'Content-Type': 'application/json' },
+          cookies,
+        }
       : {
-        // should not happen
-        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-        body: JSON.stringify({ status: 'Unknown error' }),
-        cookies,
-      };
+          // should not happen
+          statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+          body: JSON.stringify({ status: 'Unknown error' }),
+          headers: { ...headers, 'Content-Type': 'application/json' },
+          cookies,
+        };
   };
 }
 
