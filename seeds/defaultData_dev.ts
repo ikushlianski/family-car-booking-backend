@@ -2,11 +2,11 @@
 
 import { FAMILY_HONDA_CAR_NUMBER } from '../services/core/car/car.constants';
 import { UserRoles } from '../services/core/user/user.constants';
-import { HondaTrackerDynamoService } from '../services/db/db.service';
+import { FamilyCarBookingApp } from '../services/db/db.service';
 
 (async () => {
   // cars
-  const insertCarHonda = HondaTrackerDynamoService.entities.car
+  const insertCarHonda = FamilyCarBookingApp.entities.car
     .create({
       carId: FAMILY_HONDA_CAR_NUMBER,
       username: 'owner#papa',
@@ -14,10 +14,11 @@ import { HondaTrackerDynamoService } from '../services/db/db.service';
     .go();
 
   // users
-  const insertUserIlya = HondaTrackerDynamoService.entities.user
+  const insertUserIlya = FamilyCarBookingApp.entities.user
     .create({
       username: 'ilya',
       password: process.env.ILYA_PASSWORD as string,
+      sessionId: 'test-session-id',
       roles: [UserRoles.DRIVER],
       availableCarIds: [FAMILY_HONDA_CAR_NUMBER],
       rideCompletionText: 'Машина в гараже',
@@ -28,7 +29,7 @@ import { HondaTrackerDynamoService } from '../services/db/db.service';
     })
     .go();
 
-  const insertUserPapa = HondaTrackerDynamoService.entities.user
+  const insertUserPapa = FamilyCarBookingApp.entities.user
     .create({
       username: 'papa',
       password: process.env.PAPA_PASSWORD as string,
@@ -42,7 +43,21 @@ import { HondaTrackerDynamoService } from '../services/db/db.service';
     })
     .go();
 
-  await Promise.all([insertCarHonda, insertUserPapa, insertUserIlya]);
+  const insertIlyaBooking = FamilyCarBookingApp.entities.booking
+    .create({
+      username: 'ilya',
+      carId: FAMILY_HONDA_CAR_NUMBER,
+      startTime: 1659420000,
+      description: 'Going to the country!',
+    })
+    .go();
 
-  console.log('done');
+  await Promise.all([
+    insertCarHonda,
+    insertUserPapa,
+    insertUserIlya,
+    insertIlyaBooking,
+  ]);
+
+  console.log('Seeding done');
 })();

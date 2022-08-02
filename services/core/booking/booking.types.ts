@@ -1,6 +1,12 @@
-import { Username } from '../user/user.types';
+import { CarId } from 'core/car/car.types';
+import { Username } from 'core/user/user.types';
 
-export type BookingId = string;
+export type BookingId = {
+  username: BookingOwner;
+  carId: CarId;
+  startTime: number;
+};
+
 export type BookingStartTime = number;
 export type BookingEndTime = number;
 export type BookingDate = Date;

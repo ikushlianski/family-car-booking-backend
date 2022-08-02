@@ -8,7 +8,7 @@ import { responderService } from 'responder.service';
 export async function handler(
   event: APIGatewayProxyEventV2WithRequestContext<unknown>,
 ) {
-  const [error, domainUser] = loginService.getUserFromRequest(
+  const [error, domainUser] = loginService.getUserFromLoginRequest(
     event.body,
     event.cookies,
   );

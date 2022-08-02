@@ -4,9 +4,7 @@ const {
   wrongUsernameCreds,
   wrongPasswordCreds,
 } = require('./test-data');
-const {
-  HondaTrackerDynamoService,
-} = require('../../services/db/db.service');
+const { FamilyCarBookingApp } = require('../../services/db/db.service');
 
 Before(async () => {
   console.log('I am the BEFORE hook');
@@ -25,19 +23,17 @@ AfterAll(async () => {
 });
 
 async function removeAllTestUsers() {
-  const removeCorrectUser = HondaTrackerDynamoService.entities.user
+  const removeCorrectUser = FamilyCarBookingApp.entities.user
     .delete({ username: correctCreds.username })
     .go();
 
-  const removeUserWithIncorrectUsername =
-    HondaTrackerDynamoService.entities.user
-      .delete({ username: wrongUsernameCreds.username })
-      .go();
+  const removeUserWithIncorrectUsername = FamilyCarBookingApp.entities.user
+    .delete({ username: wrongUsernameCreds.username })
+    .go();
 
-  const removeUserWithIncorrectPassword =
-    HondaTrackerDynamoService.entities.user
-      .delete({ username: wrongPasswordCreds.username })
-      .go();
+  const removeUserWithIncorrectPassword = FamilyCarBookingApp.entities.user
+    .delete({ username: wrongPasswordCreds.username })
+    .go();
 
   await Promise.all([
     removeCorrectUser,

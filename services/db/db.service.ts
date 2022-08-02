@@ -8,16 +8,16 @@ import { UserModel } from './entities/user';
 
 export const AWS_REGION = 'eu-west-1';
 
-const client = new DynamoDBClient({ region: AWS_REGION });
+export const dynamoDBClient = new DynamoDBClient({ region: AWS_REGION });
 
-export const HondaTrackerDynamoService = new Service(
+export const FamilyCarBookingApp = new Service(
   {
     user: UserModel,
     booking: BookingModel,
     car: CarModel,
   },
   {
-    client,
+    client: dynamoDBClient,
     table: TABLE_NAME,
   },
 );

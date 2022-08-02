@@ -1,4 +1,4 @@
-import {Maybe} from 'app.types';
+import { Maybe } from 'app.types';
 import { userRepository, UserRepository } from '../user/user.repository';
 import { IUserDomain, SessionId } from '../user/user.types';
 import { noCredentialsError, wrongUserOrPassword } from './auth.errors';
@@ -13,7 +13,7 @@ export class LoginService {
     private cookieService: CookieService,
   ) {}
 
-  getUserFromRequest = (
+  getUserFromLoginRequest = (
     requestBody: string | undefined,
     cookies: string[] | undefined,
   ): Maybe<IUserDomain> => {

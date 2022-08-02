@@ -4,9 +4,7 @@ setDefaultTimeout(10 * 1000);
 
 const { Given } = require('@cucumber/cucumber');
 const { correctCreds } = require('../test-data');
-const {
-  HondaTrackerDynamoService,
-} = require('../../../services/db/db.service');
+const { FamilyCarBookingApp } = require('../../../services/db/db.service');
 const {
   UserRoles,
 } = require('../../../services/core/user/user.constants');
@@ -15,7 +13,7 @@ const {
 } = require('../../../services/core/car/car.constants');
 
 Given('the user is already registered', async function () {
-  await HondaTrackerDynamoService.entities.user
+  await FamilyCarBookingApp.entities.user
     .create({
       username: correctCreds.username,
       password: Buffer.from(correctCreds.password).toString('base64'),
@@ -26,7 +24,7 @@ Given('the user is already registered', async function () {
 });
 
 Given('the user did not log in previously', async function () {
-  await HondaTrackerDynamoService.entities.user
+  await FamilyCarBookingApp.entities.user
     .update({ username: correctCreds.username })
     .remove(['sessionId'])
     .where((attr, op) => op.eq(attr.username, correctCreds.username))
@@ -34,7 +32,7 @@ Given('the user did not log in previously', async function () {
 });
 
 Given('the user logged in before', async function () {
-  await HondaTrackerDynamoService.entities.user
+  await FamilyCarBookingApp.entities.user
     .update({ username: correctCreds.username })
     .set({ sessionId: correctCreds.sessionId })
     .where((attr, op) => op.eq(attr.username, correctCreds.username))

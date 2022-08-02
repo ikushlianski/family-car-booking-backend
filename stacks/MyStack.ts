@@ -16,6 +16,7 @@ export function MyStack({ stack }: StackContext) {
     routes: {
       'GET /': 'handlers/lambda.handler',
       'POST /login': 'handlers/login.handler',
+      'GET /bookings': 'handlers/getBooking.handler',
     },
   });
 

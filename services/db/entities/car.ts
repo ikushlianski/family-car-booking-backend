@@ -18,7 +18,7 @@ export const CarModel = new Entity({
     },
   },
   indexes: {
-    username: {
+    carById: {
       pk: {
         field: 'pk',
         composite: ['carId'],

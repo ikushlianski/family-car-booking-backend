@@ -17,6 +17,23 @@ export class CookieService {
     }, '');
   };
 
+  public checkAuthenticated = (
+    cookies: string[] | undefined,
+  ): [boolean, SessionId?] => {
+    if (!cookies) return [false];
+
+    const sessionId = this.getSessionIdFromCookies(cookies);
+
+    // todo add DB call to check sessionId
+    // const sessionIdFromDb = ...
+
+    return [
+      Boolean(sessionId),
+      //todo should be sessionIdFromDb
+      sessionId || undefined,
+    ];
+  };
+
   public makeCookie = (key: string, value: string) => {
     return `${key}=${value}`;
   };
