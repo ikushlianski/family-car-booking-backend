@@ -15,7 +15,8 @@ export function MyStack({ stack }: StackContext) {
     },
     routes: {
       'POST /login': 'handlers/login.handler',
-      'GET /bookings': 'handlers/getBookings.handler',
+      'GET /bookings': 'handlers/getBookingList.handler',
+      'GET /bookings/id': 'handlers/getSingleBooking.handler',
     },
   });
 

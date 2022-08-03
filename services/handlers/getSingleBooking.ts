@@ -2,7 +2,6 @@ import { APIGatewayProxyHandlerV2 } from 'aws-lambda';
 import { unauthorizedError } from 'core/auth/auth.errors';
 import { CookieKeys, cookieService } from 'core/auth/cookie.service';
 import {
-  errorGettingBookingList,
   errorGettingSingleBooking,
   noBookingId,
 } from 'core/booking/booking.errors';
@@ -11,11 +10,11 @@ import { StatusCodes } from 'http-status-codes';
 import { responderService } from 'responder.service';
 
 export const handler: APIGatewayProxyHandlerV2 = async (event) => {
-  const sessionIdFromDb = await cookieService.checkAuthenticated(
+  const authenticatedUser = await cookieService.checkAuthenticated(
     event.cookies,
   );
 
-  if (!sessionIdFromDb) {
+  if (!authenticatedUser || !authenticatedUser.sessionId) {
     return responderService.toErrorResponse(
       unauthorizedError,
       StatusCodes.UNAUTHORIZED,
@@ -24,50 +23,26 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
 
   const query = event.queryStringParameters;
 
-  if (!query?.username || !query?.carId) {
+  if (!query?.carId || !query.startTime) {
     return responderService.toErrorResponse(
       noBookingId,
       StatusCodes.BAD_REQUEST,
     );
   }
 
-  // this means we would like to get a list of bookings
-  if (!query.startTime) {
-    const { carId, username } = query;
-
-    const [bookingListError, bookings] =
-      await bookingService.getNextWeeksBookings({
-        username,
-        carId,
-      });
-
-    if (bookingListError) {
-      return responderService.toErrorResponse(
-        errorGettingBookingList,
-        StatusCodes.INTERNAL_SERVER_ERROR,
-      );
-    }
-
-    if (!bookings) {
-      return responderService.toErrorResponse(
-        errorGettingBookingList,
-        StatusCodes.NOT_FOUND,
-      );
-    }
-
-    return responderService.toSuccessResponse(bookings, undefined, [
-      cookieService.makeCookie(CookieKeys.SESSION_ID, sessionIdFromDb),
-    ]);
-  }
-
-  const { carId, username, startTime } = query;
+  const { carId, startTime } = query;
+  const { username, roles, sessionId } = authenticatedUser;
 
   const [bookingDetailsError, booking] =
     await bookingService.getBookingDetails({
-      carId,
       username,
+      carId,
       // todo would be nice to use a mapper for such cases
       startTime: +startTime,
+      rolesMetadata: {
+        requestingOwnResource: query?.username === username,
+        currentUserRoles: roles,
+      },
     });
 
   if (bookingDetailsError) {
@@ -78,7 +53,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
   }
 
   if (!booking) {
-    console.error('No booking with this ID found');
+    console.error('Found no bookings with given ID');
 
     return responderService.toErrorResponse(
       errorGettingSingleBooking,
@@ -87,6 +62,6 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
   }
 
   return responderService.toSuccessResponse(booking, undefined, [
-    cookieService.makeCookie(CookieKeys.SESSION_ID, sessionIdFromDb),
+    cookieService.makeCookie(CookieKeys.SESSION_ID, sessionId),
   ]);
 };

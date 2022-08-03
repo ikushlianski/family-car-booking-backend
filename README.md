@@ -19,6 +19,7 @@ Most folders inside `services/core` are business entities. Each entity contains 
 - {entity}.constants.ts - constants related to this entity
 - {entity}.mapper.ts - mappers 1) network <-> business logic 2) business logic <-> database
 - {entity}.service.ts - business logic concerning this entity
+- {entity}.abilities.ts - role-based abilities of this entity relative to other entities
 - {entity}.repository.ts - layer for DB queries and data mapping from and to the data access layer
 
 Handlers are located in `services/handlers` directory. Each handler should be thin, know only about API Gateway event structure, and form responses. Otherwise, it merely delegates work to the services and repositories.

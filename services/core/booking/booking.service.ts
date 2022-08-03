@@ -13,6 +13,7 @@ export class BookingService {
     username,
     carId,
     weekCount = 2,
+    rolesMetadata: { requestingOwnResource, currentUserRoles },
   }: GetBookingListServiceParams) => {
     const currentDateSeconds = Date.now() / 1000;
     const oneWeekAheadSeconds = 60 * 60 * 24 * 7;
@@ -39,7 +40,10 @@ export class BookingService {
     username,
     carId,
     startTime,
+    rolesMetadata,
   }: GetSingleBookingServiceParams) => {
+    // todo use roles to see whether the user can get booking details
+
     try {
       const booking = await bookingRepository.getSingleBooking({
         username,

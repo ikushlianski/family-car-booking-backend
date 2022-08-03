@@ -1,4 +1,6 @@
 import { FamilyCarBookingApp } from 'db/db.service';
+import { UserModel } from 'db/entities/user';
+import { EntityItem } from 'electrodb';
 import { SessionId } from '../user/user.types';
 
 export enum CookieKeys {
@@ -20,17 +22,16 @@ export class CookieService {
 
   public checkAuthenticated = async (
     cookies: string[] | undefined,
-  ): Promise<SessionId | undefined> => {
-    if (!cookies) return undefined;
+  ): Promise<EntityItem<typeof UserModel> | false> => {
+    if (!cookies) return false;
 
     const sessionIdFromCookies = this.getSessionIdFromCookies(cookies);
 
-    const [{ sessionId: sessionIdFromDb }] =
-      await FamilyCarBookingApp.entities.user.query
-        .getUserBySessionId({ sessionId: sessionIdFromCookies })
-        .go();
+    const [user] = await FamilyCarBookingApp.entities.user.query
+      .getUserBySessionId({ sessionId: sessionIdFromCookies })
+      .go();
 
-    return sessionIdFromDb;
+    return user;
   };
 
   public makeCookie = (key: string, value: string) => {

@@ -1,3 +1,4 @@
+import { RolesMetadata } from 'core/auth/auth.types';
 import { CarId } from 'core/car/car.types';
 import { Username } from 'core/user/user.types';
 
@@ -26,6 +27,7 @@ export interface GetBookingListServiceParams {
   username: BookingOwner;
   carId: CarId;
   weekCount?: number;
+  rolesMetadata: RolesMetadata;
 }
 
 export interface GetBookingListRepositoryParams {
@@ -42,7 +44,11 @@ export interface GetSingleBookingServiceParams {
   username: BookingOwner;
   carId: CarId;
   startTime: number;
+  rolesMetadata: RolesMetadata;
 }
 
-export interface GetSingleBookingRepositoryParams
-  extends GetSingleBookingServiceParams {}
+export interface GetSingleBookingRepositoryParams {
+  username: BookingOwner;
+  carId: CarId;
+  startTime: number;
+}
