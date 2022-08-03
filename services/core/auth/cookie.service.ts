@@ -1,7 +1,6 @@
+import { userMapper } from 'core/user/user.mapper';
 import { FamilyCarBookingApp } from 'db/db.service';
-import { UserModel } from 'db/entities/user';
-import { EntityItem } from 'electrodb';
-import { SessionId } from '../user/user.types';
+import { IUserDomain, SessionId } from '../user/user.types';
 
 export enum CookieKeys {
   SESSION_ID = 'sessionId',
@@ -22,7 +21,7 @@ export class CookieService {
 
   public checkAuthenticated = async (
     cookies: string[] | undefined,
-  ): Promise<EntityItem<typeof UserModel> | false> => {
+  ): Promise<IUserDomain | false> => {
     if (!cookies) return false;
 
     const sessionIdFromCookies = this.getSessionIdFromCookies(cookies);
@@ -31,7 +30,7 @@ export class CookieService {
       .getUserBySessionId({ sessionId: sessionIdFromCookies })
       .go();
 
-    return user;
+    return userMapper.dbToDomain(user);
   };
 
   public makeCookie = (key: string, value: string) => {

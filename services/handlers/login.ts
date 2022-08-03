@@ -8,7 +8,7 @@ import { responderService } from 'responder.service';
 export async function handler(
   event: APIGatewayProxyEventV2WithRequestContext<unknown>,
 ) {
-  const [error, domainUser] = loginService.getUserFromLoginRequest(
+  const [error, loginData] = loginService.getUserFromLoginRequest(
     event.body,
     event.cookies,
   );
@@ -18,28 +18,23 @@ export async function handler(
       error,
       StatusCodes.BAD_REQUEST,
     );
-  } else if (domainUser) {
-    console.log({ domainUser });
-    const [loginError, loginSuccess] = await loginService.logIn(
-      domainUser,
-    );
+  } else if (loginData) {
+    console.log({ loginData });
 
-    console.log({ loginSuccess });
+    const [loginError, user] = await loginService.logIn(loginData);
 
     if (loginError) {
       console.log({ loginError });
+
       return responderService.toErrorResponse(
         wrongUserOrPassword,
         StatusCodes.UNAUTHORIZED,
       );
     }
 
-    return loginSuccess
+    return user?.sessionId
       ? responderService.toSuccessResponse('Success', undefined, [
-          cookieService.makeCookie(
-            CookieKeys.SESSION_ID,
-            loginSuccess.sessionId,
-          ),
+          cookieService.makeCookie(CookieKeys.SESSION_ID, user.sessionId),
         ])
       : responderService.toErrorResponse(
           wrongUserOrPassword,

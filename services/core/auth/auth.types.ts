@@ -1,12 +1,13 @@
 import { SessionId, Username } from 'core/user/user.types';
 
-export interface ILoginData {
+export interface ILoginDto {
   username: string;
   password: string;
 }
 
-export interface ILoginSuccess {
+export interface ILoginState {
   sessionId: string;
+  loginSuccess: boolean;
 }
 
 export interface CheckAuthenticatedResult {
@@ -17,4 +18,5 @@ export interface CheckAuthenticatedResult {
 export interface RolesMetadata {
   currentUserRoles: string[];
   requestingOwnResource: boolean;
+  requestingForUser?: string;
 }

@@ -1,8 +1,9 @@
 import { Maybe } from 'app.types';
+import { LoginEntity } from 'core/auth/login.entity';
+import { UserEntity } from 'core/user/user.entity';
 import { userRepository, UserRepository } from '../user/user.repository';
-import { IUserDomain, SessionId } from '../user/user.types';
+import { SessionId } from '../user/user.types';
 import { noCredentialsError, wrongUserOrPassword } from './auth.errors';
-import { ILoginSuccess } from './auth.types';
 import { cookieService, CookieService } from './cookie.service';
 
 const crypto = require('crypto');
@@ -16,7 +17,7 @@ export class LoginService {
   getUserFromLoginRequest = (
     requestBody: string | undefined,
     cookies: string[] | undefined,
-  ): Maybe<IUserDomain> => {
+  ): Maybe<LoginEntity> => {
     if (!requestBody) {
       return [noCredentialsError, undefined];
     }
@@ -33,13 +34,14 @@ export class LoginService {
       const { username, password } = JSON.parse(requestBody);
 
       if (username && password) {
-        const userFromDomain: IUserDomain = {
+        const login = new LoginEntity({
           username,
-          password,
           sessionId,
-        };
+          password,
+          loginSuccess: false,
+        });
 
-        return [undefined, userFromDomain];
+        return [undefined, login];
       }
 
       return [wrongUserOrPassword, undefined];
@@ -48,40 +50,30 @@ export class LoginService {
     }
   };
 
-  logIn = async (
-    domainUser: IUserDomain,
-  ): Promise<Maybe<ILoginSuccess>> => {
+  logIn = async (loginEntity: LoginEntity): Promise<Maybe<UserEntity>> => {
     try {
-      const userFromDB = await this.userRepo.getOneByCredentials(
-        domainUser,
-      );
+      const user = await this.userRepo.getOneByCredentials(loginEntity);
 
-      console.log({ userFromDB });
+      console.log({ user });
 
-      if (!userFromDB) {
+      if (!user) {
+        loginEntity.fail();
+
         return [wrongUserOrPassword, undefined];
       }
 
-      if (!userFromDB.sessionId) {
-        userFromDB.sessionId = crypto.randomUUID();
+      if (!user.sessionId) {
+        user.sessionId = crypto.randomUUID();
 
-        await this.userRepo.updateSessionId(userFromDB);
+        await this.userRepo.updateSessionId(user);
 
         console.log('sessionId updated successfully');
 
-        const loginSuccess: ILoginSuccess = {
-          sessionId: userFromDB.sessionId!,
-        };
-
-        return [undefined, loginSuccess];
+        return [undefined, user];
       }
 
-      const loginSuccess: ILoginSuccess = {
-        sessionId: userFromDB.sessionId,
-      };
-
-      return domainUser.sessionId === userFromDB.sessionId
-        ? [undefined, loginSuccess]
+      return loginEntity.sessionId === user.sessionId
+        ? [undefined, user]
         : [wrongUserOrPassword, undefined];
     } catch (e) {
       console.error('Something went wrong when logging in', e);

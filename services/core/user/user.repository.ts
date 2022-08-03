@@ -1,19 +1,25 @@
+import { LoginEntity } from 'core/auth/login.entity';
+import { userMapper } from 'core/user/user.mapper';
 import { FamilyCarBookingApp } from 'db/db.service';
 import { IUserDomain } from './user.types';
 
 export class UserRepository {
-  getOneByCredentials = async (
-    domainUser: IUserDomain,
-  ): Promise<IUserDomain | null> => {
-    return await FamilyCarBookingApp.entities.user
-      .get({ username: domainUser.username })
+  getOneByCredentials = async ({
+    username,
+  }: LoginEntity): Promise<IUserDomain | null> => {
+    const userFromDb = await FamilyCarBookingApp.entities.user
+      .get({ username })
       .go();
+
+    if (!userFromDb) return null;
+
+    return userMapper.dbToDomain(userFromDb);
   };
 
-  updateSessionId = async (_user: IUserDomain): Promise<void> => {
+  updateSessionId = async (user: IUserDomain): Promise<void> => {
     await FamilyCarBookingApp.entities.user
-      .update({ username: _user.username })
-      .set({ sessionId: _user.sessionId })
+      .update({ username: user.username })
+      .set({ sessionId: user.sessionId })
       .go();
   };
 }
