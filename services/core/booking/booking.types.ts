@@ -1,18 +1,6 @@
 import { CarId } from 'core/car/car.types';
 import { Username } from 'core/user/user.types';
 
-export type BookingId = {
-  username: BookingOwner;
-  carId: CarId;
-  startTime: number;
-};
-
-export type GetBookingListOptions = {
-  username: BookingOwner;
-  carId: CarId;
-  weekCount?: number;
-};
-
 export type BookingStartTime = number;
 export type BookingEndTime = number;
 export type BookingDate = Date;
@@ -24,10 +12,37 @@ export type BookingNotes = {
 };
 
 export interface IBookingDomain {
-  bookingId: BookingId;
   bookingStartTime: BookingStartTime;
   bookingEndTime: BookingEndTime;
   bookingDate: BookingDate;
   bookingOwner: BookingOwner;
   bookingNotes: BookingNotes;
 }
+
+/**
+ * Booking list
+ */
+export interface GetBookingListServiceParams {
+  username: BookingOwner;
+  carId: CarId;
+  weekCount?: number;
+}
+
+export interface GetBookingListRepositoryParams {
+  username: BookingOwner;
+  carId: CarId;
+  from: number; // timestamp in seconds
+  to: number; // timestamp in seconds
+}
+
+/**
+ * Single booking
+ */
+export interface GetSingleBookingServiceParams {
+  username: BookingOwner;
+  carId: CarId;
+  startTime: number;
+}
+
+export interface GetSingleBookingRepositoryParams
+  extends GetSingleBookingServiceParams {}

@@ -2,35 +2,30 @@ import {
   errorGettingBookingList,
   errorGettingSingleBooking,
 } from 'core/booking/booking.errors';
+import { bookingRepository } from 'core/booking/booking.repository';
 import {
-  BookingId,
-  GetBookingListOptions,
+  GetBookingListServiceParams,
+  GetSingleBookingServiceParams,
 } from 'core/booking/booking.types';
-import { FamilyCarBookingApp } from 'db/db.service';
 
 export class BookingService {
-  // could be made more flexible and accept `to` and `from` timestamps in a larger app
   getNextWeeksBookings = async ({
     username,
     carId,
     weekCount = 2,
-  }: GetBookingListOptions) => {
+  }: GetBookingListServiceParams) => {
     const currentDateSeconds = Date.now() / 1000;
     const oneWeekAheadSeconds = 60 * 60 * 24 * 7;
-    const maxDateTimestamp =
+    const maxDateSeconds =
       currentDateSeconds + oneWeekAheadSeconds * weekCount;
 
     try {
-      const bookingList = await FamilyCarBookingApp.entities.booking.query
-        .bookings({ username, carId })
-        .where(
-          (attr, op) =>
-            `${op.gte(attr.startTime, currentDateSeconds)} AND ${op.lte(
-              attr.startTime,
-              maxDateTimestamp,
-            )}`,
-        )
-        .go();
+      const bookingList = await bookingRepository.getBookingList({
+        username,
+        carId,
+        from: currentDateSeconds,
+        to: maxDateSeconds,
+      });
 
       return [null, bookingList];
     } catch (e) {
@@ -44,15 +39,17 @@ export class BookingService {
     username,
     carId,
     startTime,
-  }: BookingId) => {
+  }: GetSingleBookingServiceParams) => {
     try {
-      const [booking] = await FamilyCarBookingApp.entities.booking.query
-        .bookings({ username, carId, startTime })
-        .go();
+      const booking = await bookingRepository.getSingleBooking({
+        username,
+        carId,
+        startTime,
+      });
 
       return [null, booking];
     } catch (e) {
-      console.error('Error when querying bookings', e);
+      console.error('Error querying single booking', e);
       return [errorGettingSingleBooking, null];
     }
   };

@@ -15,8 +15,6 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
     event.cookies,
   );
 
-  console.log('sessionIdFromDb', sessionIdFromDb);
-
   if (!sessionIdFromDb) {
     return responderService.toErrorResponse(
       unauthorizedError,
