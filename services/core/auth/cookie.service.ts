@@ -1,3 +1,4 @@
+import { FamilyCarBookingApp } from 'db/db.service';
 import { SessionId } from '../user/user.types';
 
 export enum CookieKeys {
@@ -17,21 +18,19 @@ export class CookieService {
     }, '');
   };
 
-  public checkAuthenticated = (
+  public checkAuthenticated = async (
     cookies: string[] | undefined,
-  ): [boolean, SessionId?] => {
-    if (!cookies) return [false];
+  ): Promise<SessionId | undefined> => {
+    if (!cookies) return undefined;
 
-    const sessionId = this.getSessionIdFromCookies(cookies);
+    const sessionIdFromCookies = this.getSessionIdFromCookies(cookies);
 
-    // todo add DB call to check sessionId
-    // const sessionIdFromDb = ...
+    const [{ sessionId: sessionIdFromDb }] =
+      await FamilyCarBookingApp.entities.user.query
+        .getUserBySessionId({ sessionId: sessionIdFromCookies })
+        .go();
 
-    return [
-      Boolean(sessionId),
-      //todo should be sessionIdFromDb
-      sessionId || undefined,
-    ];
+    return sessionIdFromDb;
   };
 
   public makeCookie = (key: string, value: string) => {

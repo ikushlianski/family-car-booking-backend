@@ -21,7 +21,7 @@ export function Database({ stack }: StackContext) {
       sortKey: 'sk',
     },
     globalIndexes: {
-      gsi1: {
+      'get-user-by-session-id': {
         partitionKey: 'gsi1pk',
         sortKey: 'gsi1sk',
       },

@@ -13,10 +13,12 @@ export class BookingService {
   getNextWeeksBookings = async ({
     username,
     carId,
+    weekCount = 2,
   }: GetBookingListOptions) => {
     const currentDateSeconds = Date.now() / 1000;
     const oneWeekAheadSeconds = 60 * 60 * 24 * 7;
-    const maxDateTimestamp = currentDateSeconds + oneWeekAheadSeconds * 2;
+    const maxDateTimestamp =
+      currentDateSeconds + oneWeekAheadSeconds * weekCount;
 
     try {
       const bookingList = await FamilyCarBookingApp.entities.booking.query

@@ -11,10 +11,13 @@ import { StatusCodes } from 'http-status-codes';
 import { responderService } from 'responder.service';
 
 export const handler: APIGatewayProxyHandlerV2 = async (event) => {
-  const [authenticated, sessionIdFromDb] =
-    cookieService.checkAuthenticated(event.cookies);
+  const sessionIdFromDb = await cookieService.checkAuthenticated(
+    event.cookies,
+  );
 
-  if (!authenticated || !sessionIdFromDb) {
+  console.log('sessionIdFromDb', sessionIdFromDb);
+
+  if (!sessionIdFromDb) {
     return responderService.toErrorResponse(
       unauthorizedError,
       StatusCodes.UNAUTHORIZED,

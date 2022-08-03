@@ -59,8 +59,8 @@ export const UserModel = new Entity({
         composite: [],
       },
     },
-    auth: {
-      index: 'gsi1pk-gsi1sk-index',
+    getUserBySessionId: {
+      index: 'get-user-by-session-id',
       pk: {
         field: 'gsi1pk',
         composite: ['sessionId'],

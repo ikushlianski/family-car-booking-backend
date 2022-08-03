@@ -10,6 +10,7 @@ export type BookingId = {
 export type GetBookingListOptions = {
   username: BookingOwner;
   carId: CarId;
+  weekCount?: number;
 };
 
 export type BookingStartTime = number;

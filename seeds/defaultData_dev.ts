@@ -23,7 +23,7 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
       .create({
         username: 'ilya',
         password: process.env.ILYA_PASSWORD as string,
-        sessionId: 'test-session-id',
+        sessionId: 'test-session-id-ilya',
         roles: [UserRoles.DRIVER],
         availableCarIds: [FAMILY_HONDA_CAR_NUMBER],
         rideCompletionText: 'Машина в гараже',
@@ -38,6 +38,7 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
       .create({
         username: 'papa',
         password: process.env.PAPA_PASSWORD as string,
+        sessionId: 'test-session-id-papa',
         roles: [UserRoles.CAR_PROVIDER, UserRoles.DRIVER],
         availableCarIds: [FAMILY_HONDA_CAR_NUMBER],
         rideCompletionText: 'Машина в гараже',
