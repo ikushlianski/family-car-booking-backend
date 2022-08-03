@@ -35,7 +35,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
 
   const [bookingDetailsError, booking] =
     await bookingService.getBookingDetails({
-      username,
+      user: authenticatedUser,
       carId,
       // todo would be nice to use a mapper for such cases
       startTime: +startTime,

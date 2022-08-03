@@ -1,39 +1,64 @@
+import { BookingEntity } from 'core/booking/booking.entity';
 import {
   GetBookingListRepositoryParams,
   GetSingleBookingRepositoryParams,
+  IBookingDb,
 } from 'core/booking/booking.types';
 import { FamilyCarBookingApp } from 'db/db.service';
 
 export class BookingRepository {
-  getBookingList = async ({
-    username,
+  getList = async ({
+    user,
     carId,
     from,
     to,
-  }: GetBookingListRepositoryParams) => {
-    return FamilyCarBookingApp.entities.booking.query
-      .bookings({ username, carId })
-      .where(
-        (attr, op) =>
-          `${op.gte(attr.startTime, from)} AND ${op.lte(
-            attr.startTime,
-            to,
-          )}`,
-      )
-      .go();
+  }: GetBookingListRepositoryParams): Promise<BookingEntity[]> => {
+    const bookingList: IBookingDb[] =
+      await FamilyCarBookingApp.entities.booking.query
+        .bookings({ username: user.username, carId })
+        .where(
+          (attr, op) =>
+            `${op.gte(attr.startTime, from)} AND ${op.lte(
+              attr.startTime,
+              to,
+            )}`,
+        )
+        .go();
+
+    return bookingList.map(
+      ({ carId, startTime, endTime, description }) => {
+        return new BookingEntity(
+          {
+            username: user.username,
+            carId,
+            startTime,
+            endTime,
+            description,
+          },
+          user,
+        );
+      },
+    );
   };
 
   getSingleBooking = async ({
-    username,
-    carId,
-    startTime,
-  }: GetSingleBookingRepositoryParams) => {
-    const [singleBooking] =
+    user,
+    carId: _carId,
+    startTime: _startTime,
+  }: GetSingleBookingRepositoryParams): Promise<BookingEntity> => {
+    const [{ carId, startTime, endTime, description }] =
       await FamilyCarBookingApp.entities.booking.query
-        .bookings({ username, carId, startTime })
+        .bookings({
+          username: user.username,
+          carId: _carId,
+          startTime: _startTime,
+        })
         .go();
 
-    return singleBooking;
+    return new BookingEntity(
+      { username: user.username, carId, startTime, endTime, description },
+      user,
+    );
   };
 }
 

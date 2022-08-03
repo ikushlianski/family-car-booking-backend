@@ -35,9 +35,10 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
 
   const [bookingListError, bookings] =
     await bookingService.getNextWeeksBookings({
-      username,
+      user: authenticatedUser,
       carId,
       rolesMetadata: {
+        requestingForUser: query?.username,
         requestingOwnResource: query?.username === username,
         currentUserRoles: roles,
       },

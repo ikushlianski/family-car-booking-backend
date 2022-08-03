@@ -1,5 +1,4 @@
-import { IBookingDomain } from './booking.types';
-
+// todo do I need these mappers if I have classes?
 // export const bookingMapperToDomain = (
 //   bookingFromDB: IBookingFromDB,
 // ): IBookingDomain => {

@@ -1,3 +1,5 @@
+import { Maybe, MaybeArray } from 'app.types';
+import { BookingEntity } from 'core/booking/booking.entity';
 import {
   errorGettingBookingList,
   errorGettingSingleBooking,
@@ -10,51 +12,55 @@ import {
 
 export class BookingService {
   getNextWeeksBookings = async ({
-    username,
+    user,
     carId,
     weekCount = 2,
-    rolesMetadata: { requestingOwnResource, currentUserRoles },
-  }: GetBookingListServiceParams) => {
+    rolesMetadata: {
+      requestingOwnResource,
+      currentUserRoles,
+      requestingForUser,
+    },
+  }: GetBookingListServiceParams): Promise<MaybeArray<BookingEntity>> => {
     const currentDateSeconds = Date.now() / 1000;
     const oneWeekAheadSeconds = 60 * 60 * 24 * 7;
     const maxDateSeconds =
       currentDateSeconds + oneWeekAheadSeconds * weekCount;
 
     try {
-      const bookingList = await bookingRepository.getBookingList({
-        username,
+      const bookingList = await bookingRepository.getList({
+        user,
         carId,
         from: currentDateSeconds,
         to: maxDateSeconds,
       });
 
-      return [null, bookingList];
+      return [undefined, bookingList];
     } catch (e) {
       console.error('Error querying booking list', e);
 
-      return [errorGettingBookingList, null];
+      return [errorGettingBookingList, undefined];
     }
   };
 
   getBookingDetails = async ({
-    username,
+    user,
     carId,
     startTime,
-    rolesMetadata,
-  }: GetSingleBookingServiceParams) => {
+    rolesMetadata: { currentUserRoles, requestingOwnResource },
+  }: GetSingleBookingServiceParams): Promise<Maybe<BookingEntity>> => {
     // todo use roles to see whether the user can get booking details
 
     try {
       const booking = await bookingRepository.getSingleBooking({
-        username,
+        user,
         carId,
         startTime,
       });
 
-      return [null, booking];
+      return [undefined, booking];
     } catch (e) {
       console.error('Error querying single booking', e);
-      return [errorGettingSingleBooking, null];
+      return [errorGettingSingleBooking, undefined];
     }
   };
 }
