@@ -18,7 +18,23 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
       .delete({
         username: 'ilya',
         carId: FAMILY_HONDA_CAR_NUMBER,
-        startTime: 1659420000,
+        startTime: 1654611000,
+      })
+      .go(),
+
+    FamilyCarBookingApp.entities.booking
+      .delete({
+        username: 'ilya',
+        carId: FAMILY_HONDA_CAR_NUMBER,
+        startTime: 1659711000,
+      })
+      .go(),
+
+    FamilyCarBookingApp.entities.booking
+      .delete({
+        username: 'papa',
+        carId: FAMILY_HONDA_CAR_NUMBER,
+        startTime: 1659780000, // future event, relative to Aug 2 2022 09:00 (mock test time)
       })
       .go(),
   ]);
