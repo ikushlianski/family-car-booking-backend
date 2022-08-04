@@ -33,6 +33,13 @@ export const UserModel = new Entity({
         type: 'string',
       },
     },
+    providedCarIds: {
+      type: 'list',
+      required: true,
+      items: {
+        type: 'string',
+      },
+    },
     notifications: {
       type: 'map',
       properties: {

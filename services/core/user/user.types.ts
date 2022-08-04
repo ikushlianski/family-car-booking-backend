@@ -9,6 +9,7 @@ export interface IUserDomain {
   sessionId?: SessionId;
   roles: string[];
   availableCars: string[];
+  providedCars: string[];
   settings: {
     rideCompletionText?: string;
     notifications: {

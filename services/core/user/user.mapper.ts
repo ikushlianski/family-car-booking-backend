@@ -9,6 +9,7 @@ export class UserMapper {
       sessionId: rawDbItem.sessionId,
       roles: rawDbItem.roles,
       availableCars: rawDbItem.availableCarIds,
+      providedCars: rawDbItem.providedCarIds,
       settings: {
         rideCompletionText: rawDbItem.rideCompletionText,
         notifications: {

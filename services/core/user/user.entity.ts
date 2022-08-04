@@ -7,6 +7,7 @@ import {
 
 export class UserEntity implements IUserDomain {
   availableCars: string[];
+  providedCars: string[];
   roles: string[];
   sessionId?: SessionId;
   settings: {
@@ -23,11 +24,13 @@ export class UserEntity implements IUserDomain {
     roles,
     sessionId,
     availableCarIds,
+    providedCarIds,
     rideCompletionText,
     notifications,
   }: IUserDb) {
     this.roles = roles;
     this.availableCars = availableCarIds;
+    this.providedCars = providedCarIds;
     this.username = username;
     this.sessionId = sessionId;
     this.settings = {
