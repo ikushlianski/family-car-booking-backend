@@ -7,10 +7,11 @@ import {
   IBookingDomain,
 } from 'core/booking/booking.types';
 import { UserEntity } from 'core/user/user.entity';
-import { IUserDomain } from 'core/user/user.types';
+import { IUserDomain, Username } from 'core/user/user.types';
 
 export class BookingEntity implements IBookingDomain {
   bookingOwner: UserEntity;
+  bookingOwnerId: Username;
   carNumber: string;
   bookingStartTime: BookingStartTime;
   bookingEndTime?: BookingEndTime;
@@ -25,6 +26,7 @@ export class BookingEntity implements IBookingDomain {
     this.bookingEndTime = endTime ? new Date(endTime * 1000) : undefined;
     // todo hide some information about the user, use toDTO mapper
     this.bookingOwner = user;
+    this.bookingOwnerId = user.username;
     this.carNumber = carId;
     this.bookingDescription = description;
   }

@@ -52,7 +52,9 @@ export class LoginService {
 
   logIn = async (loginEntity: LoginEntity): Promise<Maybe<UserEntity>> => {
     try {
-      const user = await this.userRepo.getOneByCredentials(loginEntity);
+      const user = await this.userRepo.getOneByUsername(
+        loginEntity.username,
+      );
 
       console.log({ user });
 

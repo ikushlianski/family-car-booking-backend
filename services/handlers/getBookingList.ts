@@ -38,7 +38,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
       user: authenticatedUser,
       carId,
       rolesMetadata: {
-        requestingForUser: query?.username,
+        requestingForUsername: query?.username,
         requestingOwnResource: query?.username === username,
         currentUserRoles: roles,
       },

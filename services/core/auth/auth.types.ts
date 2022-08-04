@@ -18,5 +18,5 @@ export interface CheckAuthenticatedResult {
 export interface RolesMetadata {
   currentUserRoles: string[];
   requestingOwnResource: boolean;
-  requestingForUser?: string;
+  requestingForUsername?: Username;
 }

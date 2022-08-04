@@ -1,12 +1,11 @@
-import { LoginEntity } from 'core/auth/login.entity';
 import { userMapper } from 'core/user/user.mapper';
 import { FamilyCarBookingApp } from 'db/db.service';
-import { IUserDomain } from './user.types';
+import { IUserDomain, Username } from './user.types';
 
 export class UserRepository {
-  getOneByCredentials = async ({
-    username,
-  }: LoginEntity): Promise<IUserDomain | null> => {
+  getOneByUsername = async (
+    username: Username,
+  ): Promise<IUserDomain | null> => {
     const userFromDb = await FamilyCarBookingApp.entities.user
       .get({ username })
       .go();
