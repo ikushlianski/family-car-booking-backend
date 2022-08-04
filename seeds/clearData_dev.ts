@@ -1,6 +1,9 @@
 // noinspection ES6PreferShortImport
 
-import { FAMILY_HONDA_CAR_NUMBER } from '../services/core/car/car.constants';
+import {
+  FAMILY_HONDA_CAR_NUMBER,
+  STRANGERS_BMW,
+} from '../services/core/car/car.constants';
 import { FamilyCarBookingApp } from '../services/db/db.service';
 
 (async () => {
@@ -9,11 +12,16 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
     FamilyCarBookingApp.entities.user.delete({ username: 'papa' }).go(),
     FamilyCarBookingApp.entities.user.delete({ username: 'ilya' }).go(),
     FamilyCarBookingApp.entities.user.delete({ username: 'masha' }).go(),
+    FamilyCarBookingApp.entities.user
+      .delete({ username: 'stranger' })
+      .go(),
 
     // remove cars
     FamilyCarBookingApp.entities.car
       .delete({ carId: FAMILY_HONDA_CAR_NUMBER })
       .go(),
+
+    FamilyCarBookingApp.entities.car.delete({ carId: STRANGERS_BMW }).go(),
 
     FamilyCarBookingApp.entities.booking
       .delete({
@@ -27,6 +35,14 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
       .delete({
         username: 'ilya',
         carId: FAMILY_HONDA_CAR_NUMBER,
+        startTime: 1660716000,
+      })
+      .go(),
+
+    FamilyCarBookingApp.entities.booking
+      .delete({
+        username: 'stranger',
+        carId: STRANGERS_BMW,
         startTime: 1660716000,
       })
       .go(),

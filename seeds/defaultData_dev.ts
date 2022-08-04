@@ -1,6 +1,9 @@
 // noinspection ES6PreferShortImport
 
-import { FAMILY_HONDA_CAR_NUMBER } from '../services/core/car/car.constants';
+import {
+  FAMILY_HONDA_CAR_NUMBER,
+  STRANGERS_BMW,
+} from '../services/core/car/car.constants';
 import { UserRoles } from '../services/core/user/user.constants';
 import { FamilyCarBookingApp } from '../services/db/db.service';
 
@@ -13,6 +16,13 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
       .create({
         carId: FAMILY_HONDA_CAR_NUMBER,
         username: 'owner#papa',
+      })
+      .go(),
+
+    FamilyCarBookingApp.entities.car
+      .create({
+        carId: STRANGERS_BMW,
+        username: 'owner#stranger',
       })
       .go(),
 
@@ -67,6 +77,22 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
       })
       .go(),
 
+    FamilyCarBookingApp.entities.user
+      .create({
+        username: 'stranger',
+        password: process.env.STRANGER_PASSWORD as string,
+        sessionId: 'test-session-id-stranger',
+        roles: [UserRoles.DRIVER, UserRoles.CAR_PROVIDER],
+        availableCarIds: [STRANGERS_BMW],
+        providedCarIds: [],
+        rideCompletionText: 'I do not speak Russian :)',
+        notifications: {
+          getNotifiedWhenBookingChanged: true,
+          getNotifiedWhenBookingCreated: true,
+        },
+      })
+      .go(),
+
     /**
      * Bookings
      */
@@ -98,6 +124,16 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
         carId: FAMILY_HONDA_CAR_NUMBER,
         startTime: 1660616000, // future event, relative to Aug 2 2022 (mock test time)
         description: 'Papa - car repair',
+      })
+      .go(),
+
+    // future booking, Stranger
+    FamilyCarBookingApp.entities.booking
+      .create({
+        username: 'stranger',
+        carId: STRANGERS_BMW,
+        startTime: 1660738000, // future event relative to the time of seeding
+        description: 'Stranger - future event',
       })
       .go(),
   ]);
