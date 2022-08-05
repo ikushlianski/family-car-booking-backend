@@ -7,7 +7,7 @@
     "build": "sst build",
     "deploy:dev": "AWS_PROFILE=family-car-booking sst deploy --stage dev --region eu-west-1",
     "deploy:qa": "AWS_PROFILE=family-car-booking sst deploy --stage qa --region eu-west-1",
-    "integration": "./features/run-integration.sh",
+    "integration": "./specs/run-integration.sh",
     "remove:dev": "AWS_PROFILE=family-car-booking sst remove --stage dev --region eu-west-1",
     "remove:qa": "AWS_PROFILE=family-car-booking sst remove --stage qa --region eu-west-1",
     "console": "AWS_PROFILE=family-car-booking sst console --stage dev --region eu-west-1",
@@ -25,13 +25,15 @@
     "http-status-codes": "^2.2.0"
   },
   "devDependencies": {
-    "@cucumber/cucumber": "^8.5.1",
     "@serverless-stack/cli": "^1.6.4",
     "@serverless-stack/resources": "^1.6.4",
     "@tsconfig/node16": "^1.0.3",
     "@types/aws-lambda": "^8.10.101",
     "aws-cdk-lib": "2.32.0",
+    "jest": "^28.1.3",
+    "jest-cucumber": "^3.0.1",
     "prettier": "^2.7.1",
+    "ts-jest": "^28.0.7",
     "ts-node": "^10.9.1",
     "typescript": "^4.7.4",
     "vitest": "^0.20.2"
