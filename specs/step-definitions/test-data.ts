@@ -1,14 +1,17 @@
-const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
-const { TABLE_NAME } = require('../../services/db/db.constants');
-const { AWS_REGION } = require('../../services/db/db.service');
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { AWS_REGION } from 'services/db/db.service';
+import { TABLE_NAME } from 'services/db/db.constants';
 
-module.exports = {
+export const testData = {
+  TableName: TABLE_NAME,
   client: new DynamoDBClient({ region: AWS_REGION }),
   correctCreds: {
     username: 'correct-username',
     password: 'correct-password',
     sessionId: 'valid-session-id',
   },
+  familyCarId: 'ho-123456',
+  strangerCarId: 'bmw-789',
   wrongUsernameCreds: {
     username: 'incorrect-username',
     password: 'correct-password',
@@ -18,5 +21,4 @@ module.exports = {
     password: 'incorrect-password',
   },
   loginUrl: `${process.env.API_GATEWAY_ENDPOINT}/login`,
-  TableName: TABLE_NAME,
 };

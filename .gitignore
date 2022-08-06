@@ -25,4 +25,4 @@ services/**/*.js
 stacks/**/*.js
 
 # e2e tests
-features/.env.integration
+specs/.env.integration

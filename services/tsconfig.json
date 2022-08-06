@@ -2,7 +2,8 @@
   "extends": "../tsconfig.json",
   "include": [
     "handlers",
-    "core"
+    "core",
+    "db"
   ],
   "compilerOptions": {
     "module": "esnext",

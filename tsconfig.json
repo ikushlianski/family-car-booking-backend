@@ -1,7 +1,15 @@
 {
-  "extends": "@tsconfig/node16/tsconfig.json",
-  "include": ["stacks", "seeds"],
+  "include": [
+    "seeds",
+    "specs",
+    "stacks"
+  ],
   "compilerOptions": {
-    "baseUrl": "."
+    "baseUrl": ".",
+    "lib": [
+      "dom"
+    ],
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
   }
 }
