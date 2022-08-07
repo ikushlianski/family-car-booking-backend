@@ -45,6 +45,7 @@ export const whenLoggingInWithCorrectCreds = (
 ) => {
   when('the user logs in with correct credentials', async function () {
     const { cookie, status } = await makeRequest(
+      testData.loginUrl,
       testData.correctCreds,
       'POST',
       {

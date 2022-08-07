@@ -1,11 +1,10 @@
-import { testData } from '../test-data';
-
 export const makeRequest = async (
+  url: string,
   body: any,
   method = 'GET',
   headers = { Cookie: '' },
 ) => {
-  const response = await fetch(testData.loginUrl, {
+  const response = await fetch(url, {
     method,
     headers: {
       ...headers,

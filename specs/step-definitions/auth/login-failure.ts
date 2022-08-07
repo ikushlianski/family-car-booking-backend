@@ -9,6 +9,7 @@ export const whenLogsInWithWrongUsername = (
 ) => {
   when('the user logs in with wrong username', async function () {
     const { responseBody, status } = await makeRequest(
+      testData.loginUrl,
       testData.wrongUsernameCreds,
       'POST',
     );
@@ -24,6 +25,7 @@ export const whenLogsInWithWrongPassword = (
 ) => {
   when('the user logs in with wrong password', async function () {
     const { responseBody, status } = await makeRequest(
+      testData.loginUrl,
       testData.wrongPasswordCreds,
       'POST',
     );
