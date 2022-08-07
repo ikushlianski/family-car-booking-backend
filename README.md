@@ -50,7 +50,13 @@ To run tests in non-dev mode, e.g. as part of your pipeline, run `yarn test`. It
 ### Integration
 Integration testing covers the backend API. It is written in Gherkin using Jest-Cucumber package.
 
-Feature files are located in `specs/features`. Step definitions are located in `specs/step-definitions` folder at any depth. The main rule is that the Jest-cucumber file must be named `<what-is-tested.feature.steps.ts>`, e.g. `login.feature.steps.ts`.
+Feature files are located in `specs/features`. Step definitions are located in `specs/step-definitions` folder.
+
+Step definitions are separated by feature, where each `.feature` file has its own folder with step definitions. 
+
+Step definition files are grouped by `<tested-feature>.given.ts`, `<tested-feature>.when.ts` and `<tested-feature>.then.ts` files. Thus step defs are shared across scenarios in the feature. 
+
+The main Jest-cucumber file that is actually run by Jest must be named `<what-is-tested.feature.steps.ts>`, e.g. `login.feature.steps.ts`.
 
 Pre-requisites to running integration tests:
 - run `yarn deploy:qa` to deploy the latest changes to the `qa` env where the integration tests will run
@@ -58,6 +64,6 @@ Pre-requisites to running integration tests:
 
 To run all integration tests, do `yarn integration`.
 
-To run only a particular file, do `yarn integration <your-jest-cucumber-file-regex>`. For example, to run the login feature tests, run `yarn integration login`.
+To run only a particular file, do `yarn integration <your-jest-cucumber-file-regex>`. For example, to run the `login.feature` file, run `yarn integration login` - it will run `login.feature.steps.ts` file where steps are defined for the login feature.
 
-> Some Gherkin definitions might contain tech terms. This was done on purpose, because I'm only testing the API, and this is a pet project. On a real project we would most likely test e2e and Gherkin steps would not contain terms like `cookie`.
+> Some Gherkin definitions might contain tech terms. This was done on purpose, because we are only testing the API, and this is a pet project. On a real project we would most likely test e2e and Gherkin steps would not contain terms like `cookie`.
