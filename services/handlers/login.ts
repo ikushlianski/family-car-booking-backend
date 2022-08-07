@@ -33,9 +33,16 @@ export async function handler(
     }
 
     return user?.sessionId
-      ? responderService.toSuccessResponse('Success', undefined, [
-          cookieService.makeCookie(CookieKeys.SESSION_ID, user.sessionId),
-        ])
+      ? responderService.toSuccessResponse(
+          { status: 'Success' },
+          undefined,
+          [
+            cookieService.makeCookie(
+              CookieKeys.SESSION_ID,
+              user.sessionId,
+            ),
+          ],
+        )
       : responderService.toErrorResponse(
           wrongUserOrPassword,
           StatusCodes.UNAUTHORIZED,

@@ -3,15 +3,11 @@ import { StatusCodes } from 'http-status-codes';
 
 export class Responder {
   toSuccessResponse = (
-    body: unknown,
+    body: object,
     headers = {},
     cookies: string[] = [],
     code = StatusCodes.OK,
   ): APIGatewayProxyStructuredResultV2 => {
-    const isBodyString = (body: unknown): body is string => {
-      return typeof body === 'string';
-    };
-
     return {
       statusCode: code,
       headers: {
@@ -20,10 +16,7 @@ export class Responder {
       },
       isBase64Encoded: false,
       cookies,
-      // todo improve this, I don't like it now
-      body: isBodyString(body)
-        ? JSON.stringify({ status: body })
-        : JSON.stringify(body),
+      body: JSON.stringify(body),
     };
   };
 
