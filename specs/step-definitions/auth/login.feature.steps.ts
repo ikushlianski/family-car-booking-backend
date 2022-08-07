@@ -1,6 +1,5 @@
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import * as assert from 'node:assert';
-import { LoginResult } from 'specs/step-definitions/auth/login.types';
 import {
   givenAlreadyRegistered,
   givenDidNotLogInBefore,
@@ -14,6 +13,7 @@ import {
 } from 'specs/step-definitions/auth/login-failure';
 import { thenLoginIsSuccessful } from 'specs/step-definitions/auth/login-success';
 import { removeAllData } from 'specs/step-definitions/hooks';
+import { initTestResponseObject } from 'specs/step-definitions/step-definition.utils';
 import { testData } from 'specs/step-definitions/test-data';
 
 const feature = loadFeature('./specs/features/login.feature');
@@ -90,11 +90,7 @@ defineFeature(feature, (test) => {
 
     givenDidNotLogInBefore(given);
 
-    const loginResult: LoginResult = {
-      responseCookie: undefined,
-      responseStatus: undefined,
-      responseBody: undefined,
-    };
+    const loginResult = initTestResponseObject();
 
     whenLogsInWithWrongUsername(when, loginResult);
 
@@ -106,11 +102,7 @@ defineFeature(feature, (test) => {
 
     givenDidNotLogInBefore(given);
 
-    const loginResult: LoginResult = {
-      responseCookie: undefined,
-      responseStatus: undefined,
-      responseBody: undefined,
-    };
+    const loginResult = initTestResponseObject();
 
     whenLogsInWithWrongPassword(when, loginResult);
 

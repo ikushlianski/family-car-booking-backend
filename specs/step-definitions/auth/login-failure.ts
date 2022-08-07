@@ -1,11 +1,10 @@
-import { LoginResult } from 'specs/step-definitions/auth/login.types';
+import { StepDefinitionResponse } from 'specs/step-definitions/step-definition.types';
+import { makeRequest } from 'specs/step-definitions/step-definition.utils';
 import { testData } from 'specs/step-definitions/test-data';
-
-import { makeRequest } from './login.utils';
 
 export const whenLogsInWithWrongUsername = (
   when,
-  loginResult: LoginResult,
+  loginResult: StepDefinitionResponse,
 ) => {
   when('the user logs in with wrong username', async function () {
     const { responseBody, status } = await makeRequest(
@@ -21,7 +20,7 @@ export const whenLogsInWithWrongUsername = (
 
 export const whenLogsInWithWrongPassword = (
   when,
-  loginResult: LoginResult,
+  loginResult: StepDefinitionResponse,
 ) => {
   when('the user logs in with wrong password', async function () {
     const { responseBody, status } = await makeRequest(
@@ -37,7 +36,7 @@ export const whenLogsInWithWrongPassword = (
 
 export const thenLoginErrorIsReturned = (
   then,
-  loginResult: LoginResult,
+  loginResult: StepDefinitionResponse,
 ) => {
   then('login error is returned', async function () {
     expect(loginResult.responseStatus).toBe(401);

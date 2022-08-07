@@ -21,4 +21,5 @@ export const testData = {
     password: 'incorrect-password',
   },
   loginUrl: `${process.env.API_GATEWAY_ENDPOINT}/login`,
+  bookingsUrl: `${process.env.API_GATEWAY_ENDPOINT}/bookings`,
 };

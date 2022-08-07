@@ -1,6 +1,10 @@
+import { StepDefinitionResponse } from 'specs/step-definitions/step-definition.types';
+
 export const makeRequest = async (
   url: string,
-  body: any,
+  body: {
+    [key: string]: any;
+  },
   method = 'GET',
   headers = { Cookie: '' },
 ) => {
@@ -10,7 +14,7 @@ export const makeRequest = async (
       ...headers,
       Cookie: headers['Cookie'],
     },
-    body: JSON.stringify(body),
+    body: body && JSON.stringify(body),
   });
 
   const responseBody = await response.json();
@@ -25,3 +29,9 @@ export const makeRequest = async (
     responseHeaders: response.headers,
   };
 };
+
+export const initTestResponseObject = (): StepDefinitionResponse => ({
+  responseCookie: undefined,
+  responseStatus: undefined,
+  responseBody: undefined,
+});

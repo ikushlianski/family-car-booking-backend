@@ -58,7 +58,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
     );
   }
 
-  return responderService.toSuccessResponse(bookings, undefined, [
+  return responderService.toSuccessResponse({ bookings }, undefined, [
     cookieService.makeCookie(CookieKeys.SESSION_ID, sessionId),
   ]);
 };

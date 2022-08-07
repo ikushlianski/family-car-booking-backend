@@ -1,6 +1,6 @@
 import { UserRoles } from 'services/core/user/user.constants';
 import { FamilyCarBookingApp } from 'services/db/db.service';
-import { makeRequest } from 'specs/step-definitions/auth/login.utils';
+import { makeRequest } from 'specs/step-definitions/step-definition.utils';
 import { testData } from 'specs/step-definitions/test-data';
 
 export const givenDidNotLogInBefore = (given) => {
