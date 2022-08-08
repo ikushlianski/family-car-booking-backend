@@ -8,6 +8,9 @@ export NODE_ENV=qa
 if [ "$1" != "" ]; then
   jest "$1"
 else
-  jest
+  for file in $(find ./specs/features -type f -name "*.feature" -exec basename {} \;); do
+     jest "$file"
+  done
+
 fi
 
