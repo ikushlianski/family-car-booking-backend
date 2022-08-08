@@ -14,5 +14,6 @@ module.exports = {
   },
   testMatch: [
     "**/*.feature.steps.ts"
-  ]
+  ],
+  testTimeout: 10000
 };
