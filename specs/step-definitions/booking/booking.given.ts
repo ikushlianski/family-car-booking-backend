@@ -1,3 +1,4 @@
+import { addDays } from 'date-fns';
 import { UserRoles } from 'services/core/user/user.constants';
 import { FamilyCarBookingApp } from 'services/db/db.service';
 import { testData } from 'specs/step-definitions/test-data';
@@ -69,24 +70,20 @@ export const givenStrangerIsRegistered = (given) => {
 
 export const givenIlyaHasFutureEvent = (given) => {
   given(
-    'there is a booking for user Ilya for Aug 3 2022, 11:00 called Future Event 1',
-    async function () {
-      console.log('running givenIlyaHasFutureEvent');
-
+    /^there is a booking for user Ilya due in (\d+) days called "(.*)"$/,
+    async function (daysIntoTheFuture: number, bookingDescr: string) {
       try {
         await FamilyCarBookingApp.entities.booking
           .create({
             username: 'ilya',
             carId: testData.familyCarId,
-            startTime: 1660377600,
-            description: 'Ilya - future event 1',
+            startTime: +addDays(new Date(), daysIntoTheFuture) / 1000,
+            description: bookingDescr,
           })
           .go();
       } catch (e) {
         console.error(e);
       }
-
-      console.log('JUST RAN givenIlyaHasFutureEvent');
     },
   );
 };

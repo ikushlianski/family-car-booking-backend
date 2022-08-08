@@ -5,9 +5,9 @@ Feature: Booking list
     And Stranger is registered, provides a BMW and can drive it
 
   Scenario: Ilya requests his own booking list
-    Given there is a booking for user Ilya for Aug 3 2022, 11:00 called Future Event 1
+    Given there is a booking for user Ilya due in 2 days called "Ilya - Future Event 1"
     When Ilya requests his own bookings
-    Then Ilya gets back a list of one item named Future Event 1
+    Then Ilya gets back a list of 1 items named "Ilya - Future Event 1"
 
 #  Scenario: Booking list includes events only 2 weeks ahead
 #    Given there are is a booking for user Ilya for Aug 3 2022, 11:00 called Future Event 1

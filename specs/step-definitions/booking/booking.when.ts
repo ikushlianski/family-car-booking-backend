@@ -7,8 +7,6 @@ export const whenIlyaRequestsHisBookings = (
   bookingResponse: StepDefinitionResponse,
 ) => {
   when('Ilya requests his own bookings', async () => {
-    console.log('making request!!');
-
     const { responseBody, status } = await makeRequest(
       `${testData.bookingsUrl}?username=ilya&carId=${testData.familyCarId}`,
       undefined,
@@ -17,11 +15,6 @@ export const whenIlyaRequestsHisBookings = (
     );
 
     bookingResponse.responseBody = responseBody;
-
-    console.log(
-      'bookingResponse.responseBody',
-      bookingResponse.responseBody,
-    );
     bookingResponse.responseStatus = status;
   });
 };

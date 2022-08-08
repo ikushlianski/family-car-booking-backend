@@ -2925,6 +2925,11 @@ data-urls@^2.0.0:
     whatwg-mimetype "^2.3.0"
     whatwg-url "^8.0.0"
 
+date-fns@^2.29.1:
+  version "2.29.1"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.29.1.tgz#9667c2615525e552b5135a3116b95b1961456e60"
+  integrity sha512-dlLD5rKaKxpFdnjrs+5azHDFOPEu4ANy/LTh04A1DTzMM7qoajmKCBc8pkKRFT41CNzw+4gQh79X5C+Jq27HAw==
+
 date-format@^4.0.13:
   version "4.0.13"
   resolved "https://registry.yarnpkg.com/date-format/-/date-format-4.0.13.tgz#87c3aab3a4f6f37582c5f5f63692d2956fa67890"
