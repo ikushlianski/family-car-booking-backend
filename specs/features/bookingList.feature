@@ -9,18 +9,12 @@ Feature: Booking list
     When Ilya requests his own bookings
     Then Ilya gets back a list of 1 items named "Ilya - Future Event 1"
 
-#  Scenario: Booking list includes events only 2 weeks ahead
-#    Given there are is a booking for user Ilya for Aug 3 2022, 11:00 called Future Event 1
-#    When Ilya requests his own bookings
-#    Then Ilya's list includes only bookings not later than 2 weeks ahead
-#
-#  Scenario: Papa can see bookings of Ilya because Ilya drives Papa's car
-#    Given there are is a booking for user Ilya for Aug 3 2022, 11:00 called Future Event 1
-#    And there are bookings for user Papa
-#    When Papa requests Ilya's bookings
-#    Then he gets Ilya's bookings back
-#
-#  Scenario: Stranger cannot see bookings of Ilya because Ilya does not drive Stranger's car
-#    Given there are bookings for user Ilya
-#    When Stranger requests Ilya's bookings
-#    Then he gets Ilya's bookings back
+  Scenario: Booking list includes events only 2 weeks ahead
+    Given there is a booking for user Ilya due in 2 days called "Ilya - Future Event 0"
+    Given there is a booking for user Ilya due in 13 days called "Ilya - Future Event 1"
+    And there is a booking for user Ilya due in 22 days called "Ilya - Future Event 2"
+    When Ilya requests his own bookings
+    Then Ilya gets back a list of 2 items
+    And item 0 is called "Ilya - Future Event 0"
+    And item 1 is called "Ilya - Future Event 1"
+

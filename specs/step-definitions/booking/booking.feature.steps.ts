@@ -5,7 +5,11 @@ import {
   givenPapaIsRegistered,
   givenStrangerIsRegistered,
 } from 'specs/step-definitions/booking/booking.given';
-import { thenIlyaGetsFutureEvent1 } from 'specs/step-definitions/booking/booking.then';
+import {
+  thenItemXNameIsY,
+  thenIlyaGetsEventsUpTo2WeeksAhead,
+  thenIlyaGetsFutureEvent1,
+} from 'specs/step-definitions/booking/booking.then';
 import { whenIlyaRequestsHisBookings } from 'specs/step-definitions/booking/booking.when';
 import { removeAllData } from 'specs/step-definitions/hooks';
 import { initTestResponseObject } from 'specs/step-definitions/step-definition.utils';
@@ -41,5 +45,26 @@ defineFeature(feature, (test) => {
     whenIlyaRequestsHisBookings(when, bookingResponse);
 
     thenIlyaGetsFutureEvent1(then, bookingResponse);
+  });
+
+  test('Booking list includes events only 2 weeks ahead', async ({
+    given,
+    when,
+    then,
+  }) => {
+    setupBackground(given);
+
+    givenIlyaHasFutureEvent(given); // in 2 days
+    givenIlyaHasFutureEvent(given); // in 13 days
+    givenIlyaHasFutureEvent(given); // in 22 days
+
+    const bookingResponse = initTestResponseObject();
+
+    whenIlyaRequestsHisBookings(when, bookingResponse);
+
+    thenIlyaGetsEventsUpTo2WeeksAhead(then, bookingResponse);
+
+    thenItemXNameIsY(then, bookingResponse);
+    thenItemXNameIsY(then, bookingResponse);
   });
 });
