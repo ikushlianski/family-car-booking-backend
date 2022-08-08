@@ -36,9 +36,11 @@ defineFeature(feature, (test) => {
     when,
     then,
   }) => {
+    const now = new Date();
+
     setupBackground(given);
 
-    givenIlyaHasFutureEvent(given);
+    givenIlyaHasFutureEvent(given, now);
 
     const bookingResponse = initTestResponseObject();
 
@@ -54,9 +56,11 @@ defineFeature(feature, (test) => {
   }) => {
     setupBackground(given);
 
-    givenIlyaHasFutureEvent(given); // in 2 days
-    givenIlyaHasFutureEvent(given); // in 13 days
-    givenIlyaHasFutureEvent(given); // in 22 days
+    const now = new Date();
+
+    givenIlyaHasFutureEvent(given, now); // in 2 days
+    givenIlyaHasFutureEvent(given, now); // in 13 days
+    givenIlyaHasFutureEvent(given, now); // in 22 days
 
     const bookingResponse = initTestResponseObject();
 

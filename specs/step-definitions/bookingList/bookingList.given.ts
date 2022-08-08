@@ -1,6 +1,6 @@
-import { addDays } from 'date-fns';
 import { UserRoles } from 'services/core/user/user.constants';
 import { FamilyCarBookingApp } from 'services/db/db.service';
+import { calculateFutureTimestampInSecs } from 'specs/step-definitions/step-definition.utils';
 import { testData } from 'specs/step-definitions/test-data';
 
 const userSettings = {
@@ -68,7 +68,7 @@ export const givenStrangerIsRegistered = (given) => {
   );
 };
 
-export const givenIlyaHasFutureEvent = (given) => {
+export const givenIlyaHasFutureEvent = (given, now: Date) => {
   given(
     /^there is a booking for user "(.*)" on carId "(.*)" due in (\d+) days called "(.*)"$/,
     async function (
@@ -82,7 +82,10 @@ export const givenIlyaHasFutureEvent = (given) => {
           .create({
             username,
             carId,
-            startTime: +addDays(new Date(), daysIntoTheFuture) / 1000,
+            startTime: calculateFutureTimestampInSecs(
+              now,
+              daysIntoTheFuture,
+            ),
             description: bookingDescr,
           })
           .go();

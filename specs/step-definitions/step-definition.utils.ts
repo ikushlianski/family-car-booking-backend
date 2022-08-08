@@ -1,3 +1,4 @@
+import { addDays } from 'date-fns';
 import { StepDefinitionResponse } from 'specs/step-definitions/step-definition.types';
 
 export const makeRequest = async (
@@ -35,3 +36,10 @@ export const initTestResponseObject = (): StepDefinitionResponse => ({
   responseStatus: undefined,
   responseBody: undefined,
 });
+
+export const calculateFutureTimestampInSecs = (
+  now: Date,
+  daysToAdd: number,
+) => {
+  return Math.round(+addDays(now, daysToAdd) / 1000);
+};
