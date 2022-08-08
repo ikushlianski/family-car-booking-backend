@@ -67,26 +67,26 @@ export const givenStrangerIsRegistered = (given) => {
   );
 };
 
-export const givenTodayIs01Aug2022 = (given) => {
-  given('today is Aug 1, 2022', () => {
-    jest.useFakeTimers('modern');
-
-    jest.setSystemTime(new Date('Aug 1, 2022 09:00'));
-  });
-};
-
 export const givenIlyaHasFutureEvent = (given) => {
   given(
     'there is a booking for user Ilya for Aug 3 2022, 11:00 called Future Event 1',
-    async () => {
-      await FamilyCarBookingApp.entities.booking
-        .create({
-          username: 'ilya',
-          carId: testData.familyCarId,
-          startTime: 1659513600,
-          description: 'Ilya - future event 1',
-        })
-        .go();
+    async function () {
+      console.log('running givenIlyaHasFutureEvent');
+
+      try {
+        await FamilyCarBookingApp.entities.booking
+          .create({
+            username: 'ilya',
+            carId: testData.familyCarId,
+            startTime: 1660377600,
+            description: 'Ilya - future event 1',
+          })
+          .go();
+      } catch (e) {
+        console.error(e);
+      }
+
+      console.log('JUST RAN givenIlyaHasFutureEvent');
     },
   );
 };

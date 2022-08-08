@@ -51,7 +51,7 @@ async function removeAllTestBookings() {
       .delete({
         username: 'ilya',
         carId: testData.familyCarId,
-        startTime: 1660716000,
+        startTime: 1660377600,
       })
       .go(),
 

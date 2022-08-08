@@ -3,7 +3,6 @@ Feature: Booking list
     Given Papa is registered, provides a family honda car and can drive it
     And Ilya is registered, can drive family honda but does not provide any cars
     And Stranger is registered, provides a BMW and can drive it
-    And today is Aug 1, 2022
 
   Scenario: Ilya requests his own booking list
     Given there is a booking for user Ilya for Aug 3 2022, 11:00 called Future Event 1

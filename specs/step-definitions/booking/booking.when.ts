@@ -7,13 +7,21 @@ export const whenIlyaRequestsHisBookings = (
   bookingResponse: StepDefinitionResponse,
 ) => {
   when('Ilya requests his own bookings', async () => {
+    console.log('making request!!');
+
     const { responseBody, status } = await makeRequest(
-      `${testData.bookingsUrl}/username=ilya&carId=${testData.familyCarId}`,
+      `${testData.bookingsUrl}?username=ilya&carId=${testData.familyCarId}`,
       undefined,
       'GET',
+      { Cookie: 'sessionId=test-session-id-ilya' },
     );
 
-    bookingResponse.responseBody = responseBody.status;
+    bookingResponse.responseBody = responseBody;
+
+    console.log(
+      'bookingResponse.responseBody',
+      bookingResponse.responseBody,
+    );
     bookingResponse.responseStatus = status;
   });
 };
