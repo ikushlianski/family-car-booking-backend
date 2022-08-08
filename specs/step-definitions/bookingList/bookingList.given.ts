@@ -70,13 +70,18 @@ export const givenStrangerIsRegistered = (given) => {
 
 export const givenIlyaHasFutureEvent = (given) => {
   given(
-    /^there is a booking for user Ilya due in (\d+) days called "(.*)"$/,
-    async function (daysIntoTheFuture: number, bookingDescr: string) {
+    /^there is a booking for user "(.*)" on carId "(.*)" due in (\d+) days called "(.*)"$/,
+    async function (
+      username: string,
+      carId: string,
+      daysIntoTheFuture: number,
+      bookingDescr: string,
+    ) {
       try {
         await FamilyCarBookingApp.entities.booking
           .create({
-            username: 'ilya',
-            carId: testData.familyCarId,
+            username,
+            carId,
             startTime: +addDays(new Date(), daysIntoTheFuture) / 1000,
             description: bookingDescr,
           })

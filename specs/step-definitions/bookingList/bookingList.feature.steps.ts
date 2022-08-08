@@ -4,13 +4,13 @@ import {
   givenIlyaIsRegistered,
   givenPapaIsRegistered,
   givenStrangerIsRegistered,
-} from 'specs/step-definitions/booking/booking.given';
+} from 'specs/step-definitions/bookingList/bookingList.given';
 import {
   thenItemXNameIsY,
   thenIlyaGetsEventsUpTo2WeeksAhead,
   thenIlyaGetsFutureEvent1,
-} from 'specs/step-definitions/booking/booking.then';
-import { whenIlyaRequestsHisBookings } from 'specs/step-definitions/booking/booking.when';
+} from 'specs/step-definitions/bookingList/bookingList.then';
+import { whenIlyaRequestsHisBookings } from 'specs/step-definitions/bookingList/bookingList.when';
 import { removeAllData } from 'specs/step-definitions/hooks';
 import { initTestResponseObject } from 'specs/step-definitions/step-definition.utils';
 
@@ -31,7 +31,7 @@ defineFeature(feature, (test) => {
     await removeAllData();
   });
 
-  test('Ilya requests his own booking list', async ({
+  test('Ilya requests details for booking "Ilya - Future Event 0"', async ({
     given,
     when,
     then,
