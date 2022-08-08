@@ -38,37 +38,36 @@ async function removeAllTestCars() {
 }
 
 async function removeAllTestBookings() {
-  await Promise.all([
-    FamilyCarBookingApp.entities.booking
-      .delete({
+  const allTestBookings = await Promise.all([
+    FamilyCarBookingApp.entities.booking.query
+      .bookings({
         username: 'ilya',
         carId: testData.familyCarId,
-        startTime: 1654611000,
       })
       .go(),
-
-    FamilyCarBookingApp.entities.booking
-      .delete({
-        username: 'ilya',
-        carId: testData.familyCarId,
-        startTime: 1660377600,
-      })
-      .go(),
-
-    FamilyCarBookingApp.entities.booking
-      .delete({
+    FamilyCarBookingApp.entities.booking.query
+      .bookings({
         username: 'papa',
         carId: testData.familyCarId,
-        startTime: 1660616000,
       })
       .go(),
-
-    FamilyCarBookingApp.entities.booking
-      .delete({
+    FamilyCarBookingApp.entities.booking.query
+      .bookings({
         username: 'stranger',
         carId: testData.strangerCarId,
-        startTime: 1660716000,
       })
       .go(),
   ]);
+
+  const testBookingsToRemove = allTestBookings.flat(1).map((booking) => {
+    return FamilyCarBookingApp.entities.booking
+      .delete({
+        username: booking.username,
+        carId: booking.carId,
+        startTime: booking.startTime,
+      })
+      .go();
+  });
+
+  await Promise.all(testBookingsToRemove);
 }
