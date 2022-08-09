@@ -13,6 +13,25 @@ export function MyStack({ stack }: StackContext) {
         permissions: [table],
       },
     },
+    cors: {
+      allowCredentials: true,
+      allowMethods: [
+        'GET',
+        'POST',
+        'PATCH',
+        'PUT',
+        'DELETE',
+        'HEAD',
+        'OPTIONS',
+      ],
+      // todo change when we have more envs
+      //  also see lambda responses
+      allowOrigins: ['http://localhost:3000'],
+      exposeHeaders: [
+        'Access-Control-Allow-Origin',
+        'Access-Control-Allow-Credentials',
+      ],
+    },
     routes: {
       'POST /login': 'handlers/login.handler',
       'GET /bookings': 'handlers/getBookingList.handler',

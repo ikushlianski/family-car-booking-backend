@@ -29,8 +29,6 @@ export const whenUserRequestsTheirOwnBookingDetails = (
         { Cookie: `sessionId=test-session-id-${whoRequests}` },
       );
 
-      console.log('responseBody', responseBody);
-
       bookingResponse.responseBody = responseBody;
       bookingResponse.responseStatus = status;
     },

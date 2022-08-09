@@ -12,6 +12,7 @@ export class Responder {
       statusCode: code,
       headers: {
         ...headers,
+        ...this.getCorsHeaders(),
         'Content-Type': 'application/json',
       },
       isBase64Encoded: false,
@@ -30,17 +31,33 @@ export class Responder {
       ? {
           statusCode: code,
           body: JSON.stringify({ status: error.message }),
-          headers: { ...headers, 'Content-Type': 'application/json' },
+          headers: {
+            ...headers,
+            ...this.getCorsHeaders(),
+            'Content-Type': 'application/json',
+          },
           cookies,
         }
       : {
           // should not happen
           statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
           body: JSON.stringify({ status: 'Unknown error' }),
-          headers: { ...headers, 'Content-Type': 'application/json' },
+          headers: {
+            ...headers,
+            ...this.getCorsHeaders(),
+            'Content-Type': 'application/json',
+          },
           cookies,
         };
   };
+
+  getCorsHeaders() {
+    return {
+      // todo change once we have more envs
+      'Access-Control-Allow-Origin': 'http://localhost:3000',
+      'Access-Control-Allow-Credentials': true,
+    };
+  }
 }
 
 export const responderService = new Responder();
