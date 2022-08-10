@@ -33,9 +33,10 @@ export function MyStack({ stack }: StackContext) {
       ],
     },
     routes: {
-      'POST /login': 'handlers/login.handler',
       'GET /bookings': 'handlers/getBookingList.handler',
       'GET /bookings/id': 'handlers/getSingleBooking.handler',
+      'GET /users/{id}': 'handlers/getUser.handler',
+      'POST /login': 'handlers/login.handler',
     },
   });
 
