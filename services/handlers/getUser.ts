@@ -1,6 +1,7 @@
 import { APIGatewayProxyHandlerV2 } from 'aws-lambda';
 import { unauthorizedError } from 'core/auth/auth.errors';
 import { CookieKeys, cookieService } from 'core/auth/cookie.service';
+import { permissionDenied } from 'core/booking/booking.errors';
 import { badRequestUser, notFoundUser } from 'core/user/user.errors';
 import { userService } from 'core/user/user.service';
 import { StatusCodes } from 'http-status-codes';
@@ -27,6 +28,14 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
     );
   }
 
+  // todo admin role will be able to request such details
+  if (username !== authenticatedUser.username) {
+    return responderService.toErrorResponse(
+      permissionDenied,
+      StatusCodes.FORBIDDEN,
+    );
+  }
+
   const user = await userService.getUser(username);
 
   if (!user) {
@@ -37,6 +46,9 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
   }
 
   return responderService.toSuccessResponse({ user }, undefined, [
-    cookieService.makeCookie(CookieKeys.SESSION_ID, user.sessionId),
+    cookieService.makeCookie(
+      CookieKeys.SESSION_ID,
+      authenticatedUser.sessionId,
+    ),
   ]);
 };
