@@ -1,5 +1,6 @@
 // noinspection ES6PreferShortImport
 
+import { addDays, subDays } from 'date-fns';
 import {
   FAMILY_HONDA_CAR_NUMBER,
   STRANGERS_BMW,
@@ -85,7 +86,7 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
         roles: [UserRoles.DRIVER, UserRoles.CAR_PROVIDER],
         availableCarIds: [STRANGERS_BMW],
         providedCarIds: [],
-        rideCompletionText: 'I do not speak Russian :)',
+        rideCompletionText: 'I do not speak Belarusian :)',
         notifications: {
           getNotifiedWhenBookingChanged: true,
           getNotifiedWhenBookingCreated: true,
@@ -102,7 +103,7 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
       .create({
         username: 'ilya',
         carId: FAMILY_HONDA_CAR_NUMBER,
-        startTime: 1654611000, // past event, relative to Aug 2 2022 (mock test time)
+        startTime: calculatePrevTimestampInSecs(new Date(), 5), // past event, five days ago
         description: 'Ilya - past event',
       })
       .go(),
@@ -112,7 +113,7 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
       .create({
         username: 'ilya',
         carId: FAMILY_HONDA_CAR_NUMBER,
-        startTime: 1660716000, // future event relative to the time of seeding
+        startTime: calculateFutureTimestampInSecs(new Date(), 5), // future event relative to the time of seeding, 5 days from now
         description: 'Ilya - future event',
       })
       .go(),
@@ -122,8 +123,18 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
       .create({
         username: 'papa',
         carId: FAMILY_HONDA_CAR_NUMBER,
-        startTime: 1660616000, // future event, relative to Aug 2 2022 (mock test time)
+        startTime: calculateFutureTimestampInSecs(new Date(), 2), // future event
         description: 'Papa - car repair',
+      })
+      .go(),
+
+    // future booking, Masha
+    FamilyCarBookingApp.entities.booking
+      .create({
+        username: 'masha',
+        carId: FAMILY_HONDA_CAR_NUMBER,
+        startTime: calculateFutureTimestampInSecs(new Date(), 3), // future event
+        description: 'Masha - visit parents',
       })
       .go(),
 
@@ -132,7 +143,7 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
       .create({
         username: 'stranger',
         carId: STRANGERS_BMW,
-        startTime: 1660738000, // future event relative to the time of seeding
+        startTime: calculateFutureTimestampInSecs(new Date(), 6), // future event
         description: 'Stranger - future event',
       })
       .go(),
@@ -140,3 +151,11 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
 
   console.log('Seeding done');
 })();
+
+function calculateFutureTimestampInSecs(now: Date, daysToAdd: number) {
+  return Math.round(+addDays(now, daysToAdd) / 1000);
+}
+
+function calculatePrevTimestampInSecs(now: Date, daysToRemove: number) {
+  return Math.round(+subDays(now, daysToRemove) / 1000);
+}

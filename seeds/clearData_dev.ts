@@ -3,6 +3,7 @@
 import {
   FAMILY_HONDA_CAR_NUMBER,
   STRANGERS_BMW,
+  // todo try to make possible to have short imports here as well. Might need to have just one single tsconfig for the entire project
 } from '../services/core/car/car.constants';
 import { FamilyCarBookingApp } from '../services/db/db.service';
 
@@ -22,37 +23,48 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
       .go(),
 
     FamilyCarBookingApp.entities.car.delete({ carId: STRANGERS_BMW }).go(),
+  ]);
 
-    FamilyCarBookingApp.entities.booking
-      .delete({
+  await removeAllBookingSeeds();
+})();
+
+async function removeAllBookingSeeds() {
+  const allSeedBookings = await Promise.all([
+    FamilyCarBookingApp.entities.booking.query
+      .bookingsByUser({
         username: 'ilya',
         carId: FAMILY_HONDA_CAR_NUMBER,
-        startTime: 1654611000,
       })
       .go(),
-
-    FamilyCarBookingApp.entities.booking
-      .delete({
-        username: 'ilya',
-        carId: FAMILY_HONDA_CAR_NUMBER,
-        startTime: 1660716000,
-      })
-      .go(),
-
-    FamilyCarBookingApp.entities.booking
-      .delete({
-        username: 'stranger',
-        carId: STRANGERS_BMW,
-        startTime: 1660716000,
-      })
-      .go(),
-
-    FamilyCarBookingApp.entities.booking
-      .remove({
+    FamilyCarBookingApp.entities.booking.query
+      .bookingsByUser({
         username: 'papa',
         carId: FAMILY_HONDA_CAR_NUMBER,
-        startTime: 1660616000,
+      })
+      .go(),
+    FamilyCarBookingApp.entities.booking.query
+      .bookingsByUser({
+        username: 'masha',
+        carId: FAMILY_HONDA_CAR_NUMBER,
+      })
+      .go(),
+    FamilyCarBookingApp.entities.booking.query
+      .bookingsByUser({
+        username: 'stranger',
+        carId: 'bmw-789',
       })
       .go(),
   ]);
-})();
+
+  const testBookingsToRemove = allSeedBookings.flat(1).map((booking) => {
+    return FamilyCarBookingApp.entities.booking
+      .delete({
+        username: booking.username,
+        carId: booking.carId,
+        startTime: booking.startTime,
+      })
+      .go();
+  });
+
+  await Promise.all(testBookingsToRemove);
+}
