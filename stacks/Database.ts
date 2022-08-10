@@ -13,8 +13,10 @@ export function Database({ stack }: StackContext) {
     fields: {
       pk: 'string',
       sk: 'string',
-      gsi1pk: 'string',
-      gsi1sk: 'string',
+      gsi1pk: 'string', // get-user-by-session-id
+      gsi1sk: 'string', // get-user-by-session-id
+      gsi2pk: 'string', // get-booking-by-car-id
+      gsi2sk: 'string', // get-booking-by-car-id
     },
     primaryIndex: {
       partitionKey: 'pk',
@@ -24,6 +26,10 @@ export function Database({ stack }: StackContext) {
       'get-user-by-session-id': {
         partitionKey: 'gsi1pk',
         sortKey: 'gsi1sk',
+      },
+      'get-bookings-by-car': {
+        partitionKey: 'gsi2pk',
+        sortKey: 'gsi2sk',
       },
     },
   });

@@ -44,7 +44,7 @@ export const BookingModel = new Entity(
       },
     },
     indexes: {
-      bookings: {
+      bookingsByUser: {
         pk: {
           field: 'pk',
           composite: ['username'],
@@ -52,6 +52,17 @@ export const BookingModel = new Entity(
         sk: {
           field: 'sk',
           composite: ['carId', 'startTime'],
+        },
+      },
+      bookingsByCar: {
+        index: 'get-bookings-by-car',
+        pk: {
+          field: 'gsi2pk',
+          composite: ['carId'],
+        },
+        sk: {
+          field: 'gsi2sk',
+          composite: ['startTime', 'username'],
         },
       },
     },
