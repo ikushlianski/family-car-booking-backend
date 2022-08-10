@@ -30,6 +30,8 @@ export class CookieService {
       .getUserBySessionId({ sessionId: sessionIdFromCookies })
       .go();
 
+    if (!user) return false;
+
     return userMapper.dbToDomain(user);
   };
 

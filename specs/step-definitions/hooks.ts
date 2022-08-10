@@ -40,19 +40,19 @@ async function removeAllTestCars() {
 async function removeAllTestBookings() {
   const allTestBookings = await Promise.all([
     FamilyCarBookingApp.entities.booking.query
-      .bookings({
+      .bookingsByUser({
         username: 'ilya',
         carId: testData.familyCarId,
       })
       .go(),
     FamilyCarBookingApp.entities.booking.query
-      .bookings({
+      .bookingsByUser({
         username: 'papa',
         carId: testData.familyCarId,
       })
       .go(),
     FamilyCarBookingApp.entities.booking.query
-      .bookings({
+      .bookingsByUser({
         username: 'stranger',
         carId: testData.strangerCarId,
       })

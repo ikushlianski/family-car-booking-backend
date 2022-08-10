@@ -2,7 +2,7 @@ import { defineAbility } from '@casl/ability';
 import { UserRoles } from 'core/user/user.constants';
 import { UserEntity } from 'core/user/user.entity';
 
-export const defineBookingAbilityFor = (user: UserEntity) =>
+export const defineBookingEntityAbilitiesFor = (user: UserEntity) =>
   defineAbility((can) => {
     const carsProvided = user.providedCars;
     const carsAvailable = user.availableCars;

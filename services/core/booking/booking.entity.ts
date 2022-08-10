@@ -19,15 +19,18 @@ export class BookingEntity implements IBookingDomain {
   bookingDescription?: BookingDescription;
 
   constructor(
-    { carId, startTime, endTime, description }: IBookingDb,
-    user: IUserDomain,
+    { username, carId, startTime, endTime, description }: IBookingDb,
+    user?: IUserDomain,
   ) {
     this.bookingStartTime = new Date(startTime * 1000);
     this.bookingEndTime = endTime ? new Date(endTime * 1000) : undefined;
     // todo hide some information about the user, use toDTO mapper
-    this.bookingOwner = user;
-    this.bookingOwnerId = user.username;
+    this.bookingOwnerId = username;
     this.carNumber = carId;
     this.bookingDescription = description;
+
+    if (user) {
+      this.bookingOwner = user;
+    }
   }
 }

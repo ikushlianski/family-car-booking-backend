@@ -27,15 +27,21 @@ export type IBookingDb = EntityItem<typeof BookingModel>;
 /**
  * Booking list
  */
-export interface GetBookingListServiceParams {
+export interface GetBookingListByUserServiceParams {
   user: UserEntity;
   carId: CarId;
   weekCount?: number;
   rolesMetadata: RolesMetadata;
 }
 
-export interface GetBookingListRepositoryParams {
+export interface GetBookingListByUserRepositoryParams {
   user: UserEntity;
+  carId: CarId;
+  from: number; // timestamp in seconds
+  to: number; // timestamp in seconds
+}
+
+export interface GetBookingListByCarIdRepositoryParams {
   carId: CarId;
   from: number; // timestamp in seconds
   to: number; // timestamp in seconds

@@ -1,21 +1,23 @@
 import { BookingEntity } from 'core/booking/booking.entity';
 import {
-  GetBookingListRepositoryParams,
+  GetBookingListByCarIdRepositoryParams,
+  GetBookingListByUserRepositoryParams,
   GetSingleBookingRepositoryParams,
   IBookingDb,
 } from 'core/booking/booking.types';
+import { IUserDb, Username } from 'core/user/user.types';
 import { FamilyCarBookingApp } from 'db/db.service';
 
 export class BookingRepository {
-  getList = async ({
+  getBookingListByUser = async ({
     user,
     carId,
     from,
     to,
-  }: GetBookingListRepositoryParams): Promise<BookingEntity[]> => {
+  }: GetBookingListByUserRepositoryParams): Promise<BookingEntity[]> => {
     const bookingList: IBookingDb[] =
       await FamilyCarBookingApp.entities.booking.query
-        .bookings({ username: user.username, carId })
+        .bookingsByUser({ username: user.username, carId })
         .where(
           (attr, op) =>
             `${op.gte(attr.startTime, from)} AND ${op.lte(
@@ -41,6 +43,36 @@ export class BookingRepository {
     );
   };
 
+  getBookingListByCar = async ({
+    carId,
+    from,
+    to,
+  }: GetBookingListByCarIdRepositoryParams): Promise<BookingEntity[]> => {
+    const bookingList: IBookingDb[] =
+      await FamilyCarBookingApp.entities.booking.query
+        .bookingsByCar({ carId })
+        .where(
+          (attr, op) =>
+            `${op.gte(attr.startTime, from)} AND ${op.lte(
+              attr.startTime,
+              to,
+            )}`,
+        )
+        .go();
+
+    return bookingList.map(
+      ({ username, carId, startTime, endTime, description }) => {
+        return new BookingEntity({
+          username,
+          carId,
+          startTime,
+          endTime,
+          description,
+        });
+      },
+    );
+  };
+
   getSingleBooking = async ({
     user,
     carId: _carId,
@@ -48,7 +80,7 @@ export class BookingRepository {
   }: GetSingleBookingRepositoryParams): Promise<BookingEntity> => {
     const [{ carId, startTime, endTime, description }] =
       await FamilyCarBookingApp.entities.booking.query
-        .bookings({
+        .bookingsByUser({
           username: user.username,
           carId: _carId,
           startTime: _startTime,

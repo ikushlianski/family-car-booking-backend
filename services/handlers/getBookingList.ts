@@ -31,12 +31,23 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
     );
   }
 
-  const { carId } = query;
+  const carAvailableToAuthenticatedUser =
+    await bookingService.isCarAvailableToUser(
+      query.carId,
+      authenticatedUser.username,
+    );
+
+  if (!carAvailableToAuthenticatedUser) {
+    return responderService.toErrorResponse(
+      unauthorizedError,
+      StatusCodes.FORBIDDEN,
+    );
+  }
 
   const [bookingListError, bookings] =
     await bookingService.getNextWeeksBookings({
       user: authenticatedUser,
-      carId,
+      carId: query.carId,
       rolesMetadata: {
         requestingForUsername: query?.username,
         requestingOwnResource: query?.username === username,
