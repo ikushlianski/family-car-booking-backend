@@ -2,9 +2,9 @@ import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { Service } from 'electrodb';
 
 import { TABLE_NAME } from './db.constants';
-import { BookingModel } from './models/booking';
-import { CarModel } from './models/car';
-import { UserModel } from './models/user';
+import { BookingModel } from 'db/models/booking.model';
+import { CarModel } from 'db/models/car.model';
+import { UserModel } from 'db/models/user.model';
 
 export const AWS_REGION = 'eu-west-1';
 

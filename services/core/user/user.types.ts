@@ -1,4 +1,4 @@
-import { UserModel } from 'db/models/user';
+import { UserModel } from 'db/models/user.model';
 import { EntityItem } from 'electrodb';
 
 export type Username = string;

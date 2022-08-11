@@ -3,6 +3,7 @@ import {
   BookingEndTime,
   BookingNotes,
   BookingStartTime,
+  CreateBookingDto,
   IBookingDb,
   IBookingDomain,
 } from 'core/booking/booking.types';
@@ -18,19 +19,40 @@ export class BookingEntity implements IBookingDomain {
   bookingNotes?: BookingNotes;
   bookingDescription?: BookingDescription;
 
-  constructor(
-    { username, carId, startTime, endTime, description }: IBookingDb,
-    user?: IUserDomain,
-  ) {
-    this.bookingStartTime = new Date(startTime * 1000);
-    this.bookingEndTime = endTime ? new Date(endTime * 1000) : undefined;
-    // todo hide some information about the user, use toDTO mapper
-    this.bookingOwnerId = username;
-    this.carNumber = carId;
-    this.bookingDescription = description;
+  constructor(data: IBookingDb | CreateBookingDto, user?: IUserDomain) {
+    if (isFromNetwork(data)) {
+      this.bookingStartTime = new Date(data.startDateTime);
+      this.bookingEndTime = data.endDateTime
+        ? new Date(data.endDateTime)
+        : undefined;
+      this.bookingOwnerId = data.username;
+      this.carNumber = data.carId;
+      this.bookingDescription = data.description;
+    } else {
+      const { username, carId, startTime, endTime, description } = data;
+
+      this.bookingStartTime = new Date(startTime * 1000);
+      this.bookingEndTime = endTime ? new Date(endTime * 1000) : undefined;
+      this.bookingOwnerId = username;
+      this.carNumber = carId;
+      this.bookingDescription = description;
+    }
 
     if (user) {
+      // todo hide some information about the user, use toDTO mapper
       this.bookingOwner = user;
     }
   }
+}
+
+function isFromNetwork(
+  data: CreateBookingDto | IBookingDb,
+): data is CreateBookingDto {
+  return data.hasOwnProperty('startDateTime');
+}
+
+function isFromDb(
+  data: CreateBookingDto | IBookingDb,
+): data is IBookingDb {
+  return data.hasOwnProperty('startDate');
 }
