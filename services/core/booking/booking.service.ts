@@ -4,22 +4,44 @@ import { BookingEntity } from 'core/booking/booking.entity';
 import {
   errorGettingBookingList,
   errorGettingSingleBooking,
+  errorSavingBooking,
 } from 'core/booking/booking.errors';
+import { bookingMapper } from 'core/booking/booking.mapper';
 import { bookingRepository } from 'core/booking/booking.repository';
 import {
+  ICreateBookingDto,
   GetBookingListByUserServiceParams,
   GetSingleBookingServiceParams,
+  IBookingDomain,
 } from 'core/booking/booking.types';
 import { CarId } from 'core/car/car.types';
 import { userRepository } from 'core/user/user.repository';
 import { Username } from 'core/user/user.types';
 
 export class BookingService {
+  createBooking = async (
+    body: ICreateBookingDto,
+  ): Promise<Maybe<IBookingDomain>> => {
+    try {
+      const booking = bookingMapper.dtoToDomain(body);
+
+      console.log('booking', booking);
+
+      await bookingRepository.saveBooking(booking);
+
+      return [undefined, booking];
+    } catch (error) {
+      console.error(error);
+
+      return [errorSavingBooking, undefined];
+    }
+  };
+
   getNextWeeksBookings = async ({
     user: loggedInUser,
     carId,
     weekCount = 2,
-    rolesMetadata: { requestingOwnResource, requestingForUsername },
+    rolesMetadata: { requestingForUsername },
   }: GetBookingListByUserServiceParams): Promise<
     MaybeArray<BookingEntity>
   > => {
@@ -78,7 +100,6 @@ export class BookingService {
     user,
     carId,
     startTime,
-    rolesMetadata: { currentUserRoles, requestingOwnResource },
   }: GetSingleBookingServiceParams): Promise<Maybe<BookingEntity>> => {
     // todo use roles to see whether the user can get booking details
 

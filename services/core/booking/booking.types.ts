@@ -1,9 +1,9 @@
+import { EntityItem } from 'electrodb';
 import { RolesMetadata } from 'core/auth/auth.types';
 import { CarId } from 'core/car/car.types';
 import { UserEntity } from 'core/user/user.entity';
 import { IUserDomain, Username } from 'core/user/user.types';
 import { BookingModel } from 'db/models/booking.model';
-import { EntityItem } from 'electrodb';
 
 /**
  * Fields
@@ -20,23 +20,34 @@ export type BookingNotes = {
 /**
  * DTO
  */
-export interface CreateBookingDto {
+export interface ICreateBookingDto {
   username: Username;
   carId: CarId;
-  startDateTime: string;
-  endDateTime?: string;
+  startDateTime: number;
+  endDateTime?: number;
   description?: string;
+}
+
+export interface IGetBookingDto {
+  bookingOwnerId: Username;
+  carNumber: CarId;
+  bookingStartTime: number;
+  bookingEndTime?: number;
+  bookingDescription?: string;
+  bookingNotes?: BookingNotes;
 }
 
 /**
  * Domain layer
  */
 export interface IBookingDomain {
+  bookingOwnerId: Username;
+  carNumber: CarId;
   bookingStartTime: BookingStartTime;
   bookingEndTime?: BookingEndTime;
-  bookingOwner: IUserDomain;
+  bookingDescription?: string;
+  bookingOwner?: IUserDomain;
   bookingNotes?: BookingNotes;
-  carNumber: CarId;
 }
 
 /**
@@ -82,3 +93,6 @@ export interface GetSingleBookingRepositoryParams {
   carId: CarId;
   startTime: number;
 }
+
+export interface SaveSingleBookingRepositoryParams
+  extends IBookingDomain {}

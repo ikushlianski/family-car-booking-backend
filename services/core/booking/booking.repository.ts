@@ -1,11 +1,12 @@
 import { BookingEntity } from 'core/booking/booking.entity';
+import { bookingMapper } from 'core/booking/booking.mapper';
 import {
   GetBookingListByCarIdRepositoryParams,
   GetBookingListByUserRepositoryParams,
   GetSingleBookingRepositoryParams,
   IBookingDb,
+  IBookingDomain,
 } from 'core/booking/booking.types';
-import { IUserDb, Username } from 'core/user/user.types';
 import { FamilyCarBookingApp } from 'db/db.service';
 
 export class BookingRepository {
@@ -91,6 +92,20 @@ export class BookingRepository {
       { username: user.username, carId, startTime, endTime, description },
       user,
     );
+  };
+
+  saveBooking = async (bookingDomain: IBookingDomain) => {
+    const booking: IBookingDb = bookingMapper.domainToDb(bookingDomain);
+
+    return await FamilyCarBookingApp.entities.booking
+      .create({
+        username: booking.username,
+        carId: booking.carId,
+        startTime: booking.startTime,
+        endTime: booking.endTime,
+        description: booking.description,
+      })
+      .go();
   };
 }
 

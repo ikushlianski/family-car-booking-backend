@@ -23,6 +23,7 @@
     "aws-sdk": "^2.1185.0",
     "date-fns": "^2.29.1",
     "electrodb": "^1.11.1",
+    "fastest-validator": "^1.12.0",
     "http-status-codes": "^2.2.0"
   },
   "devDependencies": {

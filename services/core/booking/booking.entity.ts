@@ -3,7 +3,7 @@ import {
   BookingEndTime,
   BookingNotes,
   BookingStartTime,
-  CreateBookingDto,
+  ICreateBookingDto,
   IBookingDb,
   IBookingDomain,
 } from 'core/booking/booking.types';
@@ -19,11 +19,11 @@ export class BookingEntity implements IBookingDomain {
   bookingNotes?: BookingNotes;
   bookingDescription?: BookingDescription;
 
-  constructor(data: IBookingDb | CreateBookingDto, user?: IUserDomain) {
+  constructor(data: IBookingDb | ICreateBookingDto, user?: IUserDomain) {
     if (isFromNetwork(data)) {
-      this.bookingStartTime = new Date(data.startDateTime);
+      this.bookingStartTime = new Date(data.startDateTime * 1000);
       this.bookingEndTime = data.endDateTime
-        ? new Date(data.endDateTime)
+        ? new Date(data.endDateTime * 1000)
         : undefined;
       this.bookingOwnerId = data.username;
       this.carNumber = data.carId;
@@ -46,13 +46,13 @@ export class BookingEntity implements IBookingDomain {
 }
 
 function isFromNetwork(
-  data: CreateBookingDto | IBookingDb,
-): data is CreateBookingDto {
+  data: ICreateBookingDto | IBookingDb,
+): data is ICreateBookingDto {
   return data.hasOwnProperty('startDateTime');
 }
 
 function isFromDb(
-  data: CreateBookingDto | IBookingDb,
+  data: ICreateBookingDto | IBookingDb,
 ): data is IBookingDb {
   return data.hasOwnProperty('startDate');
 }
