@@ -1,15 +1,39 @@
 {
+  "ts-node": {
+    // It is faster to skip typechecking.
+    // Remove if you want ts-node to do typechecking.
+    "transpileOnly": true,
+
+    "files": true,
+
+    "compilerOptions": {
+      // compilerOptions specified here will override those declared below,
+      // but *only* in ts-node.  Useful if you want ts-node and tsc to use
+      // different options with a single tsconfig.json.
+    }
+  },
   "include": [
+    "services",
     "seeds",
+    "stacks",
     "specs",
-    "stacks"
   ],
   "compilerOptions": {
+    "rootDir": ".",
     "baseUrl": ".",
+    "outDir": "./.ts-node",
+    "module": "commonjs",
+    "moduleResolution": "node",
     "lib": [
       "dom"
     ],
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "paths": {
+      "seeds/*": ["seeds/*"],
+      "specs/*": ["specs/*"],
+      "stacks/*": ["stacks/*"],
+      "services/*": ["services/*"]
+    }
   }
 }
