@@ -6,9 +6,9 @@ import {
   ICreateBookingDto,
   IBookingDb,
   IBookingDomain,
-} from 'core/booking/booking.types';
-import { UserEntity } from 'core/user/user.entity';
-import { IUserDomain, Username } from 'core/user/user.types';
+} from 'services/core/booking/booking.types';
+import { UserEntity } from 'services/core/user/user.entity';
+import { IUserDomain, Username } from 'services/core/user/user.types';
 
 export class BookingEntity implements IBookingDomain {
   bookingOwner: UserEntity;

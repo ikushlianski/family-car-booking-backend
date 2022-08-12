@@ -1,8 +1,8 @@
 import { Service } from 'electrodb';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { BookingModel } from 'db/models/booking.model';
-import { UserModel } from 'db/models/user.model';
-import { CarModel } from 'db/models/car.model';
+import { BookingModel } from 'services/db/models/booking.model';
+import { CarModel } from 'services/db/models/car.model';
+import { UserModel } from 'services/db/models/user.model';
 
 import { TABLE_NAME } from './db.constants';
 

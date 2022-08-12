@@ -1,12 +1,12 @@
-import { Maybe } from 'app.types';
-import { BookingEntity } from 'core/booking/booking.entity';
-import { incorrectDataInBooking } from 'core/booking/booking.errors';
+import { Maybe } from 'services/app.types';
+import { BookingEntity } from 'services/core/booking/booking.entity';
+import { incorrectDataInBooking } from 'services/core/booking/booking.errors';
 import {
   ICreateBookingDto,
   IBookingDomain,
   IBookingDb,
   IGetBookingDto,
-} from 'core/booking/booking.types';
+} from 'services/core/booking/booking.types';
 
 export class BookingMapper {
   dtoToDomain = ({

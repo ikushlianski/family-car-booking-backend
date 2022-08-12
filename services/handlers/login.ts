@@ -1,9 +1,12 @@
 import { APIGatewayProxyEventV2WithRequestContext } from 'aws-lambda/trigger/api-gateway-proxy';
 import { StatusCodes } from 'http-status-codes';
-import { wrongUserOrPassword } from 'core/auth/auth.errors';
-import { CookieKeys, cookieService } from 'core/auth/cookie.service';
-import { loginService } from 'core/auth/login.service';
-import { responderService } from 'responder.service';
+import { wrongUserOrPassword } from 'services/core/auth/auth.errors';
+import {
+  CookieKeys,
+  cookieService,
+} from 'services/core/auth/cookie.service';
+import { loginService } from 'services/core/auth/login.service';
+import { responderService } from 'services/responder.service';
 
 export async function handler(
   event: APIGatewayProxyEventV2WithRequestContext<unknown>,

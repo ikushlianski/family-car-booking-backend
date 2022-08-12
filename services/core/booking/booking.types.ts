@@ -1,10 +1,9 @@
-import { Partial } from 'aws-sdk/clients/cloudsearchdomain';
 import { EntityItem } from 'electrodb';
-import { RolesMetadata } from 'core/auth/auth.types';
-import { CarId } from 'core/car/car.types';
-import { UserEntity } from 'core/user/user.entity';
-import { IUserDomain, Username } from 'core/user/user.types';
-import { BookingModel } from 'db/models/booking.model';
+import { RolesMetadata } from 'services/core/auth/auth.types';
+import { CarId } from 'services/core/car/car.types';
+import { UserEntity } from 'services/core/user/user.entity';
+import { IUserDomain, Username } from 'services/core/user/user.types';
+import { BookingModel } from 'services/db/models/booking.model';
 
 /**
  * Fields

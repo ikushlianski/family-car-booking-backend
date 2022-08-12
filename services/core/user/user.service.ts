@@ -1,5 +1,5 @@
-import { userRepository } from 'core/user/user.repository';
-import { IUserDomain, Username } from 'core/user/user.types';
+import { userRepository } from 'services/core/user/user.repository';
+import { IUserDomain, Username } from 'services/core/user/user.types';
 
 export class UserService {
   getUser = (username: Username): Promise<IUserDomain> => {

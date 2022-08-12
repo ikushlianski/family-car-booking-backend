@@ -1,5 +1,5 @@
-import { ILoginDto, ILoginState } from 'core/auth/auth.types';
-import { SessionId } from 'core/user/user.types';
+import { ILoginDto, ILoginState } from 'services/core/auth/auth.types';
+import { SessionId } from 'services/core/user/user.types';
 
 export class LoginEntity implements ILoginDto, ILoginState {
   loginSuccess: boolean;

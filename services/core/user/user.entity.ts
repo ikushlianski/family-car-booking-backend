@@ -3,7 +3,7 @@ import {
   IUserDomain,
   SessionId,
   Username,
-} from 'core/user/user.types';
+} from 'services/core/user/user.types';
 
 export class UserEntity implements IUserDomain {
   availableCars: string[];

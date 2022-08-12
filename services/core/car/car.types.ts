@@ -1,4 +1,4 @@
-import { CarModel } from 'db/models/car.model';
+import { CarModel } from 'services/db/models/car.model';
 import { EntityItem } from 'electrodb';
 import { Username } from '../user/user.types';
 

@@ -1,24 +1,24 @@
-import { Maybe, MaybeArray } from 'app.types';
-import { defineBookingEntityAbilitiesFor } from 'core/booking/booking.ability';
-import { BookingEntity } from 'core/booking/booking.entity';
+import { Maybe, MaybeArray } from 'services/app.types';
+import { defineBookingEntityAbilitiesFor } from 'services/core/booking/booking.ability';
+import { BookingEntity } from 'services/core/booking/booking.entity';
 import {
   errorEditingBooking,
   errorGettingBookingList,
   errorGettingSingleBooking,
   errorSavingBooking,
-} from 'core/booking/booking.errors';
-import { bookingMapper } from 'core/booking/booking.mapper';
-import { bookingRepository } from 'core/booking/booking.repository';
+} from 'services/core/booking/booking.errors';
+import { bookingMapper } from 'services/core/booking/booking.mapper';
+import { bookingRepository } from 'services/core/booking/booking.repository';
 import {
   ICreateBookingDto,
   GetBookingListByUserServiceParams,
   GetSingleBookingServiceParams,
   IBookingDomain,
   IEditBookingDto,
-} from 'core/booking/booking.types';
-import { CarId } from 'core/car/car.types';
-import { userRepository } from 'core/user/user.repository';
-import { IUserDomain, Username } from 'core/user/user.types';
+} from 'services/core/booking/booking.types';
+import { CarId } from 'services/core/car/car.types';
+import { userRepository } from 'services/core/user/user.repository';
+import { IUserDomain, Username } from 'services/core/user/user.types';
 
 export class BookingService {
   createBooking = async (

@@ -3,9 +3,8 @@
 import {
   FAMILY_HONDA_CAR_NUMBER,
   STRANGERS_BMW,
-  // todo try to make possible to have short imports here as well. Might need to have just one single tsconfig for the entire project
-} from '../services/core/car/car.constants';
-import { FamilyCarBookingApp } from '../services/db/db.service';
+} from 'services/core/car/car.constants';
+import { FamilyCarBookingApp } from 'services/db/db.service';
 
 (async () => {
   await Promise.all([

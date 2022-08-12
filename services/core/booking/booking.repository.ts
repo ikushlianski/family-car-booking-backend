@@ -1,5 +1,5 @@
-import { BookingEntity } from 'core/booking/booking.entity';
-import { bookingMapper } from 'core/booking/booking.mapper';
+import { BookingEntity } from 'services/core/booking/booking.entity';
+import { bookingMapper } from 'services/core/booking/booking.mapper';
 import {
   EditBookingRepositoryParams,
   GetBookingListByCarIdRepositoryParams,
@@ -7,8 +7,8 @@ import {
   GetSingleBookingRepositoryParams,
   IBookingDb,
   IBookingDomain,
-} from 'core/booking/booking.types';
-import { FamilyCarBookingApp } from 'db/db.service';
+} from 'services/core/booking/booking.types';
+import { FamilyCarBookingApp } from 'services/db/db.service';
 
 export class BookingRepository {
   getBookingListByUser = async ({

@@ -20,9 +20,7 @@ seeds/unseed_*.sh
 yarn-error.log
 
 # generated javascript
-seeds/**/*.js
-services/**/*.js
-stacks/**/*.js
+.ts-node
 
 # e2e tests
 specs/.env.integration

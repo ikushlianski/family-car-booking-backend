@@ -1,6 +1,6 @@
 import { defineAbility } from '@casl/ability';
-import { UserRoles } from 'core/user/user.constants';
-import { UserEntity } from 'core/user/user.entity';
+import { UserRoles } from 'services/core/user/user.constants';
+import { UserEntity } from 'services/core/user/user.entity';
 
 export const defineBookingEntityAbilitiesFor = (user: UserEntity) =>
   defineAbility((can) => {

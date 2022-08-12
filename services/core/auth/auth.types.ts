@@ -1,4 +1,4 @@
-import { SessionId, Username } from 'core/user/user.types';
+import { SessionId, Username } from 'services/core/user/user.types';
 
 export interface ILoginDto {
   username: string;

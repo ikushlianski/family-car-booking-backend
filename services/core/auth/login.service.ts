@@ -1,6 +1,6 @@
-import { Maybe } from 'app.types';
-import { LoginEntity } from 'core/auth/login.entity';
-import { UserEntity } from 'core/user/user.entity';
+import { Maybe } from 'services/app.types';
+import { LoginEntity } from 'services/core/auth/login.entity';
+import { UserEntity } from 'services/core/user/user.entity';
 import { userRepository, UserRepository } from '../user/user.repository';
 import { SessionId } from '../user/user.types';
 import { noCredentialsError, wrongUserOrPassword } from './auth.errors';

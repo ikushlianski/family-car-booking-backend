@@ -1,5 +1,5 @@
-import { userMapper } from 'core/user/user.mapper';
-import { FamilyCarBookingApp } from 'db/db.service';
+import { userMapper } from 'services/core/user/user.mapper';
+import { FamilyCarBookingApp } from 'services/db/db.service';
 import { IUserDomain, Username } from './user.types';
 
 export class UserRepository {

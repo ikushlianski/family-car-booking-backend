@@ -1,13 +1,16 @@
 import { APIGatewayProxyHandlerV2 } from 'aws-lambda';
-import { unauthorizedError } from 'core/auth/auth.errors';
-import { CookieKeys, cookieService } from 'core/auth/cookie.service';
+import { unauthorizedError } from 'services/core/auth/auth.errors';
+import {
+  CookieKeys,
+  cookieService,
+} from 'services/core/auth/cookie.service';
 import {
   errorGettingSingleBooking,
   noBookingId,
-} from 'core/booking/booking.errors';
-import { bookingService } from 'core/booking/booking.service';
+} from 'services/core/booking/booking.errors';
+import { bookingService } from 'services/core/booking/booking.service';
 import { StatusCodes } from 'http-status-codes';
-import { responderService } from 'responder.service';
+import { responderService } from 'services/responder.service';
 
 export const handler: APIGatewayProxyHandlerV2 = async (event) => {
   const authenticatedUser = await cookieService.checkAuthenticated(
