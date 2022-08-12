@@ -3,6 +3,9 @@ export const badRequestBooking = new Error('Bad request');
 export const errorGettingSingleBooking = new Error(
   'Error getting booking details',
 );
+export const errorEditingBooking = new Error(
+  'Error editing booking details',
+);
 export const errorGettingBookingList = new Error(
   'Error getting booking list',
 );

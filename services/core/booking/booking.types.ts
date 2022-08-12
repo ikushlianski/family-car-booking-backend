@@ -1,3 +1,4 @@
+import { Partial } from 'aws-sdk/clients/cloudsearchdomain';
 import { EntityItem } from 'electrodb';
 import { RolesMetadata } from 'core/auth/auth.types';
 import { CarId } from 'core/car/car.types';
@@ -24,6 +25,12 @@ export interface ICreateBookingDto {
   username: Username;
   carId: CarId;
   startDateTime: number;
+  endDateTime?: number;
+  description?: string;
+}
+
+export interface IEditBookingDto {
+  startDateTime?: number;
   endDateTime?: number;
   description?: string;
 }
@@ -96,3 +103,10 @@ export interface GetSingleBookingRepositoryParams {
 
 export interface SaveSingleBookingRepositoryParams
   extends IBookingDomain {}
+
+export interface EditBookingRepositoryParams {
+  username: Username;
+  carId: CarId;
+  startTime: string;
+  dataToEdit: IEditBookingDto;
+}

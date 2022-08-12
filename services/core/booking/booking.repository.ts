@@ -1,6 +1,7 @@
 import { BookingEntity } from 'core/booking/booking.entity';
 import { bookingMapper } from 'core/booking/booking.mapper';
 import {
+  EditBookingRepositoryParams,
   GetBookingListByCarIdRepositoryParams,
   GetBookingListByUserRepositoryParams,
   GetSingleBookingRepositoryParams,
@@ -106,6 +107,77 @@ export class BookingRepository {
         description: booking.description,
       })
       .go();
+  };
+
+  editNonKeyBookingAttrs = async ({
+    username,
+    carId,
+    startTime,
+    dataToEdit,
+  }: EditBookingRepositoryParams) => {
+    // todo what does .update method return?
+    return await FamilyCarBookingApp.entities.booking
+      .update({
+        username,
+        carId,
+        startTime: +startTime,
+      })
+      .data((attr, op) => {
+        if (dataToEdit.endDateTime) {
+          op.set(attr.endTime, dataToEdit.endDateTime);
+        }
+
+        if (dataToEdit.description) {
+          op.set(attr.description, dataToEdit.description);
+        }
+      })
+      .go();
+  };
+
+  replaceBookingWithNewStartDate = async ({
+    username,
+    carId,
+    startTime: originalStartTime,
+    dataToEdit,
+  }: EditBookingRepositoryParams): Promise<IBookingDomain> => {
+    const [originalBooking] =
+      await FamilyCarBookingApp.entities.booking.query
+        .bookingsByUser({
+          username,
+          carId,
+          startTime: +originalStartTime,
+        })
+        .go();
+
+    if (!originalBooking) {
+      throw new Error('Could not find a booking to edit');
+    }
+
+    const newBooking = await FamilyCarBookingApp.entities.booking
+      .create({
+        username,
+        carId,
+        startTime: dataToEdit.startDateTime,
+        endTime: dataToEdit.endDateTime || originalBooking.endTime,
+        description: dataToEdit.description || originalBooking.description,
+      })
+      .go();
+
+    await FamilyCarBookingApp.entities.booking
+      .delete({
+        username,
+        carId,
+        startTime: +originalStartTime,
+      })
+      .go();
+
+    return new BookingEntity({
+      username,
+      carId,
+      startTime: newBooking.startTime,
+      endTime: newBooking.endTime,
+      description: newBooking.description,
+    });
   };
 }
 

@@ -4,8 +4,11 @@ import { bookingService } from 'core/booking/booking.service';
 import { StatusCodes } from 'http-status-codes';
 import { unauthorizedError } from 'core/auth/auth.errors';
 import { CookieKeys, cookieService } from 'core/auth/cookie.service';
-import { badRequestBooking } from 'core/booking/booking.errors';
-import { ICreateBookingDto } from 'core/booking/booking.types';
+import {
+  badRequestBooking,
+  noBookingId,
+} from 'core/booking/booking.errors';
+import { IEditBookingDto } from 'core/booking/booking.types';
 import { responderService } from 'responder.service';
 
 export const handler: APIGatewayProxyHandlerV2 = async (event) => {
@@ -20,7 +23,16 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
     );
   }
 
-  let body: ICreateBookingDto;
+  const query = event.queryStringParameters;
+
+  if (!query?.carId || !query.startTime) {
+    return responderService.toErrorResponse(
+      noBookingId,
+      StatusCodes.BAD_REQUEST,
+    );
+  }
+
+  let body: IEditBookingDto;
 
   try {
     body = JSON.parse(event.body);
@@ -33,22 +45,42 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
     );
   }
 
-  const [createBookingError, booking] = await bookingService.createBooking(
-    body,
-  );
+  const { username: whoseBooking, carId, startTime } = query;
 
-  if (createBookingError) {
+  const [editBookingError, editBookingSuccess] =
+    await bookingService.editBooking(
+      authenticatedUser,
+      whoseBooking,
+      carId,
+      startTime,
+      body,
+    );
+
+  if (editBookingError || !editBookingSuccess) {
     return responderService.toErrorResponse(
-      createBookingError,
+      editBookingError,
       StatusCodes.INTERNAL_SERVER_ERROR,
     );
   }
 
+  if (editBookingSuccess === true) {
+    return responderService.toSuccessResponse(
+      { status: 'Success' },
+      undefined,
+      [
+        cookieService.makeCookie(
+          CookieKeys.SESSION_ID,
+          authenticatedUser.sessionId,
+        ),
+      ],
+    );
+  }
+
   const [bookingMappingError, bookingResponse] =
-    bookingMapper.domainToDto(booking);
+    bookingMapper.domainToDto(editBookingSuccess);
 
   if (bookingMappingError) {
-    console.error('Could not map booking from domain to DTO');
+    console.error('Could not map edited booking from domain to DTO');
 
     return responderService.toErrorResponse(
       bookingMappingError,

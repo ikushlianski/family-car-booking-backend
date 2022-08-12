@@ -38,6 +38,7 @@ export function MyStack({ stack }: StackContext) {
       'GET /users/{id}': 'handlers/getUser.handler',
       'POST /login': 'handlers/login.handler',
       'POST /bookings': 'handlers/createBooking.handler',
+      'PATCH /bookings/id': 'handlers/editBooking.handler',
     },
   });
 

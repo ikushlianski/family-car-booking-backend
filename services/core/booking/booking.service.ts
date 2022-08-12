@@ -2,6 +2,7 @@ import { Maybe, MaybeArray } from 'app.types';
 import { defineBookingEntityAbilitiesFor } from 'core/booking/booking.ability';
 import { BookingEntity } from 'core/booking/booking.entity';
 import {
+  errorEditingBooking,
   errorGettingBookingList,
   errorGettingSingleBooking,
   errorSavingBooking,
@@ -13,10 +14,11 @@ import {
   GetBookingListByUserServiceParams,
   GetSingleBookingServiceParams,
   IBookingDomain,
+  IEditBookingDto,
 } from 'core/booking/booking.types';
 import { CarId } from 'core/car/car.types';
 import { userRepository } from 'core/user/user.repository';
-import { Username } from 'core/user/user.types';
+import { IUserDomain, Username } from 'core/user/user.types';
 
 export class BookingService {
   createBooking = async (
@@ -24,8 +26,6 @@ export class BookingService {
   ): Promise<Maybe<IBookingDomain>> => {
     try {
       const booking = bookingMapper.dtoToDomain(body);
-
-      console.log('booking', booking);
 
       await bookingRepository.saveBooking(booking);
 
@@ -118,6 +118,47 @@ export class BookingService {
     }
   };
 
+  editBooking = async (
+    authenticatedUser: IUserDomain,
+    whoseBooking: Username | undefined,
+    carId: CarId,
+    startTime: string,
+    dataToEdit: IEditBookingDto,
+  ): Promise<Maybe<boolean | IBookingDomain>> => {
+    // todo validate fields we are trying to edit
+    if (dataToEdit.startDateTime) {
+      // we have to remove the existing booking and create a copy of the old one but with updated time
+      try {
+        const editedBooking =
+          await bookingRepository.replaceBookingWithNewStartDate({
+            username: whoseBooking || authenticatedUser.username,
+            carId,
+            startTime,
+            dataToEdit,
+          });
+
+        return [undefined, editedBooking];
+      } catch (error) {
+        return [errorEditingBooking, false];
+      }
+    } else {
+      try {
+        await bookingRepository.editNonKeyBookingAttrs({
+          username: whoseBooking || authenticatedUser.username,
+          carId,
+          startTime,
+          dataToEdit,
+        });
+
+        return [undefined, true];
+      } catch (error) {
+        console.error(error);
+
+        return [errorEditingBooking, false];
+      }
+    }
+  };
+
   isCarAvailableToUser = async (
     carId: CarId,
     username: Username,
@@ -125,6 +166,35 @@ export class BookingService {
     const user = await userRepository.getOneByUsername(username);
 
     return user.availableCars.includes(carId);
+  };
+
+  canCreate = async (
+    authenticatedUser: IUserDomain,
+    whoseBooking: Username,
+    carId: CarId,
+  ) => {
+    // todo add roles
+    return true;
+  };
+
+  canEdit = async (
+    authenticatedUser: IUserDomain,
+    whoseBooking: Username,
+    carId: CarId,
+    startTime: string,
+  ) => {
+    // todo add roles
+    return true;
+  };
+
+  canDelete = async (
+    authenticatedUser: IUserDomain,
+    whoseBooking: Username,
+    carId: CarId,
+    startTime: string,
+  ) => {
+    // todo add roles
+    return true;
   };
 }
 
