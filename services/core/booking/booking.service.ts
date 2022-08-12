@@ -6,6 +6,7 @@ import {
   errorGettingBookingList,
   errorGettingSingleBooking,
   errorSavingBooking,
+  forbiddenFieldsForEditError,
 } from 'services/core/booking/booking.errors';
 import { bookingMapper } from 'services/core/booking/booking.mapper';
 import { bookingRepository } from 'services/core/booking/booking.repository';
@@ -16,6 +17,7 @@ import {
   IBookingDomain,
   IEditBookingDto,
 } from 'services/core/booking/booking.types';
+import { bookingValidationService } from 'services/core/booking/booking.validation';
 import { CarId } from 'services/core/car/car.types';
 import { userRepository } from 'services/core/user/user.repository';
 import { IUserDomain, Username } from 'services/core/user/user.types';
@@ -125,7 +127,13 @@ export class BookingService {
     startTime: string,
     dataToEdit: IEditBookingDto,
   ): Promise<Maybe<boolean | IBookingDomain>> => {
-    // todo validate fields we are trying to edit
+    const invalidFieldsSuppliedError =
+      bookingValidationService.checkFieldsToBeEdited(dataToEdit);
+
+    if (invalidFieldsSuppliedError) {
+      return [forbiddenFieldsForEditError, undefined];
+    }
+
     if (dataToEdit.startDateTime) {
       // we have to remove the existing booking and create a copy of the old one but with updated time
       try {
@@ -137,24 +145,27 @@ export class BookingService {
             dataToEdit,
           });
 
+        console.log('editedBooking', editedBooking);
+
         return [undefined, editedBooking];
       } catch (error) {
         return [errorEditingBooking, false];
       }
     } else {
       try {
-        await bookingRepository.editNonKeyBookingAttrs({
-          username: whoseBooking || authenticatedUser.username,
-          carId,
-          startTime,
-          dataToEdit,
-        });
+        const editedBooking =
+          await bookingRepository.editNonKeyBookingAttrs({
+            username: whoseBooking || authenticatedUser.username,
+            carId,
+            startTime,
+            dataToEdit,
+          });
 
-        return [undefined, true];
+        return [undefined, editedBooking];
       } catch (error) {
         console.error(error);
 
-        return [errorEditingBooking, false];
+        return [errorEditingBooking, undefined];
       }
     }
   };
@@ -168,6 +179,7 @@ export class BookingService {
     return user.availableCars.includes(carId);
   };
 
+  // todo move these functions to a separate permissions service
   canCreate = async (
     authenticatedUser: IUserDomain,
     whoseBooking: Username,

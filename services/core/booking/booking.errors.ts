@@ -6,6 +6,9 @@ export const errorGettingSingleBooking = new Error(
 export const errorEditingBooking = new Error(
   'Error editing booking details',
 );
+export const forbiddenFieldsForEditError = new Error(
+  'Invalid fields supplied for editing',
+);
 export const errorGettingBookingList = new Error(
   'Error getting booking list',
 );

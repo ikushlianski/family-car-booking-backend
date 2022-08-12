@@ -114,9 +114,8 @@ export class BookingRepository {
     carId,
     startTime,
     dataToEdit,
-  }: EditBookingRepositoryParams) => {
-    // todo what does .update method return?
-    return await FamilyCarBookingApp.entities.booking
+  }: EditBookingRepositoryParams): Promise<BookingEntity> => {
+    await FamilyCarBookingApp.entities.booking
       .update({
         username,
         carId,
@@ -132,6 +131,22 @@ export class BookingRepository {
         }
       })
       .go();
+
+    const [freshBooking] = await FamilyCarBookingApp.entities.booking.query
+      .bookingsByUser({
+        username,
+        carId,
+        startTime: +startTime,
+      })
+      .go();
+
+    return new BookingEntity({
+      username,
+      carId,
+      startTime: freshBooking.startTime,
+      endTime: freshBooking.endTime,
+      description: freshBooking.description,
+    });
   };
 
   replaceBookingWithNewStartDate = async ({

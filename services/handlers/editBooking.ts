@@ -39,8 +39,6 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
 
   try {
     body = JSON.parse(event.body);
-
-    // todo validation
   } catch (e) {
     return responderService.toErrorResponse(
       badRequestBooking,
