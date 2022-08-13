@@ -64,19 +64,6 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
     );
   }
 
-  if (editBookingSuccess === true) {
-    return responderService.toSuccessResponse(
-      { status: 'Success' },
-      undefined,
-      [
-        cookieService.makeCookie(
-          CookieKeys.SESSION_ID,
-          authenticatedUser.sessionId,
-        ),
-      ],
-    );
-  }
-
   const [bookingMappingError, bookingResponse] =
     bookingMapper.domainToDto(editBookingSuccess);
 
