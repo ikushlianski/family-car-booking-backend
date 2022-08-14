@@ -2,6 +2,8 @@ import { Maybe, MaybeArray } from 'services/app.types';
 import { defineBookingEntityAbilitiesFor } from 'services/core/booking/booking.ability';
 import { BookingEntity } from 'services/core/booking/booking.entity';
 import {
+  bookingNotFoundError,
+  errorDeletingBooking,
   errorEditingBooking,
   errorGettingBookingList,
   errorGettingSingleBooking,
@@ -126,7 +128,7 @@ export class BookingService {
     carId: CarId,
     startTime: string,
     dataToEdit: IEditBookingDto,
-  ): Promise<Maybe<boolean | IBookingDomain>> => {
+  ): Promise<Maybe<IBookingDomain>> => {
     const invalidFieldsSuppliedError =
       bookingValidationService.checkFieldsToBeEdited(dataToEdit);
 
@@ -149,7 +151,7 @@ export class BookingService {
 
         return [undefined, editedBooking];
       } catch (error) {
-        return [errorEditingBooking, false];
+        return [errorEditingBooking, undefined];
       }
     } else {
       try {
@@ -167,6 +169,41 @@ export class BookingService {
 
         return [errorEditingBooking, undefined];
       }
+    }
+  };
+
+  deleteBooking = async (
+    authenticatedUser: IUserDomain,
+    whoseBooking: Username | undefined,
+    carId: CarId,
+    startTime: string,
+  ): Promise<true | Error> => {
+    try {
+      const exists = await bookingRepository.checkBookingExists({
+        username: whoseBooking || authenticatedUser.username,
+        carId,
+        startTime: +startTime,
+      });
+
+      if (!exists) {
+        return bookingNotFoundError;
+      }
+    } catch (e) {
+      return errorDeletingBooking;
+    }
+
+    try {
+      await bookingRepository.removeOne({
+        username: whoseBooking || authenticatedUser.username,
+        carId,
+        startTime,
+      });
+
+      return true;
+    } catch (error) {
+      console.error(error);
+
+      return errorDeletingBooking;
     }
   };
 

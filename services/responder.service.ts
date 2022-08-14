@@ -17,7 +17,7 @@ export class Responder {
       },
       isBase64Encoded: false,
       cookies,
-      body: JSON.stringify(body),
+      body: body ? JSON.stringify(body) : undefined,
     };
   };
 

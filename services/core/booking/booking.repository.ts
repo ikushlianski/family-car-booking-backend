@@ -1,6 +1,8 @@
 import { BookingEntity } from 'services/core/booking/booking.entity';
 import { bookingMapper } from 'services/core/booking/booking.mapper';
 import {
+  CheckBookingExistsRepositoryParams,
+  DeleteBookingRepositoryParams,
   EditBookingRepositoryParams,
   GetBookingListByCarIdRepositoryParams,
   GetBookingListByUserRepositoryParams,
@@ -93,6 +95,22 @@ export class BookingRepository {
       { username: user.username, carId, startTime, endTime, description },
       user,
     );
+  };
+
+  checkBookingExists = async ({
+    username,
+    carId,
+    startTime,
+  }: CheckBookingExistsRepositoryParams): Promise<boolean> => {
+    const [booking] = await FamilyCarBookingApp.entities.booking.query
+      .bookingsByUser({
+        username,
+        carId,
+        startTime,
+      })
+      .go();
+
+    return Boolean(booking);
   };
 
   saveBooking = async (bookingDomain: IBookingDomain) => {
@@ -193,6 +211,22 @@ export class BookingRepository {
       endTime: newBooking.endTime,
       description: newBooking.description,
     });
+  };
+
+  removeOne = async ({
+    username,
+    carId,
+    startTime,
+  }: DeleteBookingRepositoryParams): Promise<boolean> => {
+    await FamilyCarBookingApp.entities.booking
+      .delete({
+        username,
+        carId,
+        startTime: +startTime,
+      })
+      .go();
+
+    return true;
   };
 }
 

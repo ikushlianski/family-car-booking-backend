@@ -35,8 +35,8 @@ export class CookieService {
     return userMapper.dbToDomain(user);
   };
 
-  public makeCookie = (key: string, value: string) => {
-    return `${key}=${value}`;
+  public makeCookie = (key: string, value: string, path: string = '/') => {
+    return `${key}=${value}; Path=${path}`;
   };
 }
 

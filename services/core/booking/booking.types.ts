@@ -100,6 +100,12 @@ export interface GetSingleBookingRepositoryParams {
   startTime: number;
 }
 
+export interface CheckBookingExistsRepositoryParams {
+  username: Username;
+  carId: CarId;
+  startTime: number;
+}
+
 export interface SaveSingleBookingRepositoryParams
   extends IBookingDomain {}
 
@@ -108,4 +114,10 @@ export interface EditBookingRepositoryParams {
   carId: CarId;
   startTime: string;
   dataToEdit: IEditBookingDto;
+}
+
+export interface DeleteBookingRepositoryParams {
+  username: Username;
+  carId: CarId;
+  startTime: string;
 }

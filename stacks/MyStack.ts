@@ -39,6 +39,7 @@ export function MyStack({ stack }: StackContext) {
       'POST /login': 'handlers/login.handler',
       'POST /bookings': 'handlers/createBooking.handler',
       'PATCH /bookings/id': 'handlers/editBooking.handler',
+      'DELETE /bookings/id': 'handlers/deleteBooking.handler',
     },
   });
 

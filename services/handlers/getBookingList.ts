@@ -6,7 +6,7 @@ import {
 } from 'services/core/auth/cookie.service';
 import {
   errorGettingBookingList,
-  noBookingId,
+  bookingNotFoundError,
 } from 'services/core/booking/booking.errors';
 import { bookingService } from 'services/core/booking/booking.service';
 import { StatusCodes } from 'http-status-codes';
@@ -29,7 +29,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
 
   if (!query?.carId) {
     return responderService.toErrorResponse(
-      noBookingId,
+      bookingNotFoundError,
       StatusCodes.BAD_REQUEST,
     );
   }
