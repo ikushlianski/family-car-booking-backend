@@ -26,6 +26,7 @@ export interface ICreateBookingDto {
   startDateTime: number;
   endDateTime?: number;
   description?: string;
+  isFinished?: boolean;
 }
 
 export interface IEditBookingDto {
@@ -41,6 +42,7 @@ export interface IGetBookingDto {
   bookingEndTime?: number;
   bookingDescription?: string;
   bookingNotes?: BookingNotes;
+  isFinished?: boolean;
 }
 
 /**
@@ -54,6 +56,7 @@ export interface IBookingDomain {
   bookingDescription?: string;
   bookingOwner?: IUserDomain;
   bookingNotes?: BookingNotes;
+  isFinished?: boolean;
 }
 
 /**
@@ -92,6 +95,12 @@ export interface GetBookingListByCarIdRepositoryParams {
   carId: CarId;
   from: number; // timestamp in seconds
   to: number; // timestamp in seconds
+}
+
+export interface FinishRideRepositoryParams {
+  username: Username;
+  carId: CarId;
+  startTime: number;
 }
 
 export interface GetSingleBookingRepositoryParams {

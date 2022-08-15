@@ -105,6 +105,7 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
         carId: FAMILY_HONDA_CAR_NUMBER,
         startTime: calculatePrevTimestampInSecs(new Date(), 5), // past event, five days ago
         description: 'Ilya - past event',
+        isFinished: true,
       })
       .go(),
 

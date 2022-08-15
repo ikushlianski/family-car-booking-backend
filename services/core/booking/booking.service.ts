@@ -18,11 +18,13 @@ import {
   GetSingleBookingServiceParams,
   IBookingDomain,
   IEditBookingDto,
+  FinishRideRepositoryParams,
 } from 'services/core/booking/booking.types';
 import { bookingValidationService } from 'services/core/booking/booking.validation';
 import { CarId } from 'services/core/car/car.types';
 import { userRepository } from 'services/core/user/user.repository';
 import { IUserDomain, Username } from 'services/core/user/user.types';
+import { FamilyCarBookingApp } from 'services/db/db.service';
 
 export class BookingService {
   createBooking = async (
@@ -214,6 +216,31 @@ export class BookingService {
     const user = await userRepository.getOneByUsername(username);
 
     return user.availableCars.includes(carId);
+  };
+
+  finishRide = async ({
+    username,
+    carId,
+    startTime,
+  }: FinishRideRepositoryParams): Promise<Error | boolean> => {
+    try {
+      const item = await FamilyCarBookingApp.entities.booking
+        .get({ username, carId, startTime })
+        .go();
+
+      if (!item) return bookingNotFoundError;
+
+      await FamilyCarBookingApp.entities.booking
+        .update({ username, carId, startTime })
+        .set({ isFinished: true })
+        .go();
+
+      return true;
+    } catch (error) {
+      console.error(error);
+
+      return false;
+    }
   };
 
   // todo move these functions to a separate permissions service

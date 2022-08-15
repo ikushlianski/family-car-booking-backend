@@ -15,6 +15,7 @@ export class BookingMapper {
     description,
     startDateTime,
     endDateTime,
+    isFinished,
   }: ICreateBookingDto): IBookingDomain => {
     return new BookingEntity({
       username,
@@ -22,6 +23,7 @@ export class BookingMapper {
       description,
       startDateTime,
       endDateTime,
+      isFinished,
     });
   };
 
@@ -31,6 +33,7 @@ export class BookingMapper {
     bookingStartTime,
     bookingEndTime,
     bookingDescription,
+    isFinished,
   }: IBookingDomain): IBookingDb => {
     return {
       username: bookingOwnerId,
@@ -40,6 +43,7 @@ export class BookingMapper {
         ? bookingEndTime.valueOf() / 1000
         : undefined,
       description: bookingDescription,
+      isFinished,
     };
   };
 

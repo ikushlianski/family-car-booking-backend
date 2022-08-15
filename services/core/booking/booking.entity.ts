@@ -18,6 +18,7 @@ export class BookingEntity implements IBookingDomain {
   bookingEndTime?: BookingEndTime;
   bookingNotes?: BookingNotes;
   bookingDescription?: BookingDescription;
+  isFinished?: boolean;
 
   constructor(data: IBookingDb | ICreateBookingDto, user?: IUserDomain) {
     if (isFromNetwork(data)) {
@@ -37,6 +38,8 @@ export class BookingEntity implements IBookingDomain {
       this.carNumber = carId;
       this.bookingDescription = description;
     }
+
+    this.isFinished = data.isFinished;
 
     if (user) {
       // todo hide some information about the user, use toDTO mapper

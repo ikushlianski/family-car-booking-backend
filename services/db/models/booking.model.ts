@@ -30,6 +30,10 @@ export const BookingModel = new Entity(
         type: 'string',
         required: false,
       },
+      isFinished: {
+        type: 'boolean',
+        required: false,
+      },
       carLocationAfterRideText: {
         type: 'string',
         required: false,
