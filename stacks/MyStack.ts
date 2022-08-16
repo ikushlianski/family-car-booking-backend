@@ -48,6 +48,8 @@ export function MyStack({ stack }: StackContext) {
     ApiEndpoint: api.url,
   });
 
+  stack.addDefaultFunctionEnv({ API_URL: api.url });
+
   return {
     api,
   };
