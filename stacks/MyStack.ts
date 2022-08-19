@@ -41,6 +41,7 @@ export function MyStack({ stack }: StackContext) {
       'PATCH /bookings/id': 'handlers/editBooking.handler',
       'DELETE /bookings/id': 'handlers/deleteBooking.handler',
       'POST /bookings/finish/id': 'handlers/finishRide.handler',
+      'POST /telegram/webhook': 'handlers/telegramWebhook.handler',
     },
   });
 
