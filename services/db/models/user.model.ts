@@ -16,6 +16,10 @@ export const UserModel = new Entity({
       type: 'string',
       required: true,
     },
+    firstName: {
+      type: 'string',
+      required: true,
+    },
     sessionId: {
       type: 'string',
     },
@@ -45,11 +49,17 @@ export const UserModel = new Entity({
       properties: {
         getNotifiedWhenBookingCreated: {
           type: 'boolean',
+          default: false,
         },
         getNotifiedWhenBookingChanged: {
           type: 'boolean',
+          default: false,
         },
       },
+    },
+    tgEnabled: {
+      type: 'boolean',
+      default: false,
     },
     rideCompletionText: {
       type: 'string',

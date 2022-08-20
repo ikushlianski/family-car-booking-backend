@@ -9,9 +9,15 @@ import { FamilyCarBookingApp } from 'services/db/db.service';
 (async () => {
   await Promise.all([
     // remove users
-    FamilyCarBookingApp.entities.user.delete({ username: 'papa' }).go(),
-    FamilyCarBookingApp.entities.user.delete({ username: 'ilya' }).go(),
-    FamilyCarBookingApp.entities.user.delete({ username: 'masha' }).go(),
+    FamilyCarBookingApp.entities.user
+      .delete({ username: 'akushlianski' })
+      .go(),
+    FamilyCarBookingApp.entities.user
+      .delete({ username: 'ilya_nice' })
+      .go(),
+    FamilyCarBookingApp.entities.user
+      .delete({ username: 'mariya_kalib' })
+      .go(),
     FamilyCarBookingApp.entities.user
       .delete({ username: 'stranger' })
       .go(),
@@ -31,19 +37,19 @@ async function removeAllBookingSeeds() {
   const allSeedBookings = await Promise.all([
     FamilyCarBookingApp.entities.booking.query
       .bookingsByUser({
-        username: 'ilya',
+        username: 'ilya_nice',
         carId: FAMILY_HONDA_CAR_NUMBER,
       })
       .go(),
     FamilyCarBookingApp.entities.booking.query
       .bookingsByUser({
-        username: 'papa',
+        username: 'akushlianski',
         carId: FAMILY_HONDA_CAR_NUMBER,
       })
       .go(),
     FamilyCarBookingApp.entities.booking.query
       .bookingsByUser({
-        username: 'masha',
+        username: 'mariya_kalib',
         carId: FAMILY_HONDA_CAR_NUMBER,
       })
       .go(),

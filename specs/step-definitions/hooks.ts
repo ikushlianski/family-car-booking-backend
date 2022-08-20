@@ -18,8 +18,12 @@ async function removeAllTestUsers() {
     FamilyCarBookingApp.entities.user
       .delete({ username: testData.wrongPasswordCreds.username })
       .go(),
-    FamilyCarBookingApp.entities.user.delete({ username: 'ilya' }).go(),
-    FamilyCarBookingApp.entities.user.delete({ username: 'papa' }).go(),
+    FamilyCarBookingApp.entities.user
+      .delete({ username: 'ilya_nice' })
+      .go(),
+    FamilyCarBookingApp.entities.user
+      .delete({ username: 'akushlianski' })
+      .go(),
     FamilyCarBookingApp.entities.user
       .delete({ username: 'stranger' })
       .go(),
@@ -41,13 +45,13 @@ async function removeAllTestBookings() {
   const allTestBookings = await Promise.all([
     FamilyCarBookingApp.entities.booking.query
       .bookingsByUser({
-        username: 'ilya',
+        username: 'ilya_nice',
         carId: testData.familyCarId,
       })
       .go(),
     FamilyCarBookingApp.entities.booking.query
       .bookingsByUser({
-        username: 'papa',
+        username: 'akushlianski',
         carId: testData.familyCarId,
       })
       .go(),
