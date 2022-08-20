@@ -16,7 +16,7 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
     FamilyCarBookingApp.entities.car
       .create({
         carId: FAMILY_HONDA_CAR_NUMBER,
-        username: 'owner#papa',
+        username: 'owner#akushlianski',
       })
       .go(),
 
@@ -35,7 +35,7 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
         username: 'ilya_nice',
         firstName: 'Илья',
         password: process.env.ILYA_PASSWORD as string,
-        sessionId: 'test-session-id-ilya',
+        sessionId: 'test-session-id-ilya_nice',
         roles: [UserRoles.DRIVER],
         availableCarIds: [FAMILY_HONDA_CAR_NUMBER],
         providedCarIds: [],

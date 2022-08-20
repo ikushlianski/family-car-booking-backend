@@ -11,7 +11,7 @@ export const whenIlyaRequestsHisBookings = (
       `${testData.bookingsUrl}?username=ilya&carId=${testData.familyCarId}`,
       undefined,
       'GET',
-      { Cookie: 'sessionId=test-session-id-ilya' },
+      { Cookie: 'sessionId=test-session-id-ilya_nice' },
     );
 
     bookingResponse.responseBody = responseBody;
