@@ -18,9 +18,11 @@ export class UserEntity implements IUserDomain {
     };
   };
   username: Username;
+  firstName: Username;
 
   constructor({
     username,
+    firstName,
     roles,
     sessionId,
     availableCarIds,
@@ -32,6 +34,7 @@ export class UserEntity implements IUserDomain {
     this.availableCars = availableCarIds;
     this.providedCars = providedCarIds;
     this.username = username;
+    this.firstName = firstName;
     this.sessionId = sessionId;
     this.settings = {
       rideCompletionText,
