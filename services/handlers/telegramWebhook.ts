@@ -25,21 +25,17 @@ export async function handler(
 
   if (requestBody.message.text === '/start') {
     try {
-      const enabled = await webhookService.enableTelegramNotifications(
+      const user = await webhookService.enableTelegramNotifications(
         requestBody.message,
       );
 
-      console.log('enabled', enabled);
-
-      if (!enabled) {
+      if (!user) {
         await webhookService.sendErrorMessage();
 
         return;
       }
 
-      await webhookService.sendNotificationsEnabledMessage(
-        requestBody.message,
-      );
+      await webhookService.sendNotificationsEnabledMessage(user.firstName);
     } catch (e) {
       console.error(e);
 

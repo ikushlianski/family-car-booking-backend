@@ -1,3 +1,5 @@
+import { userMapper } from 'services/core/user/user.mapper';
+import { IUserDomain, Username } from 'services/core/user/user.types';
 import { FamilyCarBookingApp } from 'services/db/db.service';
 
 interface TelegramMessageObject {
@@ -14,13 +16,11 @@ export class WebhookService {
 
   enableTelegramNotifications = async ({
     from,
-  }: TelegramMessageObject): Promise<boolean> => {
+  }: TelegramMessageObject): Promise<IUserDomain | null> => {
     try {
       const user = await FamilyCarBookingApp.entities.user
         .get({ username: from.username })
         .go();
-
-      console.log('user based on TG message content', user);
 
       if (user) {
         await FamilyCarBookingApp.entities.user
@@ -34,15 +34,15 @@ export class WebhookService {
           })
           .go();
 
-        return true;
+        return userMapper.dbToDomain(user);
       }
     } catch (e) {
       console.error(e);
 
-      return false;
+      return null;
     }
 
-    return false;
+    return null;
   };
 
   sendGenericMessage = async () => {
@@ -60,9 +60,11 @@ export class WebhookService {
     await this.sendMessage(message);
   };
 
-  sendNotificationsEnabledMessage = async ({}: TelegramMessageObject) => {
+  sendNotificationsEnabledMessage = async (firstName?: Username) => {
     // todo provide a link based on env variables
-    const text = `Спасибо, уведомления активированы. Вы можете возвращаться обратно в приложение`;
+    const text = `Спасибо, ${
+      `${firstName}, ` || ''
+    }уведомления активированы. Вы получите уведомление в этот чат, как только Ваш автомобиль будет забронирован. Сейчас Вы можете вернуться в приложение`;
 
     await this.sendMessage(text);
   };
@@ -71,13 +73,8 @@ export class WebhookService {
     const tgApiBaseUrl = process.env.TG_API_BASE_URL;
     const chatId = process.env.TG_BOT_CHAT_ID;
 
-    console.log('tgApiBaseUrl', tgApiBaseUrl);
-    console.log('chatId', chatId);
-
     if (tgApiBaseUrl && chatId) {
       const tgApiSendMsgUrl = `${tgApiBaseUrl}/sendMessage`;
-
-      console.log('tgApiSendMsgUrl', tgApiSendMsgUrl);
 
       try {
         const body = JSON.stringify({ chat_id: chatId, text });
