@@ -6,8 +6,8 @@ import { testData } from 'specs/step-definitions/test-data';
 const userSettings = {
   rideCompletionText: 'Машина в гараже',
   notifications: {
-    getNotifiedWhenBookingChanged: true,
-    getNotifiedWhenBookingCreated: true,
+    getNotifiedWhenBookingChanged: false,
+    getNotifiedWhenBookingCreated: false,
   },
 };
 
@@ -17,7 +17,8 @@ export const givenPapaIsRegistered = (given) => {
     async () => {
       await FamilyCarBookingApp.entities.user
         .create({
-          username: 'papa',
+          username: 'akushlianski',
+          firstName: 'Андрей',
           password: process.env.PAPA_PASSWORD as string,
           sessionId: 'test-session-id-papa',
           roles: [UserRoles.CAR_PROVIDER, UserRoles.DRIVER],
@@ -36,7 +37,8 @@ export const givenIlyaIsRegistered = (given) => {
     async () => {
       await FamilyCarBookingApp.entities.user
         .create({
-          username: 'ilya',
+          username: 'ilya_nice',
+          firstName: 'Илья',
           password: process.env.ILYA_PASSWORD as string,
           sessionId: 'test-session-id-ilya',
           roles: [UserRoles.DRIVER],
@@ -56,6 +58,7 @@ export const givenStrangerIsRegistered = (given) => {
       await FamilyCarBookingApp.entities.user
         .create({
           username: 'stranger',
+          firstName: 'Джон',
           password: process.env.STRANGER_PASSWORD as string,
           sessionId: 'test-session-id-stranger',
           roles: [UserRoles.CAR_PROVIDER, UserRoles.DRIVER],

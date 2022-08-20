@@ -1,6 +1,6 @@
 export class WebhookService {
   verifySecretWebhookToken = (token: string) => {
-    return token === process.env.SECRET_WEBHOOK_TOKEN;
+    return token === process.env.TG_SECRET_WEBHOOK_TOKEN;
   };
 }
 

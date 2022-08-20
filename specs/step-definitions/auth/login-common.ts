@@ -21,6 +21,7 @@ export const givenAlreadyRegistered = (given) => {
     await FamilyCarBookingApp.entities.user
       .create({
         username: testData.correctCreds.username,
+        firstName: 'Не важно',
         password: Buffer.from(testData.correctCreds.password).toString(
           'base64',
         ),
@@ -29,8 +30,8 @@ export const givenAlreadyRegistered = (given) => {
         availableCarIds: [testData.familyCarId],
         providedCarIds: [],
         notifications: {
-          getNotifiedWhenBookingChanged: true,
-          getNotifiedWhenBookingCreated: true,
+          getNotifiedWhenBookingChanged: false,
+          getNotifiedWhenBookingCreated: false,
         },
         rideCompletionText: '',
       })
