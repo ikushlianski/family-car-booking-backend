@@ -21,6 +21,31 @@ export async function handler(
     console.error('Incorrect request body from Telegram');
   }
 
-  console.log('message author', requestBody.message.from.username);
-  console.log('message text', requestBody.message.text);
+  console.log('requestBody.message.text', requestBody.message.text);
+
+  if (requestBody.message.text === '/start') {
+    try {
+      const enabled = await webhookService.enableTelegramNotifications(
+        requestBody.message,
+      );
+
+      console.log('enabled', enabled);
+
+      if (!enabled) {
+        await webhookService.sendErrorMessage();
+
+        return;
+      }
+
+      await webhookService.sendNotificationsEnabledMessage(
+        requestBody.message,
+      );
+    } catch (e) {
+      console.error(e);
+
+      await webhookService.sendErrorMessage();
+    }
+  } else {
+    await webhookService.sendGenericMessage();
+  }
 }

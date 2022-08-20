@@ -9,7 +9,11 @@ export function MyStack({ stack }: StackContext) {
   const api = new Api(stack, REST_API_NAME, {
     defaults: {
       function: {
-        environment: { NODE_ENV: process.env.NODE_ENV! },
+        environment: {
+          NODE_ENV: process.env.NODE_ENV,
+          TG_API_BASE_URL: process.env.TG_API_BASE_URL,
+          TG_BOT_CHAT_ID: process.env.TG_BOT_CHAT_ID,
+        },
         permissions: [table],
       },
     },
