@@ -48,10 +48,12 @@ export class WebhookService {
   sendGenericMessage = async () => {
     const messages = [
       `Вы уже активировали уведомления. Я сообщу здесь, как только Ваш автомобиль забронируют`,
+      `Ранее Вы уже активировали уведомления. Я сообщу в этом чате, как только Ваш автомобиль забронируют`,
     ];
 
-    // for now always pick first option from the array
-    await this.sendMessage(messages[0]);
+    const message = messages[Math.floor(Math.random() * messages.length)];
+
+    await this.sendMessage(message);
   };
 
   sendErrorMessage = async () => {
@@ -63,7 +65,7 @@ export class WebhookService {
   sendNotificationsEnabledMessage = async (firstName?: Username) => {
     // todo provide a link based on env variables
     const text = `Спасибо, ${
-      `${firstName}, ` || ''
+      firstName ? `${firstName}, ` : ''
     }уведомления активированы. Вы получите уведомление в этот чат, как только Ваш автомобиль будет забронирован. Сейчас Вы можете вернуться в приложение`;
 
     await this.sendMessage(text);

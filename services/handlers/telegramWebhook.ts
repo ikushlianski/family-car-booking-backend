@@ -1,4 +1,5 @@
 import { APIGatewayProxyEventV2WithRequestContext } from 'aws-lambda/trigger/api-gateway-proxy';
+import { IUserDomain } from 'services/core/user/user.types';
 import { webhookService } from 'services/webhook.service';
 
 export async function handler(
@@ -24,8 +25,10 @@ export async function handler(
   console.log('requestBody.message.text', requestBody.message.text);
 
   if (requestBody.message.text === '/start') {
+    let user: IUserDomain;
+
     try {
-      const user = await webhookService.enableTelegramNotifications(
+      user = await webhookService.enableTelegramNotifications(
         requestBody.message,
       );
 
