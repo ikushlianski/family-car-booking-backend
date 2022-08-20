@@ -8,7 +8,7 @@ export const whenIlyaRequestsHisBookings = (
 ) => {
   when('Ilya requests his own bookings', async () => {
     const { responseBody, status } = await makeRequest(
-      `${testData.bookingsUrl}?username=ilya&carId=${testData.familyCarId}`,
+      `${testData.bookingsUrl}?username=ilya_nice&carId=${testData.familyCarId}`,
       undefined,
       'GET',
       { Cookie: 'sessionId=test-session-id-ilya_nice' },
