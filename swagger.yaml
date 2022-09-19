@@ -10,7 +10,7 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0
 servers:
-  - url: https://exlimr6ltc.execute-api.eu-west-1.amazonaws.com
+  - url: https://18qv4o7xm9.execute-api.eu-west-1.amazonaws.com
 paths:
   /login:
     post:

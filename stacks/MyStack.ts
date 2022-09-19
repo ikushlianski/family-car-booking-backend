@@ -30,10 +30,18 @@ export function MyStack({ stack }: StackContext) {
       ],
       // todo change when we have more envs
       //  also see lambda responses
-      allowOrigins: ['http://localhost:3000'],
+      allowOrigins: [
+        'http://localhost:3000',
+        'https://editor.swagger.io',
+        'https://ikushlianski.github.io',
+      ],
+      allowHeaders: ['Content-Type', 'api_key', 'Authorization'],
       exposeHeaders: [
         'Access-Control-Allow-Origin',
         'Access-Control-Allow-Credentials',
+        'Content-Type',
+        'api_key',
+        'Authorization',
       ],
     },
     routes: {
