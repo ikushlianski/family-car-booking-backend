@@ -35,8 +35,15 @@ export class CookieService {
     return userMapper.dbToDomain(user);
   };
 
-  public makeCookie = (key: string, value: string, path: string = '/') => {
-    return `${key}=${value}; Path=${path}`;
+  public makeCookie = (
+    key: string,
+    value: string,
+    path: string = '/',
+    days = 30,
+  ) => {
+    return `${key}=${value}; Path=${path}; expires=${new Date(
+      new Date().getTime() + days * 86409000,
+    ).toUTCString()}`;
   };
 }
 
