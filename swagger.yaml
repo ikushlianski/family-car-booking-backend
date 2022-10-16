@@ -128,8 +128,8 @@ paths:
 
   /bookings/id:
     get:
-      summary: Get user info
-      description: Information about the user, their rides, cars etc.
+      summary: Get booking by ID
+      description: Information about the booking
       parameters:
         - in: query
           name: username
@@ -234,6 +234,84 @@ paths:
                   status:
                     type: string
                     example: 'Error getting booking details'
+
+  /bookings:
+    get:
+      summary: Get all bookings by some criterion (car, user etc.)
+      description: List of bookings for a particular car or a particular user. For example, for family Honda, this should return a list of all bookings, including created by Masha, Ilya and Papa.
+        
+        
+        When `userId` is included in query params together with `carId`, then user details are also returned
+      parameters:
+        - in: query
+          name: carId
+          example: ho-123456
+          description: User's car id (license plate)
+          schema:
+            type: string
+        - in: cookie
+          name: sessionId
+          description: Cookie that should go with your user's request. This `sessionId` cookie value is located in DynamoDB database, assuming your user logged in previously. If you don't know your sessionId, it was likely not generated. Call the `/login` endpoint to get the session id generated and returned to you in the cookies
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  bookings:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        bookingOwnerId:
+                          type: string
+                          example: mariya_kalib
+                        carNumber:
+                          type: string
+                          example: "ho-123456"
+                        bookingStartTime:
+                          type: string
+                          example: "2022-10-19T13:47:44.000Z"
+                        bookingDescription:
+                          type: string
+                          example: Masha - visit parents
+        '401':
+          description: Unauthorized. You either gave a car number that the current user cannot access, or you forgot to include the cookie in the request, or the cookie is incorrect.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'Unauthorized'
+        '404':
+          description: Bookings not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'Could not find booking by ID'
+        '500':
+          description: Server side error. Do not rely on the wording of these errors! They may change on the backend side any time.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'Error getting booking details'
+
+
+
 components:
   schemas:
     Settings:
