@@ -13,6 +13,7 @@ export function MyStack({ stack }: StackContext) {
           NODE_ENV: process.env.NODE_ENV,
           TG_API_BASE_URL: process.env.TG_API_BASE_URL,
           TG_BOT_CHAT_ID: process.env.TG_BOT_CHAT_ID,
+          SWAGGER_EDITOR_URLS: process.env.SWAGGER_EDITOR_URLS,
         },
         permissions: [table],
       },
@@ -32,8 +33,7 @@ export function MyStack({ stack }: StackContext) {
       //  also see lambda responses
       allowOrigins: [
         'http://localhost:3000',
-        'https://editor.swagger.io',
-        'https://ikushlianski.github.io',
+        ...(process.env.SWAGGER_EDITOR_URLS?.split(',') || []),
       ],
       allowHeaders: ['Content-Type', 'api_key', 'Authorization'],
       exposeHeaders: [

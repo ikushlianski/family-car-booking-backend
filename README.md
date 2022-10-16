@@ -8,7 +8,7 @@ I started this project to practice hexagonal architecture, AWS SST (wrapper arou
 
 ## Useful commands
 
-* `yarn start`        deploy main resources and start lambdas locally
+* `yarn start:dev`    deploy main resources and start lambdas locally
 * `yarn deploy:dev`   deploy code for dev env (similar for qa and prod)
 * `yarn test`         perform Vitest unit tests
 * `yarn seed:dev`     seed DB with dev data
@@ -30,7 +30,9 @@ Handlers are located in `services/handlers` directory. Each handler should be th
 DynamoDB is used for this project, a single-table design is attempted using [ElectroDB](https://github.com/tywalch/electrodb) for easier interaction with DynamoDB API.
 
 ### Seed data
-Seed scripts are located at is located in unversioned files, as it contains secrets like passwords for initial users.
+Seed scripts are located in unversioned files, as they contain secrets like passwords for pre-set users.
+
+Refer to your team lead to get the seed files so you can use them to populate your database with users.
 
 After your stack is deployed, you can seed your DB in dev environment by running `yarn seed:dev`.
 

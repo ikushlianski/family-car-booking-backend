@@ -4,7 +4,9 @@ info:
   description: |-
     This is a sample family car tracking application allowing us to book car usage times.
     
-    Since I'm are using cookie auth on this Family Car project, the Try It Out feature won't work in browsers due to security limitations. Please use Postman to try these requests
+    Since I'm are using cookie auth on this Family Car project, the Try It Out feature won't work in browsers due to security limitations. Please use Postman to try these requests.
+    
+    Database is located in AWS DynamoDB, it's named `development-family-car-booking-app`
   contact:
     email: kushliansky@gmail.com
   license:
@@ -85,12 +87,34 @@ paths:
               schema:
                 type: object
                 properties:
-                  username:
-                    type: string
-                    example: masha
-                  password:
-                    type: string
-                    example: myPassW0rd
+                  user:
+                    type: object
+                    properties:
+                      username:
+                        type: string
+                      firstName:
+                        type: string
+                      sessionId:
+                        type: string
+                      roles:
+                        type: array
+                        items:
+                          type: string
+                        example: [ "driver", "carProvider" ]
+                      availableCars:
+                        type: array
+                        items:
+                          type: string
+                        example: [ "ho-123", "renault-789" ]
+                      providedCars:
+                        type: array
+                        items:
+                          type: string
+                        example: [ "renault-789" ]
+                      settings:
+                        $ref: '#/components/schemas/Settings'
+
+
         '401':
           description: Unauthorized. Invalid credentials presented or cookie was not included in the request or cookie is incorrect.
           content:
@@ -167,7 +191,7 @@ paths:
                               type: string
                             example: ["renault-789"]
                           settings:
-                            type: object
+                            $ref: '#/components/schemas/Settings'
                       bookingOwnerId:
                         type: string
                         example: "ilya_nice"
@@ -189,7 +213,7 @@ paths:
                 properties:
                   status:
                     type: string
-                    example: 'Invalid credentials provided'
+                    example: 'Unauthorized'
         '404':
           description: Not Found. Do not rely on the wording of these errors! They may change on the backend side any time. Look at error codes. Check if your fetching library throws an error on response code 500 or still considers it a success and never goes to the `catch` part of the `try/catch` clause.
           content:
@@ -210,4 +234,19 @@ paths:
                   status:
                     type: string
                     example: 'Error getting booking details'
-
+components:
+  schemas:
+    Settings:
+      type: object
+      properties:
+        rideCompletionText:
+          type: string
+          example: 'Машина в гараже'
+        notifications:
+          type: object
+          properties:
+            getNotifiedAboutBookingChanges:
+              type: boolean
+            getNotifiedAboutNewBookings:
+              type: boolean
+              example: false
