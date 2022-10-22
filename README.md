@@ -63,7 +63,9 @@ The main Jest-cucumber file that is actually run by Jest must be named `<what-is
 
 Pre-requisites to running integration tests:
 - ensure you have Node.js 18 or higher. This is required for `fetch` API support
-- run `yarn deploy:qa` to deploy the latest changes to the `qa` env where the integration tests will run
+- prepare env against which integration tests will run:
+  - either run `yarn deploy:qa` to deploy the latest changes to the `qa` env where the integration tests will run 
+  - OR run `yarn start:qa` to run integration tests against a local version of your qa stage (env). In this case don't forget to subsequently deploy the stable version of the code to QA env `yarn deploy:qa`
 - ensure you have `features/.env.integration` file. Ask your teammates for the actual values or deploy your own environment to get unique values
 
 To run all integration tests, do `yarn integration`.
