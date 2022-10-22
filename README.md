@@ -8,12 +8,13 @@ I started this project to practice hexagonal architecture, AWS SST (wrapper arou
 
 ## Useful commands
 
-* `yarn start:dev`    deploy main resources and start lambdas locally
-* `yarn deploy:dev`   deploy code for dev env (similar for qa and prod)
-* `yarn test`         perform Vitest unit tests
-* `yarn seed:dev`     seed DB with dev data
-* `yarn unseed:dev`   remove seed data from DB
-* `yarn integration`  run integration tests against this API
+* `yarn start:dev`       deploy main resources and start lambdas locally
+* `yarn deploy:dev`      deploy code for dev env (similar for qa and prod)
+* `yarn deploy:swagger`  deploy API Swagger to Github Pages
+* `yarn test`            perform Vitest unit tests
+* `yarn seed:dev`        seed DB with dev data
+* `yarn unseed:dev`      remove seed data from DB
+* `yarn integration`     run integration tests against this API
 
 ## Project file structure
 Most folders inside `services/core` are business entities. Each entity contains the following elements:

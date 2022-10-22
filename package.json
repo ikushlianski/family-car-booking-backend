@@ -5,6 +5,7 @@
   "scripts": {
     "start:dev": "AWS_PROFILE=family-car-booking sst start --stage dev",
     "build": "sst build",
+    "deploy:swagger": "sh ./scripts/deploy-swagger.sh",
     "deploy:dev": "AWS_PROFILE=family-car-booking sst deploy --stage dev --region eu-west-1",
     "deploy:qa": "AWS_PROFILE=family-car-booking sst deploy --stage qa --region eu-west-1",
     "integration": "./specs/run-integration.sh",
