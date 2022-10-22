@@ -6,6 +6,7 @@ export class UserMapper {
   public dbToDomain(rawDbItem: IUserDb): IUserDomain {
     return {
       username: rawDbItem.username,
+      password: rawDbItem.password,
       firstName: rawDbItem.firstName,
       sessionId: rawDbItem.sessionId,
       roles: rawDbItem.roles,

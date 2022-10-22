@@ -11,16 +11,15 @@ import { responderService } from 'services/responder.service';
 export async function handler(
   event: APIGatewayProxyEventV2WithRequestContext<unknown>,
 ) {
-  const [error, loginData] = loginService.getUserFromLoginRequest(
+  const [error, loginData] = await loginService.getUserFromLoginRequest(
     event.body,
     event.cookies,
   );
 
   if (error) {
-    return responderService.toErrorResponse(
-      error,
-      StatusCodes.BAD_REQUEST,
-    );
+    return error.message === wrongUserOrPassword.message
+      ? responderService.toErrorResponse(error, StatusCodes.UNAUTHORIZED)
+      : responderService.toErrorResponse(error, StatusCodes.BAD_REQUEST);
   } else if (loginData) {
     console.log({ loginData });
 

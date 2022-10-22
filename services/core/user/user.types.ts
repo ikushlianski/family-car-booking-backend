@@ -7,6 +7,7 @@ export type SessionId = string;
 export interface IUserDomain {
   username: Username;
   firstName: Username;
+  password?: string;
   sessionId?: SessionId;
   roles: string[];
   availableCars: string[];

@@ -79,7 +79,10 @@ defineFeature(feature, (test) => {
       const [key, value] = loginResult.responseCookie.split('=');
 
       assert.strictEqual(key, 'sessionId');
-      assert.strictEqual(value, testData.correctCreds.sessionId);
+      assert.strictEqual(
+        value.split(';')[0],
+        testData.correctCreds.sessionId,
+      );
     });
 
     thenLoginIsSuccessful(then, loginResult);

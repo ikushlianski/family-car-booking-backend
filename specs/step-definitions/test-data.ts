@@ -17,7 +17,7 @@ export const testData = {
     password: 'correct-password',
   },
   wrongPasswordCreds: {
-    username: 'correct-username1',
+    username: 'correct-username',
     password: 'incorrect-password',
   },
   loginUrl: `${process.env.API_GATEWAY_ENDPOINT}/login`,

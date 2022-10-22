@@ -14,10 +14,10 @@ export class LoginService {
     private cookieService: CookieService,
   ) {}
 
-  getUserFromLoginRequest = (
+  getUserFromLoginRequest = async (
     requestBody: string | undefined,
     cookies: string[] | undefined,
-  ): Maybe<LoginEntity> => {
+  ): Promise<Maybe<LoginEntity>> => {
     if (!requestBody) {
       return [noCredentialsError, undefined];
     }
@@ -32,6 +32,16 @@ export class LoginService {
 
     try {
       const { username, password } = JSON.parse(requestBody);
+
+      const user = await this.userRepo.getOneByUsername(username);
+
+      if (!user) {
+        return [wrongUserOrPassword, undefined];
+      }
+
+      if (user.password !== Buffer.from(password).toString('base64')) {
+        return [wrongUserOrPassword, undefined];
+      }
 
       if (username && password) {
         const login = new LoginEntity({
@@ -55,14 +65,6 @@ export class LoginService {
       const user = await this.userRepo.getOneByUsername(
         loginEntity.username,
       );
-
-      console.log({ user });
-
-      if (!user) {
-        loginEntity.fail();
-
-        return [wrongUserOrPassword, undefined];
-      }
 
       if (!user.sessionId) {
         user.sessionId = crypto.randomUUID();

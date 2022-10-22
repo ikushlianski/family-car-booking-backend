@@ -62,6 +62,7 @@ Step definition files are grouped by `<tested-feature>.given.ts`, `<tested-featu
 The main Jest-cucumber file that is actually run by Jest must be named `<what-is-tested.feature.steps.ts>`, e.g. `login.feature.steps.ts`.
 
 Pre-requisites to running integration tests:
+- ensure you have Node.js 18 or higher. This is required for `fetch` API support
 - run `yarn deploy:qa` to deploy the latest changes to the `qa` env where the integration tests will run
 - ensure you have `features/.env.integration` file. Ask your teammates for the actual values or deploy your own environment to get unique values
 
