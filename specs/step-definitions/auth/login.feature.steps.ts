@@ -3,9 +3,9 @@ import * as assert from 'node:assert';
 import {
   givenAlreadyRegistered,
   givenDidNotLogInBefore,
+  givenUserLoggedInBefore,
   whenLoggingInWithCorrectCreds,
 } from 'specs/step-definitions/auth/login-common';
-import { FamilyCarBookingApp } from 'services/db/db.service';
 import {
   thenLoginErrorIsReturned,
   whenLogsInWithWrongPassword,
@@ -56,17 +56,7 @@ defineFeature(feature, (test) => {
   test('Successful login - subsequent times', ({ given, when, then }) => {
     givenAlreadyRegistered(given);
 
-    given('the user logged in before', async function () {
-      await FamilyCarBookingApp.entities.user
-        .update({ username: testData.correctCreds.username })
-        .set({ sessionId: testData.correctCreds.sessionId })
-        .where((attr, op) =>
-          op.eq(attr.username, testData.correctCreds.username),
-        )
-        .go();
-
-      sessionCookie = `sessionId=${testData.correctCreds.sessionId}`;
-    });
+    givenUserLoggedInBefore(given, sessionCookie);
 
     const loginResult = {
       responseCookie: undefined,

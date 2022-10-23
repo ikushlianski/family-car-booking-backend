@@ -16,6 +16,20 @@ export const givenDidNotLogInBefore = (given) => {
   });
 };
 
+export const givenUserLoggedInBefore = (given, sessionCookie) => {
+  given('the user logged in before', async function () {
+    await FamilyCarBookingApp.entities.user
+      .update({ username: testData.correctCreds.username })
+      .set({ sessionId: testData.correctCreds.sessionId })
+      .where((attr, op) =>
+        op.eq(attr.username, testData.correctCreds.username),
+      )
+      .go();
+
+    sessionCookie = `sessionId=${testData.correctCreds.sessionId}`;
+  });
+};
+
 export const givenAlreadyRegistered = (given) => {
   given('the user is already registered', async function () {
     await FamilyCarBookingApp.entities.user
