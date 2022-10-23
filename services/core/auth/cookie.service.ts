@@ -45,6 +45,14 @@ export class CookieService {
       new Date().getTime() + days * 86409000,
     ).toUTCString()}`;
   };
+
+  public buildCookieToBeRemoved(sKey: string, sPath = '/') {
+    return (
+      sKey +
+      '=; expires=Thu, 01 Jan 1970 00:00:00 GMT' +
+      (sPath ? '; path=' + sPath : '')
+    );
+  }
 }
 
 export const cookieService = new CookieService();

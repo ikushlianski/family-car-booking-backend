@@ -49,6 +49,7 @@ export function MyStack({ stack }: StackContext) {
       'GET /bookings/id': 'handlers/getSingleBooking.handler',
       'GET /users/{id}': 'handlers/getUser.handler',
       'POST /login': 'handlers/login.handler',
+      'POST /logout': 'handlers/logout.handler',
       'POST /bookings': 'handlers/createBooking.handler',
       'PATCH /bookings/id': 'handlers/editBooking.handler',
       'DELETE /bookings/id': 'handlers/deleteBooking.handler',

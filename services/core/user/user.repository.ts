@@ -21,6 +21,13 @@ export class UserRepository {
       .set({ sessionId: user.sessionId })
       .go();
   };
+
+  removeSessionId = async (user: IUserDomain): Promise<void> => {
+    await FamilyCarBookingApp.entities.user
+      .update({ username: user.username })
+      .set({ sessionId: user.sessionId })
+      .go();
+  };
 }
 
 export const userRepository = new UserRepository();
