@@ -41,7 +41,7 @@ export class CookieService {
     path: string = '/',
     days = 30,
   ) => {
-    return `${key}=${value}; Path=${path}; expires=${new Date(
+    return `${key}=${value}; Path=${path}; SameSite=None; Secure; expires=${new Date(
       new Date().getTime() + days * 86409000,
     ).toUTCString()}`;
   };
@@ -50,7 +50,8 @@ export class CookieService {
     return (
       sKey +
       '=; expires=Thu, 01 Jan 1970 00:00:00 GMT' +
-      (sPath ? '; path=' + sPath : '')
+      (sPath ? '; path=' + sPath : '') +
+      '; SameSite=None; Secure;'
     );
   }
 }

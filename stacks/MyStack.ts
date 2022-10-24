@@ -39,9 +39,11 @@ export function MyStack({ stack }: StackContext) {
       exposeHeaders: [
         'Access-Control-Allow-Origin',
         'Access-Control-Allow-Credentials',
+        'Access-Control-Allow-Headers',
         'Content-Type',
         'api_key',
         'Authorization',
+        'Set-Cookie',
       ],
     },
     routes: {
