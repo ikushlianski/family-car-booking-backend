@@ -39,10 +39,12 @@ export class CookieService {
     key: string,
     value: string,
     path: string = '/',
-    days = 30,
+    days = 1,
   ) => {
+    const MS_IN_DAY = 86409000;
+
     return `${key}=${value}; Path=${path}; SameSite=None; Secure; expires=${new Date(
-      new Date().getTime() + days * 86409000,
+      new Date().getTime() + days * MS_IN_DAY,
     ).toUTCString()}`;
   };
 
