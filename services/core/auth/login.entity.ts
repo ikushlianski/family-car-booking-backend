@@ -1,34 +1,32 @@
-import { ILoginDto, ILoginState } from 'services/core/auth/auth.types';
 import { SessionId } from 'services/core/user/user.types';
 
-export class LoginEntity implements ILoginDto, ILoginState {
+export class LoginEntity {
   loginSuccess: boolean;
-  password: string;
-  username: string;
-  sessionId: SessionId;
+  usernameFromBody: string;
+  usernameFromDb: string;
+  passwordFromBody: string;
+  passwordFromDb: string;
+  sessionIdFromDb: SessionId;
+  sessionIdFromCookie: SessionId;
 
   constructor({
-    username,
-    password,
-    sessionId,
+    usernameFromBody,
+    usernameFromDb,
+    passwordFromBody,
+    passwordFromDb,
+    sessionIdFromDb,
+    sessionIdFromCookie,
     loginSuccess,
-  }: ILoginDto & ILoginState) {
-    this.password = password;
-    this.username = username;
+  }: any) {
+    this.usernameFromBody = usernameFromBody;
+    this.usernameFromDb = usernameFromDb;
 
-    this.sessionId = sessionId;
+    this.passwordFromBody = passwordFromBody;
+    this.passwordFromDb = passwordFromDb;
+
+    this.sessionIdFromDb = sessionIdFromDb;
+    this.sessionIdFromCookie = sessionIdFromCookie;
+
     this.loginSuccess = loginSuccess;
-  }
-
-  succeed = () => {
-    this.loginSuccess = true;
-  };
-
-  fail = () => {
-    this.loginSuccess = false;
-  };
-
-  setSession(sessionId: SessionId) {
-    this.sessionId = sessionId;
   }
 }

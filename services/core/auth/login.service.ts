@@ -31,27 +31,30 @@ export class LoginService {
     }
 
     try {
-      const { username, password } = JSON.parse(requestBody);
+      const { username: usernameFromBody, password: passwordFromBody } =
+        JSON.parse(requestBody);
 
-      const user = await this.userRepo.getOneByUsername(username);
+      const user = await this.userRepo.getOneByUsername(usernameFromBody);
 
-      if (!user) {
+      if (
+        !user ||
+        !LoginService.isPasswordCorrect(user.password, passwordFromBody)
+      ) {
         return [wrongUserOrPassword, undefined];
       }
 
-      if (user.password !== Buffer.from(password).toString('base64')) {
-        return [wrongUserOrPassword, undefined];
-      }
-
-      if (username && password) {
-        const login = new LoginEntity({
-          username,
-          sessionId,
-          password,
+      if (usernameFromBody && passwordFromBody) {
+        const loginData = new LoginEntity({
+          usernameFromBody,
+          usernameFromDb: user.username,
+          passwordFromBody,
+          passwordFromDb: user.password,
+          sessionIdFromCookie: sessionId,
+          sessionIdFromDb: user.sessionId,
           loginSuccess: false,
         });
 
-        return [undefined, login];
+        return [undefined, loginData];
       }
 
       return [wrongUserOrPassword, undefined];
@@ -63,7 +66,7 @@ export class LoginService {
   logIn = async (loginEntity: LoginEntity): Promise<Maybe<UserEntity>> => {
     try {
       const user = await this.userRepo.getOneByUsername(
-        loginEntity.username,
+        loginEntity.usernameFromBody,
       );
 
       if (!user.sessionId) {
@@ -71,20 +74,25 @@ export class LoginService {
 
         await this.userRepo.updateSessionId(user);
 
-        console.log('sessionId updated successfully');
-
-        return [undefined, user];
+        console.log('sessionId added to DB successfully');
       }
 
-      return loginEntity.sessionId === user.sessionId
-        ? [undefined, user]
-        : [wrongUserOrPassword, undefined];
+      return [undefined, user];
     } catch (e) {
       console.error('Something went wrong when logging in', e);
 
       return [wrongUserOrPassword, undefined];
     }
   };
+
+  private static isPasswordCorrect(
+    passwordFromDB: string,
+    passwordFromBody: string,
+  ) {
+    return (
+      passwordFromDB === Buffer.from(passwordFromBody).toString('base64')
+    );
+  }
 }
 
 export const loginService = new LoginService(
