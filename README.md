@@ -6,6 +6,8 @@ My wife provides a frontend as her portfolio project, and I'm doing backend.
 
 I started this project to practice hexagonal architecture, AWS SST (wrapper around CDK) and Cucumber/Gherkin testing.
 
+API is available at [https://ikushlianski.github.io/hondatrackerdevapi](https://ikushlianski.github.io/hondatrackerdevapi/)
+
 ## Useful commands
 
 * `yarn start:dev`       deploy main resources and start lambdas locally
