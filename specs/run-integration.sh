@@ -3,7 +3,9 @@
 source ./specs/.env.integration
 
 export AWS_PROFILE=family-car-booking
-export NODE_ENV=qa
+# `development` for DEV env
+# `qa` for QA env
+export NODE_ENV=development
 
 if [ "$1" != "" ]; then
   jest "$1"
