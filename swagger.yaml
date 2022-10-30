@@ -80,7 +80,7 @@ paths:
       parameters:
         - in: cookie
           name: sessionId
-          description: Cookie that should go with your user's request. This `sessionId` cookie value is located in DynamoDB database, assuming your user logged in previously. If you don't know your sessionId, it was likely not generated. Call the `/login` endpoint to get the session id generated and returned to you in the cookies
+          description: Cookie that should go with the user's request. This `sessionId` cookie value is located in DynamoDB database, assuming your user logged in previously. If you don't know your sessionId, it was likely not generated. Call the `/login` endpoint to get the session id generated and returned to you in the cookies
           schema:
             type: string
 
