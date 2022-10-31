@@ -98,7 +98,7 @@ paths:
                     type: string
                     example: 'Logout error'
 
-  /user/{username}:
+  /users/{username}:
     get:
       summary: Get user info
       description: Information about the user, their rides, cars etc.
