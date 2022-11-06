@@ -73,6 +73,39 @@ paths:
                     type: string
                     example: 'Invalid credentials provided'
 
+  /me:
+    get:
+      summary: Get my username
+      description: Current user's username by cookie
+      parameters:
+        - in: cookie
+          name: sessionId
+          description: Cookie that should go with your user's request. This `sessionId` cookie value is located in DynamoDB database, assuming your user logged in previously. If you don't know your sessionId, it was likely not generated. Call the `/login` endpoint to get the session id generated and returned to you in the cookies
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                    example: ilya_nice
+
+        '401':
+          description: Unauthorized. Invalid cookie presented or cookie was not included in the request or cookie is incorrect.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'Unauthorized'
+
   /logout:
     post:
       summary: Logout using your credentials
