@@ -50,6 +50,7 @@ export function MyStack({ stack }: StackContext) {
       'GET /bookings': 'handlers/getBookingList.handler',
       'GET /bookings/id': 'handlers/getSingleBooking.handler',
       'GET /users/{id}': 'handlers/getUser.handler',
+      'GET /me': 'handlers/me.handler',
       'POST /login': 'handlers/login.handler',
       'POST /logout': 'handlers/logout.handler',
       'POST /bookings': 'handlers/createBooking.handler',
