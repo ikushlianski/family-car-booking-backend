@@ -6,6 +6,9 @@ export const REST_API_NAME = `${process.env.NODE_ENV}-family-car-booking-app`;
 export function MyStack({ stack }: StackContext) {
   const { table } = use(Database);
 
+  const hostedZone = 'ilya.online';
+  const domainName = `${stack.stage}-car-tracker.${hostedZone}`;
+
   const api = new Api(stack, REST_API_NAME, {
     defaults: {
       function: {
@@ -18,6 +21,7 @@ export function MyStack({ stack }: StackContext) {
         permissions: [table],
       },
     },
+    customDomain: domainName,
     cors: {
       allowCredentials: true,
       allowMethods: [
