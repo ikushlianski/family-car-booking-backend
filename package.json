@@ -25,6 +25,7 @@
     "unseed:qa": "NODE_ENV=qa ./seeds/unseed_qa.sh"
   },
   "dependencies": {
+    "@aws-sdk/client-cognito-identity-provider": "^3.215.0",
     "@aws-sdk/client-dynamodb": "^3.137.0",
     "@casl/ability": "^6.0.0",
     "aws-sdk": "^2.1185.0",
