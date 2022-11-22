@@ -143,6 +143,36 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
       })
       .go(),
 
+    // future booking, Masha
+    FamilyCarBookingApp.entities.booking
+      .create({
+        username: 'mariya_kalib',
+        carId: FAMILY_HONDA_CAR_NUMBER,
+        startTime: calculateFutureTimestampInSecs(new Date(), 6), // future event
+        description: 'Зоопарк!',
+      })
+      .go(),
+
+    // future booking, Masha
+    FamilyCarBookingApp.entities.booking
+      .create({
+        username: 'mariya_kalib',
+        carId: FAMILY_HONDA_CAR_NUMBER,
+        startTime: calculateFutureTimestampInSecs(new Date(), 11), // future event
+        description: 'За шубой',
+      })
+      .go(),
+
+    // future booking, Masha
+    FamilyCarBookingApp.entities.booking
+      .create({
+        username: 'mariya_kalib',
+        carId: FAMILY_HONDA_CAR_NUMBER,
+        startTime: calculateFutureTimestampInSecs(new Date(), 13), // future event
+        description: 'К психологу в ЛОДЭ',
+      })
+      .go(),
+
     // future booking, Stranger
     FamilyCarBookingApp.entities.booking
       .create({

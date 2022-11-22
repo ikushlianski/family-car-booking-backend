@@ -1,4 +1,9 @@
-import { StackContext, Api, use } from '@serverless-stack/resources';
+import {
+  StackContext,
+  Api,
+  use,
+  Cognito,
+} from '@serverless-stack/resources';
 import { Database } from 'stacks/Database';
 
 export const REST_API_NAME = `${process.env.NODE_ENV}-family-car-booking-app`;
@@ -11,6 +16,7 @@ export function MyStack({ stack }: StackContext) {
 
   const api = new Api(stack, REST_API_NAME, {
     defaults: {
+      // authorizer: 'iam',
       function: {
         environment: {
           NODE_ENV: process.env.NODE_ENV,
@@ -65,8 +71,25 @@ export function MyStack({ stack }: StackContext) {
     },
   });
 
+  const auth = new Cognito(stack, 'Auth', {
+    login: ['email'],
+  });
+
+  auth.attachPermissionsForAuthUsers(this, [api, 's3', 'dynamodb']);
+
+  const {
+    userPoolClientId,
+    cognitoIdentityPoolId,
+    userPoolId,
+    userPoolArn,
+  } = auth;
+
   stack.addOutputs({
-    ApiEndpoint: api.url,
+    apiEndpoint: api.url,
+    userPoolClientId,
+    cognitoIdentityPoolId,
+    userPoolId,
+    userPoolArn,
   });
 
   stack.addDefaultFunctionEnv({ API_URL: api.url });
