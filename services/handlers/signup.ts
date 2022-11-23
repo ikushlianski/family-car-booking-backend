@@ -6,14 +6,20 @@ import {
   SignUpCommand,
 } from '@aws-sdk/client-cognito-identity-provider';
 import { APIGatewayProxyEventV2WithRequestContext } from 'aws-lambda/trigger/api-gateway-proxy';
+import {
+  cookieService,
+} from 'services/core/auth/cookie.service';
 import { signupService } from 'services/core/auth/signup.service';
+import { userRepository } from 'services/core/user/user.repository';
 import { responderService } from 'services/responder.service';
 
 export async function handler(
   event: APIGatewayProxyEventV2WithRequestContext<unknown>,
 ) {
-  const [error, { username, password }] =
-    await signupService.getUserFromSignupRequest(event.body);
+  const [
+    error,
+    { username, password, providedCarIds, availableCarIds, firstName },
+  ] = await signupService.getUserFromSignupRequest(event.body);
 
   const client = new CognitoIdentityProviderClient({});
 
@@ -22,7 +28,12 @@ export async function handler(
     Password: password,
     ClientId: process.env.USER_POOL_CLIENT_ID,
   });
-  const { UserConfirmed } = await client.send(signupCommand);
+
+  try {
+    await client.send(signupCommand);
+  } catch (e) {
+    return responderService.toErrorResponse(e, 400);
+  }
 
   const confirmUserCommand = new AdminConfirmSignUpCommand({
     Username: username,
@@ -30,6 +41,13 @@ export async function handler(
   });
 
   await client.send(confirmUserCommand);
+
+  await userRepository.createUser({
+    username,
+    providedCarIds,
+    availableCarIds,
+    firstName,
+  });
 
   const signInCommand = new AdminInitiateAuthCommand({
     ClientId: process.env.USER_POOL_CLIENT_ID,
@@ -41,47 +59,11 @@ export async function handler(
     UserPoolId: process.env.USER_POOL_ID,
   });
 
-  const { AuthenticationResult } = await client.send(signInCommand);
+  const {
+    AuthenticationResult: { IdToken, AccessToken, RefreshToken },
+  } = await client.send(signInCommand);
 
-  console.log('AuthenticationResult', AuthenticationResult);
-
-  // if (error) {
-  //   return error.message === wrongUserOrPassword.message
-  //     ? responderService.toErrorResponse(error, StatusCodes.UNAUTHORIZED)
-  //     : responderService.toErrorResponse(error, StatusCodes.BAD_REQUEST);
-  // } else if (loginData) {
-  //   console.log({ loginData });
-  //
-  //   const [loginError, user] = await loginService.logIn(loginData);
-  //
-  //   if (loginError) {
-  //     console.log({ loginError });
-  //
-  //     return responderService.toErrorResponse(
-  //       wrongUserOrPassword,
-  //       StatusCodes.UNAUTHORIZED,
-  //     );
-  //   }
-  //
-  //   return user?.sessionId
-  //     ? responderService.toSuccessResponse(
-  //         { status: 'Success' },
-  //         undefined,
-  //         [
-  //           cookieService.makeCookie(
-  //             CookieKeys.SESSION_ID,
-  //             user.sessionId,
-  //           ),
-  //         ],
-  //       )
-  //     : responderService.toErrorResponse(
-  //         wrongUserOrPassword,
-  //         StatusCodes.UNAUTHORIZED,
-  //       );
-  // }
-  //
-  // return responderService.toErrorResponse(
-  //   new Error('Unknown login error'),
-  //   StatusCodes.UNAUTHORIZED,
-  // );
+  return responderService.toSuccessResponse({ IdToken, AccessToken }, {}, [
+    cookieService.makeCookie('refreshToken', RefreshToken, '/', 30),
+  ]);
 }
