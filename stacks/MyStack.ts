@@ -16,6 +16,9 @@ export function MyStack({ stack }: StackContext) {
 
   const auth = new Cognito(stack, 'Auth', {
     login: ['email'],
+    triggers: {
+      preSignUp: 'triggers/pre-sign-up.handler',
+    },
     cdk: {
       userPoolClient: {
         authFlows: {

@@ -6,9 +6,7 @@ import {
   SignUpCommand,
 } from '@aws-sdk/client-cognito-identity-provider';
 import { APIGatewayProxyEventV2WithRequestContext } from 'aws-lambda/trigger/api-gateway-proxy';
-import {
-  cookieService,
-} from 'services/core/auth/cookie.service';
+import { cookieService } from 'services/core/auth/cookie.service';
 import { signupService } from 'services/core/auth/signup.service';
 import { userRepository } from 'services/core/user/user.repository';
 import { responderService } from 'services/responder.service';
@@ -35,12 +33,12 @@ export async function handler(
     return responderService.toErrorResponse(e, 400);
   }
 
-  const confirmUserCommand = new AdminConfirmSignUpCommand({
-    Username: username,
-    UserPoolId: process.env.USER_POOL_ID,
-  });
-
-  await client.send(confirmUserCommand);
+  // const confirmUserCommand = new AdminConfirmSignUpCommand({
+  //   Username: username,
+  //   UserPoolId: process.env.USER_POOL_ID,
+  // });
+  //
+  // await client.send(confirmUserCommand);
 
   await userRepository.createUser({
     username,
