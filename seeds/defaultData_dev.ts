@@ -139,6 +139,16 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
         username: 'mariya_kalib',
         carId: FAMILY_HONDA_CAR_NUMBER,
         startTime: calculateFutureTimestampInSecs(new Date(), 3), // future event
+        description: 'Masha - buy presents for parents',
+      })
+      .go(),
+
+    // future booking, Masha
+    FamilyCarBookingApp.entities.booking
+      .create({
+        username: 'mariya_kalib',
+        carId: FAMILY_HONDA_CAR_NUMBER,
+        startTime: calculateFutureTimestampInSecs(new Date(), 3) + 3600, // future event
         description: 'Masha - visit parents',
       })
       .go(),
