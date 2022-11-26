@@ -1,58 +1,43 @@
 import { APIGatewayProxyEventV2WithRequestContext } from 'aws-lambda/trigger/api-gateway-proxy';
 import { StatusCodes } from 'http-status-codes';
 import { wrongUserOrPassword } from 'services/core/auth/auth.errors';
-import {
-  CookieKeys,
-  cookieService,
-} from 'services/core/auth/cookie.service';
+import { cookieService } from 'services/core/auth/cookie.service';
 import { loginService } from 'services/core/auth/login.service';
 import { responderService } from 'services/responder.service';
 
 export async function handler(
   event: APIGatewayProxyEventV2WithRequestContext<unknown>,
 ) {
-  const [error, loginData] = await loginService.getUserFromLoginRequest(
-    event.body,
-    event.cookies,
-  );
+  const [parsingError, { username, password }] =
+    await loginService.parseLoginRequest(event.body);
 
-  if (error) {
-    return error.message === wrongUserOrPassword.message
-      ? responderService.toErrorResponse(error, StatusCodes.UNAUTHORIZED)
-      : responderService.toErrorResponse(error, StatusCodes.BAD_REQUEST);
-  } else if (loginData) {
-    console.log({ loginData });
-
-    const [loginError, user] = await loginService.logIn(loginData);
-
-    if (loginError) {
-      console.log({ loginError });
-
-      return responderService.toErrorResponse(
-        wrongUserOrPassword,
-        StatusCodes.UNAUTHORIZED,
-      );
-    }
-
-    return user?.sessionId
-      ? responderService.toSuccessResponse(
-          { status: 'Success' },
-          undefined,
-          [
-            cookieService.makeCookie(
-              CookieKeys.SESSION_ID,
-              user.sessionId,
-            ),
-          ],
-        )
-      : responderService.toErrorResponse(
-          wrongUserOrPassword,
-          StatusCodes.UNAUTHORIZED,
-        );
+  if (parsingError) {
+    return responderService.toErrorResponse(
+      parsingError,
+      StatusCodes.BAD_REQUEST,
+    );
   }
 
-  return responderService.toErrorResponse(
-    new Error('Unknown login error'),
-    StatusCodes.UNAUTHORIZED,
-  );
+  const [loginError, tokens] = await loginService.logIn({
+    username,
+    password,
+  });
+
+  return loginError
+    ? responderService.toErrorResponse(
+        wrongUserOrPassword,
+        StatusCodes.UNAUTHORIZED,
+      )
+    : responderService.toSuccessResponse(
+        { status: 'Success', idToken: tokens.IdToken },
+        undefined,
+        [
+          cookieService.makeCookie(
+            'refreshToken',
+            tokens.RefreshToken,
+            '/',
+            30,
+          ),
+        ],
+      );
 }

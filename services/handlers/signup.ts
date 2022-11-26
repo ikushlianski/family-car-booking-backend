@@ -1,5 +1,4 @@
 import {
-  AdminConfirmSignUpCommand,
   AdminInitiateAuthCommand,
   AuthFlowType,
   CognitoIdentityProviderClient,
@@ -17,7 +16,11 @@ export async function handler(
   const [
     error,
     { username, password, providedCarIds, availableCarIds, firstName },
-  ] = await signupService.getUserFromSignupRequest(event.body);
+  ] = await signupService.parseSignupRequest(event.body);
+
+  if (error) {
+    return responderService.toErrorResponse(error, 400);
+  }
 
   const client = new CognitoIdentityProviderClient({});
 
@@ -32,13 +35,6 @@ export async function handler(
   } catch (e) {
     return responderService.toErrorResponse(e, 400);
   }
-
-  // const confirmUserCommand = new AdminConfirmSignUpCommand({
-  //   Username: username,
-  //   UserPoolId: process.env.USER_POOL_ID,
-  // });
-  //
-  // await client.send(confirmUserCommand);
 
   await userRepository.createUser({
     username,

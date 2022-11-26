@@ -1,12 +1,15 @@
+import {
+  AuthenticationResultType,
+  AuthFlowType,
+  CognitoIdentityProviderClient,
+  InitiateAuthCommand,
+} from '@aws-sdk/client-cognito-identity-provider';
 import { Maybe } from 'services/app.types';
-import { LoginEntity } from 'services/core/auth/login.entity';
-import { UserEntity } from 'services/core/user/user.entity';
+import { LoginFields } from 'services/core/auth/login.types';
+import { badRequestUser } from 'services/core/user/user.errors';
 import { userRepository, UserRepository } from '../user/user.repository';
-import { SessionId } from '../user/user.types';
-import { noCredentialsError, wrongUserOrPassword } from './auth.errors';
+import { noCredentialsError } from './auth.errors';
 import { cookieService, CookieService } from './cookie.service';
-
-const crypto = require('crypto');
 
 export class LoginService {
   constructor(
@@ -14,74 +17,44 @@ export class LoginService {
     private cookieService: CookieService,
   ) {}
 
-  getUserFromLoginRequest = async (
+  parseLoginRequest = async (
     requestBody: string | undefined,
-    cookies: string[] | undefined,
-  ): Promise<Maybe<LoginEntity>> => {
+  ): Promise<Maybe<LoginFields>> => {
     if (!requestBody) {
       return [noCredentialsError, undefined];
     }
 
-    let sessionId: SessionId = '';
-
-    if (cookies) {
-      sessionId = this.cookieService.getSessionIdFromCookies(cookies);
-
-      console.log('sessionId from request', sessionId);
-    }
-
     try {
-      const { username: usernameFromBody, password: passwordFromBody } =
-        JSON.parse(requestBody);
+      const { username, password } = JSON.parse(requestBody);
 
-      const user = await this.userRepo.getOneByUsername(usernameFromBody);
-
-      if (
-        !user ||
-        !LoginService.isPasswordCorrect(user.password, passwordFromBody)
-      ) {
-        return [wrongUserOrPassword, undefined];
-      }
-
-      if (usernameFromBody && passwordFromBody) {
-        const loginData = new LoginEntity({
-          usernameFromBody,
-          usernameFromDb: user.username,
-          passwordFromBody,
-          passwordFromDb: user.password,
-          sessionIdFromCookie: sessionId,
-          sessionIdFromDb: user.sessionId,
-          loginSuccess: false,
-        });
-
-        return [undefined, loginData];
-      }
-
-      return [wrongUserOrPassword, undefined];
+      return [undefined, { username, password }];
     } catch (e) {
-      return [noCredentialsError, undefined];
+      return [badRequestUser, undefined];
     }
   };
 
-  logIn = async (loginEntity: LoginEntity): Promise<Maybe<UserEntity>> => {
+  logIn = async ({
+    username,
+    password,
+  }: LoginFields): Promise<Maybe<AuthenticationResultType>> => {
+    const client = new CognitoIdentityProviderClient({});
+
+    const signInCommand = new InitiateAuthCommand({
+      AuthParameters: {
+        USERNAME: username,
+        PASSWORD: password,
+      },
+      AuthFlow: AuthFlowType.USER_PASSWORD_AUTH,
+      ClientId: process.env.USER_POOL_CLIENT_ID,
+    });
+
     try {
-      const user = await this.userRepo.getOneByUsername(
-        loginEntity.usernameFromBody,
-      );
+      const { AuthenticationResult } = await client.send(signInCommand);
 
-      if (!user.sessionId) {
-        user.sessionId = crypto.randomUUID();
-
-        await this.userRepo.updateSessionId(user);
-
-        console.log('sessionId added to DB successfully');
-      }
-
-      return [undefined, user];
+      return [undefined, AuthenticationResult];
     } catch (e) {
-      console.error('Something went wrong when logging in', e);
-
-      return [wrongUserOrPassword, undefined];
+      console.log('error', e);
+      return [e, undefined];
     }
   };
 

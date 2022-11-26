@@ -34,8 +34,6 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
       .create({
         username: 'ilya_nice',
         firstName: 'Илья',
-        password: process.env.ILYA_PASSWORD as string,
-        sessionId: undefined,
         roles: [UserRoles.DRIVER],
         availableCarIds: [FAMILY_HONDA_CAR_NUMBER],
         providedCarIds: [],
@@ -51,8 +49,6 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
       .create({
         username: 'akushlianski',
         firstName: 'Андрей',
-        password: process.env.PAPA_PASSWORD as string,
-        sessionId: undefined,
         roles: [UserRoles.CAR_PROVIDER, UserRoles.DRIVER],
         availableCarIds: [FAMILY_HONDA_CAR_NUMBER],
         providedCarIds: [FAMILY_HONDA_CAR_NUMBER],
@@ -68,8 +64,6 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
       .create({
         username: 'mariya_kalib',
         firstName: 'Мария',
-        password: process.env.MASHA_PASSWORD as string,
-        sessionId: undefined,
         roles: [UserRoles.DRIVER],
         availableCarIds: [FAMILY_HONDA_CAR_NUMBER],
         providedCarIds: [],
@@ -85,8 +79,6 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
       .create({
         username: 'stranger',
         firstName: 'Джон',
-        password: process.env.STRANGER_PASSWORD as string,
-        sessionId: undefined,
         roles: [UserRoles.DRIVER, UserRoles.CAR_PROVIDER],
         availableCarIds: [STRANGERS_BMW],
         providedCarIds: [],

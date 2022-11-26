@@ -3,9 +3,9 @@ import { IUserDomain } from 'services/core/user/user.types';
 import { FamilyCarBookingApp } from 'services/db/db.service';
 
 export class AuthService {
-  async verifyAccessToken() {}
-
-  async getUserFromIdToken(idToken): Promise<IUserDomain> {
+  async getUserFromIdToken(authHeader: string): Promise<IUserDomain> {
+    const [, idToken] = authHeader.split('Bearer ');
+    console.log('idToken', idToken);
     const email = this.getEmailFromIdToken(idToken);
 
     const userFromDb = await FamilyCarBookingApp.entities.user

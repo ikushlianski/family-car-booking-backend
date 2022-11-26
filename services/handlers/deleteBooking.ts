@@ -1,25 +1,14 @@
 import { APIGatewayProxyHandlerV2 } from 'aws-lambda';
 import { StatusCodes } from 'http-status-codes';
-import { unauthorizedError } from 'services/core/auth/auth.errors';
-import {
-  CookieKeys,
-  cookieService,
-} from 'services/core/auth/cookie.service';
+import { authService } from 'services/core/auth/authService';
 import { bookingNotFoundError } from 'services/core/booking/booking.errors';
 import { bookingService } from 'services/core/booking/booking.service';
 import { responderService } from 'services/responder.service';
 
 export const handler: APIGatewayProxyHandlerV2 = async (event) => {
-  const authenticatedUser = await cookieService.checkAuthenticated(
-    event.cookies,
+  const authenticatedUser = await authService.getUserFromIdToken(
+    event.headers.authorization,
   );
-
-  if (!authenticatedUser || !authenticatedUser.sessionId) {
-    return responderService.toErrorResponse(
-      unauthorizedError,
-      StatusCodes.UNAUTHORIZED,
-    );
-  }
 
   const query = event.queryStringParameters;
 
@@ -49,11 +38,5 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
   return responderService.toSuccessResponse(
     { status: 'Deleted successfully' },
     undefined,
-    [
-      cookieService.makeCookie(
-        CookieKeys.SESSION_ID,
-        authenticatedUser.sessionId,
-      ),
-    ],
   );
 };

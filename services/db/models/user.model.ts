@@ -12,16 +12,9 @@ export const UserModel = new Entity({
       type: 'string',
       required: true,
     },
-    password: {
-      type: 'string',
-      required: true,
-    },
     firstName: {
       type: 'string',
       required: true,
-    },
-    sessionId: {
-      type: 'string',
     },
     roles: {
       type: 'list',
@@ -73,17 +66,6 @@ export const UserModel = new Entity({
       },
       sk: {
         field: 'sk',
-        composite: [],
-      },
-    },
-    getUserBySessionId: {
-      index: 'get-user-by-session-id',
-      pk: {
-        field: 'gsi1pk',
-        composite: ['sessionId'],
-      },
-      sk: {
-        field: 'gsi1sk',
         composite: [],
       },
     },
