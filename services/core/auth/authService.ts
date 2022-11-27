@@ -1,13 +1,10 @@
 import { userMapper } from 'services/core/user/user.mapper';
 import { IUserDomain } from 'services/core/user/user.types';
 import { FamilyCarBookingApp } from 'services/db/db.service';
+import { Claims } from 'services/handlers/handlers.types';
 
 export class AuthService {
-  async getUserFromIdToken(authHeader: string): Promise<IUserDomain> {
-    const [, idToken] = authHeader.split('Bearer ');
-    console.log('idToken', idToken);
-    const email = this.getEmailFromIdToken(idToken);
-
+  async getUserByJwtClaims({ email }: Claims): Promise<IUserDomain> {
     const userFromDb = await FamilyCarBookingApp.entities.user
       .get({ username: email })
       .go();

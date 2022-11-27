@@ -1,12 +1,19 @@
-import { APIGatewayProxyHandlerV2 } from 'aws-lambda';
+import { APIGatewayProxyEventV2WithRequestContext } from 'aws-lambda/trigger/api-gateway-proxy';
+import { authService } from 'services/core/auth/authService';
 import { bookingMapper } from 'services/core/booking/booking.mapper';
 import { bookingService } from 'services/core/booking/booking.service';
 import { StatusCodes } from 'http-status-codes';
 import { badRequestBooking } from 'services/core/booking/booking.errors';
 import { ICreateBookingDto } from 'services/core/booking/booking.types';
+import { RequestContext } from 'services/handlers/handlers.types';
 import { responderService } from 'services/responder.service';
 
-export const handler: APIGatewayProxyHandlerV2 = async (event) => {
+export const handler = async (
+  event: APIGatewayProxyEventV2WithRequestContext<RequestContext>,
+) => {
+  const authenticatedUser = await authService.getUserByJwtClaims(
+    event.requestContext.authorizer.jwt.claims,
+  );
   let body: ICreateBookingDto;
 
   try {

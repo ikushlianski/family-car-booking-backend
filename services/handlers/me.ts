@@ -1,14 +1,17 @@
-import { APIGatewayProxyHandlerV2 } from 'aws-lambda';
+import { APIGatewayProxyEventV2WithRequestContext } from 'aws-lambda/trigger/api-gateway-proxy';
 import { authService } from 'services/core/auth/authService';
 import {
   CookieKeys,
   cookieService,
 } from 'services/core/auth/cookie.service';
+import { RequestContext } from 'services/handlers/handlers.types';
 import { responderService } from 'services/responder.service';
 
-export const handler: APIGatewayProxyHandlerV2 = async (event) => {
-  const authenticatedUser = await authService.getUserFromIdToken(
-    event.headers.authorization,
+export const handler = async (
+  event: APIGatewayProxyEventV2WithRequestContext<RequestContext>,
+) => {
+  const authenticatedUser = await authService.getUserByJwtClaims(
+    event.requestContext.authorizer.jwt.claims,
   );
 
   return responderService.toSuccessResponse(
