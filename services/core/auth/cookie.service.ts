@@ -2,10 +2,11 @@ import { SessionId } from '../user/user.types';
 
 export enum CookieKeys {
   SESSION_ID = 'sessionId',
+  REFRESH_TOKEN = 'refreshToken',
 }
 
 export class CookieService {
-  public getSessionIdFromCookies = (cookies: string[]): SessionId => {
+  public getRefreshTokenFromCookies = (cookies: string[]): SessionId => {
     return cookies.reduce((acc: SessionId, cookieString) => {
       const [key, value] = cookieString.split('=');
 

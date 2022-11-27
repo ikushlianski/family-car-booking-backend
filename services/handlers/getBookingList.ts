@@ -1,6 +1,6 @@
 import { APIGatewayProxyEventV2WithRequestContext } from 'aws-lambda/trigger/api-gateway-proxy';
 import { unauthorizedError } from 'services/core/auth/auth.errors';
-import { authService } from 'services/core/auth/authService';
+import { authService } from 'services/core/auth/auth.service';
 import {
   CookieKeys,
   cookieService,
@@ -17,9 +17,7 @@ import { responderService } from 'services/responder.service';
 export const handler = async (
   event: APIGatewayProxyEventV2WithRequestContext<RequestContext>,
 ) => {
-  const authenticatedUser = await authService.getUserByJwtClaims(
-    event.requestContext.authorizer.jwt.claims,
-  );
+  const authenticatedUser = await authService.authenticate(event);
   const query = event.queryStringParameters;
   const { username, roles, sessionId } = authenticatedUser;
 

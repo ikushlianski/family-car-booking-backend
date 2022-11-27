@@ -1,4 +1,4 @@
-import { authService } from 'services/core/auth/authService';
+import { authService } from 'services/core/auth/auth.service';
 
 describe('AuthService', () => {
   describe('getEmailFromIdToken', () => {

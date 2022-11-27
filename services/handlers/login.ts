@@ -29,7 +29,11 @@ export async function handler(
         StatusCodes.UNAUTHORIZED,
       )
     : responderService.toSuccessResponse(
-        { status: 'Success', idToken: tokens.IdToken },
+        {
+          status: 'Success',
+          accessToken: tokens.AccessToken,
+          idToken: tokens.IdToken,
+        },
         undefined,
         [
           cookieService.makeCookie(
