@@ -1,25 +1,46 @@
+import {
+  CognitoIdentityProviderClient,
+  GlobalSignOutCommand,
+} from '@aws-sdk/client-cognito-identity-provider';
 import { APIGatewayProxyEventV2WithRequestContext } from 'aws-lambda/trigger/api-gateway-proxy';
+import { StatusCodes } from 'http-status-codes';
+import { responderService } from 'services/responder.service';
 
 export async function handler(
   event: APIGatewayProxyEventV2WithRequestContext<unknown>,
 ) {
-  // get refresh token in cookie
-  // revoke that token
-  // if (error || !user) {
-  //   return responderService.toErrorResponse(
-  //     error,
-  //     StatusCodes.UNAUTHORIZED,
-  //   );
-  // }
-  //
-  // const [logoutError] = await logoutService.logout(user);
-  //
-  // return logoutError
-  //   ? responderService.toErrorResponse(
-  //       logoutError,
-  //       StatusCodes.UNAUTHORIZED,
-  //     )
-  //   : responderService.toSuccessResponse(undefined, undefined, [
-  //       cookieService.buildCookieToBeRemoved(CookieKeys.SESSION_ID),
-  //     ]);
+  let accessToken;
+
+  try {
+    ({ accessToken } = JSON.parse(event.body));
+  } catch (e) {
+    return responderService.toErrorResponse(
+      new Error('Bad request'),
+      StatusCodes.BAD_REQUEST,
+    );
+  }
+
+  if (!accessToken) {
+    return responderService.toErrorResponse(
+      new Error('No refresh token provided in request'),
+      StatusCodes.BAD_REQUEST,
+    );
+  }
+
+  const client = new CognitoIdentityProviderClient({});
+
+  const signOutCommand = new GlobalSignOutCommand({
+    AccessToken: accessToken,
+  });
+
+  try {
+    await client.send(signOutCommand);
+
+    return responderService.toSuccessResponse({ status: 'Logged out' });
+  } catch (e) {
+    return responderService.toErrorResponse(
+      e,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+    );
+  }
 }
