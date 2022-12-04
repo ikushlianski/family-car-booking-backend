@@ -93,11 +93,8 @@ export function MyStack({ stack }: StackContext) {
         authorizer: 'none',
         function: 'handlers/login.handler',
       },
-      // 'POST /token/refresh': {
-      //   authorizer: 'none',
-      //   function: 'handlers/refresh-token.handler',
-      // },
       'POST /logout': 'handlers/logout.handler',
+      'POST /token/refresh': 'handlers/refresh-tokens.handler',
 
       // APP
       'GET /bookings': 'handlers/getBookingList.handler',
