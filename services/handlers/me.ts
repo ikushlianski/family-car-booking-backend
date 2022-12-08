@@ -15,11 +15,6 @@ export const handler = async (
   return responderService.toSuccessResponse(
     { username: authenticatedUser.username },
     undefined,
-    [
-      cookieService.makeCookie(
-        CookieKeys.SESSION_ID,
-        authenticatedUser.sessionId,
-      ),
-    ],
+    [],
   );
 };
