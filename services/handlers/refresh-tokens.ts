@@ -6,7 +6,7 @@ import { responderService } from 'services/responder.service';
 export async function handler(
   event: APIGatewayProxyEventV2WithRequestContext<unknown>,
 ) {
-  const [validationError, { accessToken, refreshToken, idToken }] =
+  const [validationError, { refreshToken }] =
     refreshTokensService.validateTokens(event);
 
   if (validationError) {
@@ -16,32 +16,25 @@ export async function handler(
     );
   }
 
-  return 'stub';
+  const [refreshTokenError, result] =
+    await refreshTokensService.refreshTokens({ refreshToken });
 
-  // const [refreshTokensError, newTokens] =
-  //   await refreshTokensService.refreshTokens({
-  //     refreshToken,
-  //   });
-  //
-  // return refreshTokensError
-  //   ? responderService.toErrorResponse(
-  //       wrongUserOrPassword,
-  //       StatusCodes.UNAUTHORIZED,
-  //     )
-  //   : responderService.toSuccessResponse(
-  //       {
-  //         status: 'Success',
-  //         accessToken: newTokens.AccessToken,
-  //         idToken: newTokens.IdToken,
-  //       },
-  //       undefined,
-  //       [
-  //         cookieService.makeCookie(
-  //           'refreshToken',
-  //           newTokens.RefreshToken,
-  //           '/',
-  //           30,
-  //         ),
-  //       ],
-  //     );
+  if (refreshTokenError) {
+    return responderService.toErrorResponse(
+      refreshTokenError,
+      StatusCodes.BAD_REQUEST,
+    );
+  }
+
+  if (!result) {
+    return responderService.toErrorResponse(
+      refreshTokenError,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+    );
+  }
+
+  return responderService.toSuccessResponse(
+    { IdToken: result.IdToken, AccessToken: result.AccessToken },
+    {},
+  );
 }
