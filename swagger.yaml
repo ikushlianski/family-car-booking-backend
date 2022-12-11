@@ -16,7 +16,67 @@ info:
 servers:
   - url: https://qa-car-tracker.ilya.online
 paths:
-  # todo add signup endpoint
+  /signup:
+    post:
+      summary: Sign up with your credential.
+      description: Sign up with your credentials and basic user data.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: masha@gmail.com
+                  description: Should be the user's email
+                password:
+                  type: string
+                  example: myPassW0rd
+                providedCarIds:
+                  type: array
+                  example: ['ho-123456']
+                  default: []
+                  description: By default the user does not provide any cars
+                availableCarIds:
+                  type: array
+                  example: ['ho-123456']
+                  default: ['ho-123456']
+                  description: By default the user gets assigned the Family Honda car. This is done for simplicity. In a real app, the user needs to provide their own car out of a list or create a car on the fly. This app is for educational purposes, so we are removing this complexity.
+                firstName:
+                  type: string
+                  example: Maria
+                  description: Your user's name as it will be shown in the application
+      responses:
+        '200':
+          description: Successful signup
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  IdToken:
+                    type: string
+                    example: abc
+                  AccessToken:
+                    type: string
+                    example: abc
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: refreshToken=abcde12345
+        '400':
+          description: Bad request. You did not provide the necessary information for a successful signup.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'Bad Request'
+
   # todo add refresh token endpoint
 
   /login:
@@ -43,7 +103,7 @@ paths:
                   example: myPassW0rd
       responses:
         '200':
-          description: Successful operation
+          description: Successful signup. You will get IdToken and AccessToken in the body as well as RefreshToken in the cookies
           content:
             application/json:
               schema:
