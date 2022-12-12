@@ -102,7 +102,7 @@ paths:
                     example: abc
 
         '401':
-          description: Unauthorized. Invalid credentials presented.
+          description: Unauthorized. Invalid credentials presented or the refresh token has already been revoked.
           content:
             application/json:
               schema:
@@ -202,19 +202,22 @@ paths:
   /logout:
     post:
       summary: Logout using your credentials
-      description: You must provide a cookie called `sessionId` with a value that corresponds to your user in the database. Without a cookie, the logout fails
-      parameters:
-        - in: cookie
-          name: sessionId
-          description: Cookie that should go with your user's request. This `sessionId` cookie value is located in DynamoDB database, assuming your user logged in previously. If you don't know your sessionId, it was likely not generated. Call the `/login` endpoint to get the session id generated and returned to you in the cookies
-          schema:
-            type: string
+      description: You must provide access token in the request body. When you revoke your tokens, you won't be able to use them for accessing the backend.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                  example: abc
 
       responses:
         '200':
-          description: Successful operation. Your session cookie gets removed. No body is returned
+          description: Successful operation. Your refresh token was revoked and cannot be used for refreshing tokens anymore until you log in again.
         '401':
-          description: Unauthorized. Invalid cookie presented or the cookie was not included in the request or cookie is incorrect.
+          description: Unauthorized.
           content:
             application/json:
               schema:
@@ -229,17 +232,19 @@ paths:
       summary: Get user info
       description: Information about the user, their rides, cars etc.
       parameters:
+        - in: header
+          name: Authorization
+          description: "Access token. The format should be `Authorization: Bearer <your-token>`"
+          schema:
+            type: string
+
         - in: path
           name: username
           description: User's name as it appears in the DynamoDB database
           schema:
             type: string
           required: true
-        - in: cookie
-          name: sessionId
-          description: Cookie that should go with your user's request. This `sessionId` cookie value is located in DynamoDB database, assuming your user logged in previously. If you don't know your sessionId, it was likely not generated. Call the `/login` endpoint to get the session id generated and returned to you in the cookies
-          schema:
-            type: string
+
       responses:
         '200':
           description: Successful operation
@@ -254,8 +259,6 @@ paths:
                       username:
                         type: string
                       firstName:
-                        type: string
-                      sessionId:
                         type: string
                       roles:
                         type: array
@@ -277,7 +280,7 @@ paths:
 
 
         '401':
-          description: Unauthorized. Invalid credentials presented or cookie was not included in the request or cookie is incorrect.
+          description: Unauthorized. Invalid credentials presented.
           content:
             application/json:
               schema:
@@ -311,9 +314,9 @@ paths:
           description: Timestamp (seconds, not JS milliseconds) of the booking start time
           schema:
             type: string
-        - in: cookie
-          name: sessionId
-          description: Cookie that should go with your user's request. This `sessionId` cookie value is located in DynamoDB database, assuming your user logged in previously. If you don't know your sessionId, it was likely not generated. Call the `/login` endpoint to get the session id generated and returned to you in the cookies
+        - in: header
+          name: Authorization
+          description: "Access token. The format should be `Authorization: Bearer <your-token>`"
           schema:
             type: string
       responses:

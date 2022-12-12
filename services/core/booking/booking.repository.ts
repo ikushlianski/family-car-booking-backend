@@ -82,17 +82,26 @@ export class BookingRepository {
     carId: _carId,
     startTime: _startTime,
   }: GetSingleBookingRepositoryParams): Promise<BookingEntity> => {
-    const [{ carId, startTime, endTime, description }] =
-      await FamilyCarBookingApp.entities.booking.query
-        .bookingsByUser({
-          username: user.username,
-          carId: _carId,
-          startTime: _startTime,
-        })
-        .go();
+    const [booking] = await FamilyCarBookingApp.entities.booking.query
+      .bookingsByUser({
+        username: user.username,
+        carId: _carId,
+        startTime: _startTime,
+      })
+      .go();
+
+    if (!booking?.carId) {
+      return undefined;
+    }
 
     return new BookingEntity(
-      { username: user.username, carId, startTime, endTime, description },
+      {
+        username: user.username,
+        carId: booking.carId,
+        startTime: booking.startTime,
+        endTime: booking.endTime,
+        description: booking.description,
+      },
       user,
     );
   };

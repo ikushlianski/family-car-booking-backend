@@ -20,6 +20,8 @@ export const handler = async (
 
   const query = event.queryStringParameters;
 
+  console.log('query', query);
+
   if (!query?.carId || !query.startTime) {
     return responderService.toErrorResponse(
       bookingNotFoundError,

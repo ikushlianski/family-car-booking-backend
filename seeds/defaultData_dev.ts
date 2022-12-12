@@ -32,7 +32,7 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
      */
     FamilyCarBookingApp.entities.user
       .create({
-        username: 'ilya_nice',
+        username: 'kushliansky@gmail.com',
         firstName: 'Илья',
         roles: [UserRoles.DRIVER],
         availableCarIds: [FAMILY_HONDA_CAR_NUMBER],
@@ -97,7 +97,7 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
     // past booking, Ilya
     FamilyCarBookingApp.entities.booking
       .create({
-        username: 'ilya_nice',
+        username: 'kushliansky@gmail.com',
         carId: FAMILY_HONDA_CAR_NUMBER,
         startTime: calculatePrevTimestampInSecs(new Date(), 5), // past event, five days ago
         description: 'Ilya - past event',
@@ -108,7 +108,7 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
     // future booking, Ilya
     FamilyCarBookingApp.entities.booking
       .create({
-        username: 'ilya_nice',
+        username: 'kushliansky@gmail.com',
         carId: FAMILY_HONDA_CAR_NUMBER,
         startTime: calculateFutureTimestampInSecs(new Date(), 5), // future event relative to the time of seeding, 5 days from now
         description: 'Ilya - future event',

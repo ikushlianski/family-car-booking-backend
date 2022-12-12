@@ -116,7 +116,9 @@ export class BookingService {
         startTime,
       });
 
-      return [undefined, booking];
+      return booking
+        ? [undefined, booking]
+        : [bookingNotFoundError, undefined];
     } catch (e) {
       console.error('Error querying single booking', e);
 
