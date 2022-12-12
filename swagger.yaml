@@ -18,7 +18,7 @@ servers:
 paths:
   /signup:
     post:
-      summary: Sign up with your credential.
+      summary: Sign up with your credentials.
       description: Sign up with your credentials and basic user data.
       requestBody:
         content:
@@ -61,11 +61,10 @@ paths:
                   AccessToken:
                     type: string
                     example: abc
-          headers:
-            Set-Cookie:
-              schema:
-                type: string
-                example: refreshToken=abcde12345
+                  RefreshToken:
+                    type: string
+                    example: abc
+
         '400':
           description: Bad request. You did not provide the necessary information for a successful signup.
           content:
@@ -82,13 +81,7 @@ paths:
   /login:
     post:
       summary: Login with your credentials
-      description: You must provide a cookie called `sessionId` with a value that corresponds to your user in the database. We assume that the user is already registered, so you should find it in the DynamoDB database. When calling this endpoint for the first time, you should not supply any auth cookie (`sessionId`). But for subsequent calls, please ensure you attach the `sessionId` cookie returned from previous `/login` calls. Ask backend team for any support.
-      parameters:
-        - in: cookie
-          name: sessionId
-          description: Cookie that should go with your user's request. This `sessionId` cookie value is located in DynamoDB database, assuming your user logged in previously. If you don't know your sessionId, it was likely not generated. Call the `/login` endpoint to get the session id generated and returned to you in the cookies
-          schema:
-            type: string
+      description: Supply login and password to authenticate.
       requestBody:
         content:
           application/json:
@@ -97,24 +90,27 @@ paths:
               properties:
                 username:
                   type: string
-                  example: masha
+                  example: masha@mail.com
                 password:
                   type: string
                   example: myPassW0rd
       responses:
         '200':
-          description: Successful signup. You will get IdToken and AccessToken in the body as well as RefreshToken in the cookies
+          description: Successful login. You will get IdToken, AccessToken and RefreshToken in the response body
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  username:
+                  RefreshToken:
                     type: string
-                    example: masha
-                  password:
+                    example: abc
+                  IdToken:
                     type: string
-                    example: myPassW0rd
+                    example: abc
+                  AccessToken:
+                    type: string
+                    example: abc
         '400':
           description: Bad request. You did not provide any credentials at all, so request is incorrect.
           content:
@@ -126,7 +122,7 @@ paths:
                     type: string
                     example: 'No credentials provided'
         '401':
-          description: Unauthorized. Invalid credentials presented or cookie was not included in the request or cookie is incorrect.
+          description: Unauthorized. Invalid credentials presented.
           content:
             application/json:
               schema:

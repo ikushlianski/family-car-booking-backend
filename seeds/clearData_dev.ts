@@ -16,7 +16,13 @@ import { FamilyCarBookingApp } from 'services/db/db.service';
       .delete({ username: 'ilya_nice' })
       .go(),
     FamilyCarBookingApp.entities.user
+      .delete({ username: 'kushliansky@gmail.com' })
+      .go(),
+    FamilyCarBookingApp.entities.user
       .delete({ username: 'mariya_kalib' })
+      .go(),
+    FamilyCarBookingApp.entities.user
+      .delete({ username: 'mariakazakova92@gmail.com' })
       .go(),
     FamilyCarBookingApp.entities.user
       .delete({ username: 'stranger' })

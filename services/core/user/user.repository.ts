@@ -21,7 +21,7 @@ export class UserRepository {
         username,
         availableCarIds:
           // for simplicity of this educational app, assume Family Honda is a default car
-          availableCarIds.length === 0
+          availableCarIds?.length === 0
             ? [FAMILY_HONDA_CAR_NUMBER]
             : availableCarIds,
         providedCarIds,

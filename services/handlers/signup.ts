@@ -57,7 +57,8 @@ export async function handler(
     AuthenticationResult: { IdToken, AccessToken, RefreshToken },
   } = await client.send(signInCommand);
 
-  return responderService.toSuccessResponse({ IdToken, AccessToken }, {}, [
-    cookieService.makeCookie('refreshToken', RefreshToken, '/', 30),
-  ]);
+  return responderService.toSuccessResponse(
+    { RefreshToken, IdToken, AccessToken },
+    {},
+  );
 }

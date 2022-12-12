@@ -30,18 +30,10 @@ export async function handler(
       )
     : responderService.toSuccessResponse(
         {
-          status: 'Success',
-          accessToken: tokens.AccessToken,
-          idToken: tokens.IdToken,
+          AccessToken: tokens.AccessToken,
+          IdToken: tokens.IdToken,
+          RefreshToken: tokens.RefreshToken,
         },
         undefined,
-        [
-          cookieService.makeCookie(
-            'refreshToken',
-            tokens.RefreshToken,
-            '/',
-            30,
-          ),
-        ],
       );
 }
