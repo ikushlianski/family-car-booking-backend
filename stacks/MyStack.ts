@@ -26,6 +26,16 @@ export function MyStack({ stack }: StackContext) {
           adminUserPassword: true,
         },
       },
+      userPool: {
+        passwordPolicy: {
+          // complex password would be required in a real app
+          minLength: 6,
+          requireLowercase: false,
+          requireUppercase: false,
+          requireDigits: false,
+          requireSymbols: false,
+        },
+      },
     },
   });
 
