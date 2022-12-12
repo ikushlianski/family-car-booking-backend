@@ -76,7 +76,41 @@ paths:
                     type: string
                     example: 'Bad Request'
 
-  # todo add refresh token endpoint
+  /token/refresh:
+    post:
+      summary: Refresh access and id token by presenting a secure refresh token
+      parameters:
+        - in: header
+          name: x-refresh-token
+          schema:
+            type: string
+          required: true
+
+      responses:
+        '200':
+          description: Successful refresh. You will get IdToken and AccessToken back
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  IdToken:
+                    type: string
+                    example: abc
+                  AccessToken:
+                    type: string
+                    example: abc
+
+        '401':
+          description: Unauthorized. Invalid credentials presented.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'Invalid credentials provided'
 
   /login:
     post:

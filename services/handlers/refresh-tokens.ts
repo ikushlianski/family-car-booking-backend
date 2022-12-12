@@ -12,7 +12,7 @@ export async function handler(
   if (validationError) {
     return responderService.toErrorResponse(
       validationError,
-      StatusCodes.BAD_REQUEST,
+      StatusCodes.UNAUTHORIZED,
     );
   }
 
@@ -22,7 +22,7 @@ export async function handler(
   if (refreshTokenError) {
     return responderService.toErrorResponse(
       refreshTokenError,
-      StatusCodes.BAD_REQUEST,
+      StatusCodes.UNAUTHORIZED,
     );
   }
 
