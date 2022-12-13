@@ -1,5 +1,3 @@
-export interface ValidateRefreshTokenBodyResult {
-  accessToken: string;
-  idToken: string;
+export interface ValidateRefreshTokenResult {
   refreshToken: string;
 }

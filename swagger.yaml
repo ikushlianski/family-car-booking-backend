@@ -457,7 +457,7 @@ paths:
                           type: string
                           example: Masha - visit parents
         '401':
-          description: Unauthorized. You either gave a car number that the current user cannot access, or you forgot to include the cookie in the request, or the cookie is incorrect.
+          description: Unauthorized. You either gave a car number that the current user cannot access, or you forgot to include the Authorization header in the request.
           content:
             application/json:
               schema:
@@ -497,7 +497,7 @@ paths:
               properties:
                 username:
                   type: string
-                  example: masha
+                  example: masha@mail.com
                 carId:
                   type: string
                   example: ho-123456
@@ -509,9 +509,10 @@ paths:
                   type: string
                   description: Name of your ride
       parameters:
-        - in: cookie
-          name: sessionId
-          description: Cookie that should go with your user's request. This `sessionId` cookie value is located in DynamoDB database, assuming your user logged in previously. If you don't know your sessionId, it was likely not generated. Call the `/login` endpoint to get the session id generated and returned to you in the cookies
+        - in: header
+          name: Authorization
+          description: "Access token. The format should be `Authorization: Bearer <your-token>`"
+          required: true
           schema:
             type: string
       responses:

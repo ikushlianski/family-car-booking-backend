@@ -6,28 +6,22 @@ import {
 } from '@aws-sdk/client-cognito-identity-provider';
 import { APIGatewayProxyEventV2WithRequestContext } from 'aws-lambda/trigger/api-gateway-proxy';
 import { Maybe } from 'services/app.types';
-import { ValidateRefreshTokenBodyResult } from 'services/core/auth/refresh-tokens.types';
+import { ValidateRefreshTokenResult } from 'services/core/auth/refresh-tokens.types';
 import { unauthorizedError } from './auth.errors';
 
 export class RefreshTokensService {
   validateTokens(
     event: APIGatewayProxyEventV2WithRequestContext<any>,
-  ): Maybe<ValidateRefreshTokenBodyResult> {
-    const [, accessToken] =
-      event.headers['authorization'].split('Bearer ');
-
-    const idToken = event.headers['x-id-token'];
+  ): Maybe<ValidateRefreshTokenResult> {
     const refreshToken = event.headers['x-refresh-token'];
 
-    if (accessToken && idToken && refreshToken) {
-      return [undefined, { accessToken, idToken, refreshToken }];
+    if (refreshToken) {
+      return [undefined, { refreshToken }];
     }
 
     return [
       unauthorizedError,
       {
-        accessToken: undefined,
-        idToken: undefined,
         refreshToken: undefined,
       },
     ];
