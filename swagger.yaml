@@ -369,7 +369,7 @@ paths:
                         type: string
                         example: "Поездка в Новолукомль"
         '401':
-          description: Unauthorized. Invalid credentials presented or cookie was not included in the request or cookie is incorrect.
+          description: Unauthorized. Invalid credentials presented.
           content:
             application/json:
               schema:
@@ -411,13 +411,23 @@ paths:
           name: carId
           example: ho-123456
           description: User's car id (license plate)
+          required: true
           schema:
             type: string
-        - in: cookie
-          name: sessionId
-          description: Cookie that should go with your user's request. This `sessionId` cookie value is located in DynamoDB database, assuming your user logged in previously. If you don't know your sessionId, it was likely not generated. Call the `/login` endpoint to get the session id generated and returned to you in the cookies
+        - in: query
+          name: username
+          example: masha@mail.com
+          description: User's name, if you want to refine the search to find only the rides for a particular user
+          required: false
           schema:
             type: string
+        - in: header
+          name: Authorization
+          description: "Access token. The format should be `Authorization: Bearer <your-token>`"
+          required: true
+          schema:
+            type: string
+
       responses:
         '200':
           description: Successful operation
