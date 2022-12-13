@@ -66,7 +66,5 @@ export const handler = async (
     );
   }
 
-  return responderService.toSuccessResponse({ bookings }, undefined, [
-    cookieService.makeCookie(CookieKeys.SESSION_ID, sessionId),
-  ]);
+  return responderService.toSuccessResponse({ bookings }, undefined);
 };

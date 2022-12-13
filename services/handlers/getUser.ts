@@ -49,10 +49,5 @@ export const handler = async (
     );
   }
 
-  return responderService.toSuccessResponse({ user }, undefined, [
-    cookieService.makeCookie(
-      CookieKeys.SESSION_ID,
-      authenticatedUser.sessionId,
-    ),
-  ]);
+  return responderService.toSuccessResponse({ user }, undefined);
 };

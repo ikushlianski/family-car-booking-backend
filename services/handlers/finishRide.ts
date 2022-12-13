@@ -56,11 +56,5 @@ export const handler = async (
   return responderService.toSuccessResponse(
     { status: 'Finished ride successfully' },
     undefined,
-    [
-      cookieService.makeCookie(
-        CookieKeys.SESSION_ID,
-        authenticatedUser.sessionId,
-      ),
-    ],
   );
 };

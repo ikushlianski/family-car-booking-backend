@@ -73,11 +73,5 @@ export const handler = async (
   return responderService.toSuccessResponse(
     { booking: bookingResponse },
     undefined,
-    [
-      cookieService.makeCookie(
-        CookieKeys.SESSION_ID,
-        authenticatedUser.sessionId,
-      ),
-    ],
   );
 };
