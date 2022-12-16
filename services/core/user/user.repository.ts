@@ -45,6 +45,10 @@ export class UserRepository {
     return userMapper.dbToDomain(userFromDb);
   };
 
+  removeUser = async (username: string) => {
+    await FamilyCarBookingApp.entities.user.delete({ username }).go();
+  };
+
   resolveUserRoles(
     availableCarIds: string[],
     providedCarIds: string[],

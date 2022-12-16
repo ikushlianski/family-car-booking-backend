@@ -237,6 +237,26 @@ export class BookingRepository {
 
     return true;
   };
+
+  async removeBookingsByUser(username) {
+    const bookings = await FamilyCarBookingApp.entities.booking.query
+      .bookingsByUser({
+        username,
+      })
+      .go();
+
+    await Promise.all(
+      bookings.map((booking) => {
+        return FamilyCarBookingApp.entities.booking
+          .delete({
+            username: booking.username,
+            carId: booking.carId,
+            startTime: booking.startTime,
+          })
+          .go();
+      }),
+    );
+  }
 }
 
 export const bookingRepository = new BookingRepository();

@@ -569,6 +569,49 @@ paths:
                     type: string
                     example: 'Error saving your booking'
 
+  /account:
+    delete:
+      summary: Delete user account by credentials
+      description: Delete the user's account and their rides and information. Sign up once again to create a new user
+      parameters:
+        - in: header
+          name: Authorization
+          description: "Access token. The format should be `Authorization: Bearer <your-token>`"
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Successfully deleted the user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: User removed
+        '401':
+          description: Unauthorized. You likely did not supply the user's access token. The token should be valid and not expired.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'Unauthorized'
+        '500':
+          description: Server-side error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'Error getting booking details'
 
 components:
   schemas:

@@ -108,6 +108,7 @@ export function MyStack({ stack }: StackContext) {
         function: 'handlers/refresh-tokens.handler',
       },
       'POST /logout': 'handlers/logout.handler',
+      'DELETE /account': 'handlers/delete-account.handler',
 
       // APP
       'GET /bookings': 'handlers/getBookingList.handler',

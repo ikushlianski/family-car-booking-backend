@@ -22,7 +22,7 @@ export async function handler(
 
   if (!accessToken) {
     return responderService.toErrorResponse(
-      new Error('No refresh token provided in request'),
+      new Error('No access token provided in request'),
       StatusCodes.BAD_REQUEST,
     );
   }
