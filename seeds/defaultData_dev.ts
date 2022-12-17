@@ -5,8 +5,10 @@ import {
   FAMILY_HONDA_CAR_NUMBER,
   STRANGERS_BMW,
 } from '../services/core/car/car.constants';
-import { UserRoles } from '../services/core/user/user.constants';
 import { FamilyCarBookingApp } from '../services/db/db.service';
+
+const ilyasEmail = 'kushliansky@gmail.com';
+const mashasEmail = 'mariakazakova92@gmail.com';
 
 (async () => {
   await Promise.all([
@@ -30,65 +32,7 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
     /**
      * Users
      */
-    FamilyCarBookingApp.entities.user
-      .create({
-        username: 'kushliansky@gmail.com',
-        firstName: 'Илья',
-        roles: [UserRoles.DRIVER],
-        availableCarIds: [FAMILY_HONDA_CAR_NUMBER],
-        providedCarIds: [],
-        rideCompletionText: 'Машина в гараже',
-        notifications: {
-          getNotifiedWhenBookingChanged: false,
-          getNotifiedWhenBookingCreated: false,
-        },
-      })
-      .go(),
-
-    FamilyCarBookingApp.entities.user
-      .create({
-        username: 'akushlianski',
-        firstName: 'Андрей',
-        roles: [UserRoles.CAR_PROVIDER, UserRoles.DRIVER],
-        availableCarIds: [FAMILY_HONDA_CAR_NUMBER],
-        providedCarIds: [FAMILY_HONDA_CAR_NUMBER],
-        rideCompletionText: 'Машина в гараже',
-        notifications: {
-          getNotifiedWhenBookingChanged: false,
-          getNotifiedWhenBookingCreated: false,
-        },
-      })
-      .go(),
-
-    FamilyCarBookingApp.entities.user
-      .create({
-        username: 'mariya_kalib',
-        firstName: 'Мария',
-        roles: [UserRoles.DRIVER],
-        availableCarIds: [FAMILY_HONDA_CAR_NUMBER],
-        providedCarIds: [],
-        rideCompletionText: 'Машина в гараже',
-        notifications: {
-          getNotifiedWhenBookingChanged: false,
-          getNotifiedWhenBookingCreated: false,
-        },
-      })
-      .go(),
-
-    FamilyCarBookingApp.entities.user
-      .create({
-        username: 'stranger',
-        firstName: 'Джон',
-        roles: [UserRoles.DRIVER, UserRoles.CAR_PROVIDER],
-        availableCarIds: [STRANGERS_BMW],
-        providedCarIds: [],
-        rideCompletionText: 'I do not speak Belarusian :)',
-        notifications: {
-          getNotifiedWhenBookingChanged: false,
-          getNotifiedWhenBookingCreated: false,
-        },
-      })
-      .go(),
+    // Do not pre-create users, since we now have signup functionality
 
     /**
      * Bookings
@@ -97,7 +41,7 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
     // past booking, Ilya
     FamilyCarBookingApp.entities.booking
       .create({
-        username: 'kushliansky@gmail.com',
+        username: ilyasEmail,
         carId: FAMILY_HONDA_CAR_NUMBER,
         startTime: calculatePrevTimestampInSecs(new Date(), 5), // past event, five days ago
         description: 'Ilya - past event',
@@ -108,7 +52,7 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
     // future booking, Ilya
     FamilyCarBookingApp.entities.booking
       .create({
-        username: 'kushliansky@gmail.com',
+        username: ilyasEmail,
         carId: FAMILY_HONDA_CAR_NUMBER,
         startTime: calculateFutureTimestampInSecs(new Date(), 5), // future event relative to the time of seeding, 5 days from now
         description: 'Ilya - future event',
@@ -128,7 +72,7 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
     // future booking, Masha
     FamilyCarBookingApp.entities.booking
       .create({
-        username: 'mariya_kalib',
+        username: mashasEmail,
         carId: FAMILY_HONDA_CAR_NUMBER,
         startTime: calculateFutureTimestampInSecs(new Date(), 3), // future event
         description: 'Masha - visit parents',
@@ -138,7 +82,7 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
     // future booking, Masha
     FamilyCarBookingApp.entities.booking
       .create({
-        username: 'mariya_kalib',
+        username: mashasEmail,
         carId: FAMILY_HONDA_CAR_NUMBER,
         startTime: calculateFutureTimestampInSecs(new Date(), 6), // future event
         description: 'Зоопарк!',
@@ -148,7 +92,7 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
     // future booking, Masha
     FamilyCarBookingApp.entities.booking
       .create({
-        username: 'mariya_kalib',
+        username: mashasEmail,
         carId: FAMILY_HONDA_CAR_NUMBER,
         startTime: calculateFutureTimestampInSecs(new Date(), 11), // future event
         description: 'За шубой',
@@ -158,7 +102,7 @@ import { FamilyCarBookingApp } from '../services/db/db.service';
     // future booking, Masha
     FamilyCarBookingApp.entities.booking
       .create({
-        username: 'mariya_kalib',
+        username: mashasEmail,
         carId: FAMILY_HONDA_CAR_NUMBER,
         startTime: calculateFutureTimestampInSecs(new Date(), 13), // future event
         description: 'К психологу в ЛОДЭ',

@@ -51,7 +51,7 @@ async function removeAllBookingSeeds() {
   const allSeedBookings = await Promise.all([
     FamilyCarBookingApp.entities.booking.query
       .bookingsByUser({
-        username: 'ilya_nice',
+        username: 'kushliansky@gmail.com',
         carId: FAMILY_HONDA_CAR_NUMBER,
       })
       .go(),
@@ -63,7 +63,7 @@ async function removeAllBookingSeeds() {
       .go(),
     FamilyCarBookingApp.entities.booking.query
       .bookingsByUser({
-        username: 'mariya_kalib',
+        username: 'mariakazakova92@gmail.com',
         carId: FAMILY_HONDA_CAR_NUMBER,
       })
       .go(),
