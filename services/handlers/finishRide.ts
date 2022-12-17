@@ -3,12 +3,9 @@ import { StatusCodes } from 'http-status-codes';
 import { authService } from 'services/core/auth/auth.service';
 import { bookingService } from 'services/core/booking/booking.service';
 import {
-  CookieKeys,
-  cookieService,
-} from 'services/core/auth/cookie.service';
-import {
   bookingNotFoundError,
   finishRideError,
+  permissionDenied,
 } from 'services/core/booking/booking.errors';
 import { RequestContext } from 'services/handlers/handlers.types';
 import { responderService } from 'services/responder.service';
@@ -30,9 +27,10 @@ export const handler = async (
   const { username: whoseBooking, carId, startTime } = query;
 
   const finishRideResult = await bookingService.finishRide({
-    username: whoseBooking || authenticatedUser.username,
+    username: whoseBooking,
     carId,
     startTime: +startTime,
+    authenticatedUser,
   });
 
   if (finishRideResult === false) {
@@ -50,6 +48,16 @@ export const handler = async (
     return responderService.toErrorResponse(
       bookingNotFoundError,
       StatusCodes.INTERNAL_SERVER_ERROR,
+    );
+  }
+
+  if (
+    finishRideResult instanceof Error &&
+    finishRideResult.message === permissionDenied.message
+  ) {
+    return responderService.toErrorResponse(
+      permissionDenied,
+      StatusCodes.FORBIDDEN,
     );
   }
 

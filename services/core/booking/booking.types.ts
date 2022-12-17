@@ -101,6 +101,7 @@ export interface FinishRideRepositoryParams {
   username: Username;
   carId: CarId;
   startTime: number;
+  authenticatedUser: IUserDomain;
 }
 
 export interface GetSingleBookingRepositoryParams {

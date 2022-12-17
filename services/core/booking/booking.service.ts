@@ -9,6 +9,7 @@ import {
   errorGettingSingleBooking,
   errorSavingBooking,
   forbiddenFieldsForEditError,
+  permissionDenied,
 } from 'services/core/booking/booking.errors';
 import { bookingMapper } from 'services/core/booking/booking.mapper';
 import { bookingRepository } from 'services/core/booking/booking.repository';
@@ -233,7 +234,12 @@ export class BookingService {
     username,
     carId,
     startTime,
+    authenticatedUser,
   }: FinishRideRepositoryParams): Promise<Error | boolean> => {
+    if (username !== authenticatedUser.username) {
+      return permissionDenied;
+    }
+
     try {
       const item = await FamilyCarBookingApp.entities.booking
         .get({ username, carId, startTime })

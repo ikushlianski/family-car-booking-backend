@@ -292,6 +292,91 @@ paths:
                     type: string
                     example: 'Invalid credentials provided'
 
+  /bookings/finish/id:
+    post:
+      summary: Finish ride
+      description: Finish one ride of a user
+      parameters:
+        - in: header
+          name: Authorization
+          description: "Access token. The format should be `Authorization: Bearer <your-token>`"
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: username
+          description: User's name as it appears in the DynamoDB database
+          example: maria@mail.com
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: carId
+          example: ho-123456
+          description: User's car id (license plate)
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: startTime
+          example: 1659716808
+          description: Timestamp (seconds, not JS milliseconds) of the booking start time
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Successfully finished the ride
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: Finished ride successfully
+        '400':
+          description: Bad request. You did not provide the necessary information for a successful finish of the ride.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'Bad Request'
+        '401':
+          description: Unauthorized. You likely did not supply the user's access token. The token should be valid and not expired.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'Unauthorized'
+        '403':
+          description: Forbidden. You probably tried to modify someone else's data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'Forbidden'
+        '500':
+          description: Server-side error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'Error finishing the ride'
+
   /bookings/id:
     get:
       summary: Get booking by ID
