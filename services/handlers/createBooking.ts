@@ -27,6 +27,7 @@ export const handler = async (
 
   const [createBookingError, booking] = await bookingService.createBooking(
     body,
+    authenticatedUser,
   );
 
   if (createBookingError) {

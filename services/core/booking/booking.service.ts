@@ -29,8 +29,13 @@ import { FamilyCarBookingApp } from 'services/db/db.service';
 export class BookingService {
   createBooking = async (
     body: ICreateBookingDto,
+    authenticatedUser: IUserDomain,
   ): Promise<Maybe<IBookingDomain>> => {
     try {
+      if (body.username !== authenticatedUser.username) {
+        return [errorSavingBooking, undefined];
+      }
+
       const booking = bookingMapper.dtoToDomain(body);
 
       await bookingRepository.saveBooking(booking);
