@@ -188,8 +188,12 @@ export class BookingService {
     startTime: string,
   ): Promise<true | Error> => {
     try {
+      if (whoseBooking !== authenticatedUser.username) {
+        return errorDeletingBooking;
+      }
+
       const exists = await bookingRepository.checkBookingExists({
-        username: whoseBooking || authenticatedUser.username,
+        username: whoseBooking,
         carId,
         startTime: +startTime,
       });
@@ -203,7 +207,7 @@ export class BookingService {
 
     try {
       await bookingRepository.removeOne({
-        username: whoseBooking || authenticatedUser.username,
+        username: whoseBooking,
         carId,
         startTime,
       });
