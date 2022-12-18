@@ -1,5 +1,5 @@
-import { APIGatewayProxyHandlerV2 } from 'aws-lambda';
-import { unauthorizedError } from 'services/core/auth/auth.errors';
+import { APIGatewayProxyEventV2WithRequestContext } from 'aws-lambda/trigger/api-gateway-proxy';
+import { authService } from 'services/core/auth/auth.service';
 import {
   CookieKeys,
   cookieService,
@@ -11,19 +11,17 @@ import {
 } from 'services/core/user/user.errors';
 import { userService } from 'services/core/user/user.service';
 import { StatusCodes } from 'http-status-codes';
+import { RequestContext } from 'services/handlers/handlers.types';
 import { responderService } from 'services/responder.service';
 
-export const handler: APIGatewayProxyHandlerV2 = async (event) => {
-  const authenticatedUser = await cookieService.checkAuthenticated(
-    event.cookies,
+export const handler = async (
+  event: APIGatewayProxyEventV2WithRequestContext<RequestContext>,
+) => {
+  console.log(
+    'event.requestContext.authorizer',
+    event.requestContext.authorizer,
   );
-
-  if (!authenticatedUser || !authenticatedUser.sessionId) {
-    return responderService.toErrorResponse(
-      unauthorizedError,
-      StatusCodes.UNAUTHORIZED,
-    );
-  }
+  const authenticatedUser = await authService.authenticate(event);
 
   const username = event.pathParameters.id;
 
@@ -51,10 +49,5 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
     );
   }
 
-  return responderService.toSuccessResponse({ user }, undefined, [
-    cookieService.makeCookie(
-      CookieKeys.SESSION_ID,
-      authenticatedUser.sessionId,
-    ),
-  ]);
+  return responderService.toSuccessResponse({ user }, undefined);
 };

@@ -16,16 +16,10 @@ info:
 servers:
   - url: https://qa-car-tracker.ilya.online
 paths:
-  /login:
+  /signup:
     post:
-      summary: Login with your credentials
-      description: You must provide a cookie called `sessionId` with a value that corresponds to your user in the database. We assume that the user is already registered, so you should find it in the DynamoDB database. When calling this endpoint for the first time, you should not supply any auth cookie (`sessionId`). But for subsequent calls, please ensure you attach the `sessionId` cookie returned from previous `/login` calls. Ask backend team for any support.
-      parameters:
-        - in: cookie
-          name: sessionId
-          description: Cookie that should go with your user's request. This `sessionId` cookie value is located in DynamoDB database, assuming your user logged in previously. If you don't know your sessionId, it was likely not generated. Call the `/login` endpoint to get the session id generated and returned to you in the cookies
-          schema:
-            type: string
+      summary: Sign up with your credentials.
+      description: Sign up with your credentials and basic user data.
       requestBody:
         content:
           application/json:
@@ -34,24 +28,123 @@ paths:
               properties:
                 username:
                   type: string
-                  example: masha
+                  example: masha@gmail.com
+                  description: Should be the user's email
                 password:
                   type: string
                   example: myPassW0rd
+                providedCarIds:
+                  type: array
+                  example: ['ho-123456']
+                  default: []
+                  description: By default the user does not provide any cars
+                availableCarIds:
+                  type: array
+                  example: ['ho-123456']
+                  default: ['ho-123456']
+                  description: By default the user gets assigned the Family Honda car. This is done for simplicity. In a real app, the user needs to provide their own car out of a list or create a car on the fly. This app is for educational purposes, so we are removing this complexity.
+                firstName:
+                  type: string
+                  example: Maria
+                  description: Your user's name as it will be shown in the application
       responses:
         '200':
-          description: Successful operation
+          description: Successful signup
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  username:
+                  IdToken:
                     type: string
-                    example: masha
-                  password:
+                    example: abc
+                  AccessToken:
                     type: string
-                    example: myPassW0rd
+                    example: abc
+                  RefreshToken:
+                    type: string
+                    example: abc
+
+        '400':
+          description: Bad request. You did not provide the necessary information for a successful signup.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'Bad Request'
+
+  /token/refresh:
+    post:
+      summary: Refresh access and id token by presenting a secure refresh token
+      parameters:
+        - in: header
+          name: x-refresh-token
+          schema:
+            type: string
+          required: true
+
+      responses:
+        '200':
+          description: Successful refresh. You will get IdToken and AccessToken back
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  IdToken:
+                    type: string
+                    example: abc
+                  AccessToken:
+                    type: string
+                    example: abc
+
+        '401':
+          description: Unauthorized. Invalid credentials presented or the refresh token has already been revoked.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'Invalid credentials provided'
+
+  /login:
+    post:
+      summary: Login with your credentials
+      description: Supply login and password to authenticate.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: masha@mail.com
+                password:
+                  type: string
+                  example: myPassW0rd
+      responses:
+        '200':
+          description: Successful login. You will get IdToken, AccessToken and RefreshToken in the response body
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  RefreshToken:
+                    type: string
+                    example: abc
+                  IdToken:
+                    type: string
+                    example: abc
+                  AccessToken:
+                    type: string
+                    example: abc
         '400':
           description: Bad request. You did not provide any credentials at all, so request is incorrect.
           content:
@@ -63,7 +156,7 @@ paths:
                     type: string
                     example: 'No credentials provided'
         '401':
-          description: Unauthorized. Invalid credentials presented or cookie was not included in the request or cookie is incorrect.
+          description: Unauthorized. Invalid credentials presented.
           content:
             application/json:
               schema:
@@ -78,9 +171,10 @@ paths:
       summary: Get my username
       description: Current user's username by cookie
       parameters:
-        - in: cookie
-          name: sessionId
-          description: Cookie that should go with your user's request. This `sessionId` cookie value is located in DynamoDB database, assuming your user logged in previously. If you don't know your sessionId, it was likely not generated. Call the `/login` endpoint to get the session id generated and returned to you in the cookies
+        - in: header
+          name: Authorization
+          description: "Access token. The format should be `Authorization: Bearer <your-token>`"
+          required: true
           schema:
             type: string
       responses:
@@ -93,7 +187,7 @@ paths:
                 properties:
                   username:
                     type: string
-                    example: ilya_nice
+                    example: mariakazakova92@gmail.com
 
         '401':
           description: Unauthorized. Invalid cookie presented or cookie was not included in the request or cookie is incorrect.
@@ -109,19 +203,22 @@ paths:
   /logout:
     post:
       summary: Logout using your credentials
-      description: You must provide a cookie called `sessionId` with a value that corresponds to your user in the database. Without a cookie, the logout fails
-      parameters:
-        - in: cookie
-          name: sessionId
-          description: Cookie that should go with your user's request. This `sessionId` cookie value is located in DynamoDB database, assuming your user logged in previously. If you don't know your sessionId, it was likely not generated. Call the `/login` endpoint to get the session id generated and returned to you in the cookies
-          schema:
-            type: string
+      description: You must provide access token in the request body. When you revoke your tokens, you won't be able to use them for accessing the backend.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                  example: abc
 
       responses:
         '200':
-          description: Successful operation. Your session cookie gets removed. No body is returned
+          description: Successful operation. Your refresh token was revoked and cannot be used for refreshing tokens anymore until you log in again.
         '401':
-          description: Unauthorized. Invalid cookie presented or the cookie was not included in the request or cookie is incorrect.
+          description: Unauthorized.
           content:
             application/json:
               schema:
@@ -136,17 +233,20 @@ paths:
       summary: Get user info
       description: Information about the user, their rides, cars etc.
       parameters:
+        - in: header
+          name: Authorization
+          description: "Access token. The format should be `Authorization: Bearer <your-token>`"
+          required: true
+          schema:
+            type: string
+
         - in: path
           name: username
           description: User's name as it appears in the DynamoDB database
           schema:
             type: string
           required: true
-        - in: cookie
-          name: sessionId
-          description: Cookie that should go with your user's request. This `sessionId` cookie value is located in DynamoDB database, assuming your user logged in previously. If you don't know your sessionId, it was likely not generated. Call the `/login` endpoint to get the session id generated and returned to you in the cookies
-          schema:
-            type: string
+
       responses:
         '200':
           description: Successful operation
@@ -161,8 +261,6 @@ paths:
                       username:
                         type: string
                       firstName:
-                        type: string
-                      sessionId:
                         type: string
                       roles:
                         type: array
@@ -184,7 +282,7 @@ paths:
 
 
         '401':
-          description: Unauthorized. Invalid credentials presented or cookie was not included in the request or cookie is incorrect.
+          description: Unauthorized. Invalid credentials presented.
           content:
             application/json:
               schema:
@@ -193,6 +291,91 @@ paths:
                   status:
                     type: string
                     example: 'Invalid credentials provided'
+
+  /bookings/finish/id:
+    post:
+      summary: Finish ride
+      description: Finish one ride of a user
+      parameters:
+        - in: header
+          name: Authorization
+          description: "Access token. The format should be `Authorization: Bearer <your-token>`"
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: username
+          description: User's name as it appears in the DynamoDB database
+          example: maria@mail.com
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: carId
+          example: ho-123456
+          description: User's car id (license plate)
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: startTime
+          example: 1659716808
+          description: Timestamp (seconds, not JS milliseconds) of the booking start time
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Successfully finished the ride
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: Finished ride successfully
+        '400':
+          description: Bad request. You did not provide the necessary information for a successful finish of the ride.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'Bad Request'
+        '401':
+          description: Unauthorized. You likely did not supply the user's access token. The token should be valid and not expired.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'Unauthorized'
+        '403':
+          description: Forbidden. You probably tried to modify someone else's data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'Forbidden'
+        '500':
+          description: Server-side error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'Error finishing the ride'
 
   /bookings/id:
     get:
@@ -210,17 +393,20 @@ paths:
           name: carId
           example: ho-123456
           description: User's car id (license plate)
+          required: true
           schema:
             type: string
         - in: query
           name: startTime
           example: 1659716808
           description: Timestamp (seconds, not JS milliseconds) of the booking start time
+          required: true
           schema:
             type: string
-        - in: cookie
-          name: sessionId
-          description: Cookie that should go with your user's request. This `sessionId` cookie value is located in DynamoDB database, assuming your user logged in previously. If you don't know your sessionId, it was likely not generated. Call the `/login` endpoint to get the session id generated and returned to you in the cookies
+        - in: header
+          name: Authorization
+          description: "Access token. The format should be `Authorization: Bearer <your-token>`"
+          required: true
           schema:
             type: string
       responses:
@@ -273,7 +459,7 @@ paths:
                         type: string
                         example: "Поездка в Новолукомль"
         '401':
-          description: Unauthorized. Invalid credentials presented or cookie was not included in the request or cookie is incorrect.
+          description: Unauthorized. Invalid credentials presented.
           content:
             application/json:
               schema:
@@ -303,6 +489,80 @@ paths:
                     type: string
                     example: 'Error getting booking details'
 
+    delete:
+      summary: Delete ride
+      description: Delete one ride of a user
+      parameters:
+        - in: header
+          name: Authorization
+          description: "Access token. The format should be `Authorization: Bearer <your-token>`"
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: username
+          description: User's name as it appears in the DynamoDB database
+          example: maria@mail.com
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: carId
+          example: ho-123456
+          description: User's car id (license plate)
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: startTime
+          example: 1659716808
+          description: Timestamp (seconds, not JS milliseconds) of the booking start time
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Successfully deleted the booking
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: Booking removed
+        '400':
+          description: Bad request. You did not provide the necessary information for a successful deletion of the booking.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'Bad Request'
+        '401':
+          description: Unauthorized. You likely did not supply the user's access token. The token should be valid and not expired.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'Unauthorized'
+        '500':
+          description: Server-side error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'Error getting booking details'
+
   /bookings:
     get:
       summary: Get all bookings by some criterion (car, user etc.)
@@ -315,13 +575,23 @@ paths:
           name: carId
           example: ho-123456
           description: User's car id (license plate)
+          required: true
           schema:
             type: string
-        - in: cookie
-          name: sessionId
-          description: Cookie that should go with your user's request. This `sessionId` cookie value is located in DynamoDB database, assuming your user logged in previously. If you don't know your sessionId, it was likely not generated. Call the `/login` endpoint to get the session id generated and returned to you in the cookies
+        - in: query
+          name: username
+          example: masha@mail.com
+          description: User's name, if you want to refine the search to find only the rides for a particular user
+          required: false
           schema:
             type: string
+        - in: header
+          name: Authorization
+          description: "Access token. The format should be `Authorization: Bearer <your-token>`"
+          required: true
+          schema:
+            type: string
+
       responses:
         '200':
           description: Successful operation
@@ -348,7 +618,7 @@ paths:
                           type: string
                           example: Masha - visit parents
         '401':
-          description: Unauthorized. You either gave a car number that the current user cannot access, or you forgot to include the cookie in the request, or the cookie is incorrect.
+          description: Unauthorized. You either gave a car number that the current user cannot access, or you forgot to include the Authorization header in the request.
           content:
             application/json:
               schema:
@@ -388,21 +658,31 @@ paths:
               properties:
                 username:
                   type: string
-                  example: masha
+                  example: masha@mail.com
+                  required: true
                 carId:
                   type: string
                   example: ho-123456
+                  required: true
                 startDateTime:
                   type: number
                   example: 1666439360
                   description: "Timestamp in seconds (!). Warning: providing Javascript milliseconds does not work!"
+                  required: true
+                endDateTime:
+                  type: number
+                  example: 1666439360
+                  description: "Timestamp of the end of ride in seconds. It is not required when creating a booking, but could be provided if known"
+                  required: false
                 description:
                   type: string
                   description: Name of your ride
+                  required: false
       parameters:
-        - in: cookie
-          name: sessionId
-          description: Cookie that should go with your user's request. This `sessionId` cookie value is located in DynamoDB database, assuming your user logged in previously. If you don't know your sessionId, it was likely not generated. Call the `/login` endpoint to get the session id generated and returned to you in the cookies
+        - in: header
+          name: Authorization
+          description: "Access token. The format should be `Authorization: Bearer <your-token>`"
+          required: true
           schema:
             type: string
       responses:
@@ -427,7 +707,7 @@ paths:
                         example: "2022-10-29T13:47:44.000Z"
                       bookingDescription:
                         type: string
-                        example: Masha - visit parents
+                        example: New title of your booking
         '401':
           description: Unauthorized. You likely forgot to include the cookie in the request, or the cookie is incorrect.
           content:
@@ -458,6 +738,165 @@ paths:
                   status:
                     type: string
                     example: 'Error saving your booking'
+
+    patch:
+      summary: Edit a booking
+      description: Edit a new booking by supplying field that you want to change
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                startDateTime:
+                  type: number
+                  example: 1666439360
+                  description: "New timestamp in seconds (!). Warning: providing Javascript milliseconds does not work!"
+                  required: false
+                endDateTime:
+                  type: number
+                  example: 1666439360
+                  description: "New timestamp of the end of ride in seconds. It is not required when creating a booking, but could be provided if known"
+                  required: false
+                description:
+                  type: string
+                  description: New name of your ride
+                  required: false
+      parameters:
+        - in: header
+          name: Authorization
+          description: "Access token. The format should be `Authorization: Bearer <your-token>`"
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: username
+          description: User's name as it appears in the DynamoDB database
+          example: maria@mail.com
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: carId
+          example: ho-123456
+          description: User's car id (license plate)
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: startTime
+          example: 1659716808
+          description: Timestamp (seconds, not JS milliseconds) of the booking start time
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful edit
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  booking:
+                    type: object
+                    properties:
+                      bookingOwnerId:
+                        type: string
+                        example: mary@gmail.com
+                      carNumber:
+                        type: string
+                        example: "ho-123456"
+                      bookingStartTime:
+                        type: string
+                        example: "2022-10-29T13:47:44.000Z"
+                      bookingDescription:
+                        type: string
+                        example: Masha - visit parents
+        '400':
+          description: Bad request. You did not provide the necessary information the successful editing of the booking.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'Bad Request'
+        '401':
+          description: Unauthorized. You likely forgot to include the cookie in the request, or the cookie is incorrect.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'Unauthorized'
+        '404':
+          description: Booking not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'Could not find booking by ID'
+        '500':
+          description: Server side error. Do not rely on the wording of these errors! They may change on the backend side any time.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'Error saving your booking'
+
+  /account:
+    delete:
+      summary: Delete user account by credentials
+      description: Delete the user's account and their rides and information. Sign up once again to create a new user
+      parameters:
+        - in: header
+          name: Authorization
+          description: "Access token. The format should be `Authorization: Bearer <your-token>`"
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Successfully deleted the user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: User removed
+        '401':
+          description: Unauthorized. You likely did not supply the user's access token. The token should be valid and not expired.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'Unauthorized'
+        '500':
+          description: Server-side error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'Error getting booking details'
 
 
 components:

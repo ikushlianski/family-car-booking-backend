@@ -1,8 +1,8 @@
-import { APIGatewayProxyHandlerV2 } from 'aws-lambda';
+import { APIGatewayProxyEventV2WithRequestContext } from 'aws-lambda/trigger/api-gateway-proxy';
 import { StatusCodes } from 'http-status-codes';
+import { authService } from 'services/core/auth/auth.service';
 import { bookingMapper } from 'services/core/booking/booking.mapper';
 import { bookingService } from 'services/core/booking/booking.service';
-import { unauthorizedError } from 'services/core/auth/auth.errors';
 import {
   CookieKeys,
   cookieService,
@@ -12,19 +12,13 @@ import {
   bookingNotFoundError,
 } from 'services/core/booking/booking.errors';
 import { IEditBookingDto } from 'services/core/booking/booking.types';
+import { RequestContext } from 'services/handlers/handlers.types';
 import { responderService } from 'services/responder.service';
 
-export const handler: APIGatewayProxyHandlerV2 = async (event) => {
-  const authenticatedUser = await cookieService.checkAuthenticated(
-    event.cookies,
-  );
-
-  if (!authenticatedUser || !authenticatedUser.sessionId) {
-    return responderService.toErrorResponse(
-      unauthorizedError,
-      StatusCodes.UNAUTHORIZED,
-    );
-  }
+export const handler = async (
+  event: APIGatewayProxyEventV2WithRequestContext<RequestContext>,
+) => {
+  const authenticatedUser = await authService.authenticate(event);
 
   const query = event.queryStringParameters;
 
@@ -79,11 +73,5 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
   return responderService.toSuccessResponse(
     { booking: bookingResponse },
     undefined,
-    [
-      cookieService.makeCookie(
-        CookieKeys.SESSION_ID,
-        authenticatedUser.sessionId,
-      ),
-    ],
   );
 };

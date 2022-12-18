@@ -36,10 +36,6 @@ export const givenAlreadyRegistered = (given) => {
       .create({
         username: testData.correctCreds.username,
         firstName: 'Не важно',
-        password: Buffer.from(testData.correctCreds.password).toString(
-          'base64',
-        ),
-        sessionId: '',
         roles: [UserRoles.DRIVER],
         availableCarIds: [testData.familyCarId],
         providedCarIds: [],

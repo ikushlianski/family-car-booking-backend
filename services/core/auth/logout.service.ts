@@ -11,20 +11,6 @@ export class LogoutService {
     private cookieService: CookieService,
   ) {}
 
-  getUserFromLogoutRequest = async (
-    cookies: string[] | undefined,
-  ): Promise<Maybe<IUserDomain>> => {
-    const authenticatedUser = await this.cookieService.checkAuthenticated(
-      cookies,
-    );
-
-    if (!authenticatedUser) {
-      return [logoutError, undefined];
-    }
-
-    return [undefined, authenticatedUser];
-  };
-
   logout = async (user: IUserDomain): Promise<Maybe<void>> => {
     try {
       await FamilyCarBookingApp.entities.user

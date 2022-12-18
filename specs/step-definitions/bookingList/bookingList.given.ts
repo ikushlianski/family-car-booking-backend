@@ -19,8 +19,6 @@ export const givenPapaIsRegistered = (given) => {
         .create({
           username: 'akushlianski',
           firstName: 'Андрей',
-          password: process.env.PAPA_PASSWORD as string,
-          sessionId: 'test-session-id-akushlianski',
           roles: [UserRoles.CAR_PROVIDER, UserRoles.DRIVER],
           availableCarIds: [testData.familyCarId],
           providedCarIds: [testData.familyCarId],
@@ -39,8 +37,6 @@ export const givenIlyaIsRegistered = (given) => {
         .create({
           username: 'ilya_nice',
           firstName: 'Илья',
-          password: process.env.ILYA_PASSWORD as string,
-          sessionId: 'test-session-id-ilya_nice',
           roles: [UserRoles.DRIVER],
           availableCarIds: [testData.familyCarId],
           providedCarIds: [],
@@ -59,8 +55,6 @@ export const givenStrangerIsRegistered = (given) => {
         .create({
           username: 'stranger',
           firstName: 'Джон',
-          password: process.env.STRANGER_PASSWORD as string,
-          sessionId: 'test-session-id-stranger',
           roles: [UserRoles.CAR_PROVIDER, UserRoles.DRIVER],
           availableCarIds: [testData.familyCarId],
           providedCarIds: [testData.familyCarId],

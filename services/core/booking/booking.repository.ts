@@ -32,7 +32,7 @@ export class BookingRepository {
         .go();
 
     return bookingList.map(
-      ({ carId, startTime, endTime, description }) => {
+      ({ carId, startTime, endTime, description, isFinished }) => {
         return new BookingEntity(
           {
             username: user.username,
@@ -40,6 +40,7 @@ export class BookingRepository {
             startTime,
             endTime,
             description,
+            isFinished: Boolean(isFinished),
           },
           user,
         );
@@ -82,17 +83,27 @@ export class BookingRepository {
     carId: _carId,
     startTime: _startTime,
   }: GetSingleBookingRepositoryParams): Promise<BookingEntity> => {
-    const [{ carId, startTime, endTime, description }] =
-      await FamilyCarBookingApp.entities.booking.query
-        .bookingsByUser({
-          username: user.username,
-          carId: _carId,
-          startTime: _startTime,
-        })
-        .go();
+    const [booking] = await FamilyCarBookingApp.entities.booking.query
+      .bookingsByUser({
+        username: user.username,
+        carId: _carId,
+        startTime: _startTime,
+      })
+      .go();
+
+    if (!booking?.carId) {
+      return undefined;
+    }
 
     return new BookingEntity(
-      { username: user.username, carId, startTime, endTime, description },
+      {
+        username: user.username,
+        carId: booking.carId,
+        startTime: booking.startTime,
+        endTime: booking.endTime,
+        description: booking.description,
+        isFinished: Boolean(booking.isFinished),
+      },
       user,
     );
   };
@@ -228,6 +239,26 @@ export class BookingRepository {
 
     return true;
   };
+
+  async removeBookingsByUser(username) {
+    const bookings = await FamilyCarBookingApp.entities.booking.query
+      .bookingsByUser({
+        username,
+      })
+      .go();
+
+    await Promise.all(
+      bookings.map((booking) => {
+        return FamilyCarBookingApp.entities.booking
+          .delete({
+            username: booking.username,
+            carId: booking.carId,
+            startTime: booking.startTime,
+          })
+          .go();
+      }),
+    );
+  }
 }
 
 export const bookingRepository = new BookingRepository();

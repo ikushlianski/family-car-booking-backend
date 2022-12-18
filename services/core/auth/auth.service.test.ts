@@ -1,0 +1,14 @@
+import { authService } from 'services/core/auth/auth.service';
+
+describe('AuthService', () => {
+  describe('getEmailFromIdToken', () => {
+    it('should return kushliansky@gmail.com', () => {
+      const token =
+        'eyJraWQiOiJTSXJ4ZUxqY1JTNGhcLzVHMU9qUlFBXC96YVNXXC9Ea2xwZ0xNeERhZWpuNXowPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI0ODg3YWQzYi0xNzczLTRmMTktYWQ3OC01YmNjMjNkOWVlMzEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC5ldS13ZXN0LTEuYW1hem9uYXdzLmNvbVwvZXUtd2VzdC0xX29EUE1lb1dPZCIsImNvZ25pdG86dXNlcm5hbWUiOiI0ODg3YWQzYi0xNzczLTRmMTktYWQ3OC01YmNjMjNkOWVlMzEiLCJvcmlnaW5fanRpIjoiM2Q0MmM4MmQtZDVjMy00N2UyLWI0NjYtMjA2MDVkYjNhNzVmIiwiYXVkIjoiMmZoajVoN2d1bmd1M2M5aGJsZGNrZGw0azkiLCJldmVudF9pZCI6IjIzZDJkODgzLTI0YmMtNGU1NS1iZGZlLTI1MDBhNTlkYTJmZiIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjY5MjIxODg5LCJleHAiOjE2NjkyMjU0ODksImlhdCI6MTY2OTIyMTg4OSwianRpIjoiZTJiMjQzZmYtZDlhOC00ZmQ4LTlmMzEtYjZlOTE5NTBiYzQ5IiwiZW1haWwiOiJrdXNobGlhbnNreUBnbWFpbC5jb20ifQ.Obbszgq5Pt1Vgbln2HFs33KCke9fbDzZ741iIOHeeizOd0z5nzVeKIzXV9IWQJGukJfy43S0kKVPtsL75cic5TX9qjDhShfQFQL7uJryuq4sQ0N24qk4ag1wHx8n2yj850vsx33bYQCuhL4Jw7MG088HxOr2EYtOwm2Lnls97UEHPn_1lv0hwZsmjxbcBc2k7lFuUmu_D_cBAJrasf_Bn5QNXmLRElVVC3yiFX7yIIMwWCtyowoAO6MRrBvQegbffmM51MiYadpQwpZ140H_rbQB9bemGT5YFAxnMJmoTauW9pi_1Exxy1K8x4541w8QjWkC5vx80RbUj05LBZGaDw';
+
+      const email = authService['getEmailFromIdToken'](token);
+
+      expect(email).toBe('kushliansky@gmail.com');
+    });
+  });
+});

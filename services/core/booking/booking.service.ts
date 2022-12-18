@@ -9,6 +9,7 @@ import {
   errorGettingSingleBooking,
   errorSavingBooking,
   forbiddenFieldsForEditError,
+  permissionDenied,
 } from 'services/core/booking/booking.errors';
 import { bookingMapper } from 'services/core/booking/booking.mapper';
 import { bookingRepository } from 'services/core/booking/booking.repository';
@@ -29,8 +30,13 @@ import { FamilyCarBookingApp } from 'services/db/db.service';
 export class BookingService {
   createBooking = async (
     body: ICreateBookingDto,
+    authenticatedUser: IUserDomain,
   ): Promise<Maybe<IBookingDomain>> => {
     try {
+      if (body.username !== authenticatedUser.username) {
+        return [errorSavingBooking, undefined];
+      }
+
       const booking = bookingMapper.dtoToDomain(body);
 
       await bookingRepository.saveBooking(booking);
@@ -116,7 +122,9 @@ export class BookingService {
         startTime,
       });
 
-      return [undefined, booking];
+      return booking
+        ? [undefined, booking]
+        : [bookingNotFoundError, undefined];
     } catch (e) {
       console.error('Error querying single booking', e);
 
@@ -181,8 +189,12 @@ export class BookingService {
     startTime: string,
   ): Promise<true | Error> => {
     try {
+      if (whoseBooking !== authenticatedUser.username) {
+        return errorDeletingBooking;
+      }
+
       const exists = await bookingRepository.checkBookingExists({
-        username: whoseBooking || authenticatedUser.username,
+        username: whoseBooking,
         carId,
         startTime: +startTime,
       });
@@ -196,7 +208,7 @@ export class BookingService {
 
     try {
       await bookingRepository.removeOne({
-        username: whoseBooking || authenticatedUser.username,
+        username: whoseBooking,
         carId,
         startTime,
       });
@@ -222,7 +234,12 @@ export class BookingService {
     username,
     carId,
     startTime,
+    authenticatedUser,
   }: FinishRideRepositoryParams): Promise<Error | boolean> => {
+    if (username !== authenticatedUser.username) {
+      return permissionDenied;
+    }
+
     try {
       const item = await FamilyCarBookingApp.entities.booking
         .get({ username, carId, startTime })

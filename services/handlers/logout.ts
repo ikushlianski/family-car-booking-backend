@@ -1,34 +1,46 @@
+import {
+  CognitoIdentityProviderClient,
+  GlobalSignOutCommand,
+} from '@aws-sdk/client-cognito-identity-provider';
 import { APIGatewayProxyEventV2WithRequestContext } from 'aws-lambda/trigger/api-gateway-proxy';
 import { StatusCodes } from 'http-status-codes';
-import {
-  CookieKeys,
-  cookieService,
-} from 'services/core/auth/cookie.service';
-import { logoutService } from 'services/core/auth/logout.service';
 import { responderService } from 'services/responder.service';
 
 export async function handler(
   event: APIGatewayProxyEventV2WithRequestContext<unknown>,
 ) {
-  const [error, user] = await logoutService.getUserFromLogoutRequest(
-    event.cookies,
-  );
+  let accessToken;
 
-  if (error || !user) {
+  try {
+    ({ accessToken } = JSON.parse(event.body));
+  } catch (e) {
     return responderService.toErrorResponse(
-      error,
-      StatusCodes.UNAUTHORIZED,
+      new Error('Bad request'),
+      StatusCodes.BAD_REQUEST,
     );
   }
 
-  const [logoutError] = await logoutService.logout(user);
+  if (!accessToken) {
+    return responderService.toErrorResponse(
+      new Error('No access token provided in request'),
+      StatusCodes.BAD_REQUEST,
+    );
+  }
 
-  return logoutError
-    ? responderService.toErrorResponse(
-        logoutError,
-        StatusCodes.UNAUTHORIZED,
-      )
-    : responderService.toSuccessResponse(undefined, undefined, [
-        cookieService.buildCookieToBeRemoved(CookieKeys.SESSION_ID),
-      ]);
+  const client = new CognitoIdentityProviderClient({});
+
+  const signOutCommand = new GlobalSignOutCommand({
+    AccessToken: accessToken,
+  });
+
+  try {
+    await client.send(signOutCommand);
+
+    return responderService.toSuccessResponse({ status: 'Logged out' });
+  } catch (e) {
+    return responderService.toErrorResponse(
+      e,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+    );
+  }
 }

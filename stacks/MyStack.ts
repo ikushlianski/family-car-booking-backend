@@ -14,15 +14,52 @@ export function MyStack({ stack }: StackContext) {
   const hostedZone = 'ilya.online';
   const domainName = `${stack.stage}-car-tracker.${hostedZone}`;
 
+  const auth = new Cognito(stack, 'Auth', {
+    login: ['email'],
+    triggers: {
+      preSignUp: 'triggers/pre-sign-up.handler',
+    },
+    cdk: {
+      userPoolClient: {
+        authFlows: {
+          userPassword: true,
+          adminUserPassword: true,
+        },
+      },
+      userPool: {
+        passwordPolicy: {
+          // complex password would be required in a real app
+          minLength: 6,
+          requireLowercase: false,
+          requireUppercase: false,
+          requireDigits: false,
+          requireSymbols: false,
+        },
+      },
+    },
+  });
+
   const api = new Api(stack, REST_API_NAME, {
+    authorizers: {
+      UserPoolAuthorizer: {
+        type: 'user_pool',
+        userPool: {
+          id: auth.userPoolId,
+          clientIds: [auth.userPoolClientId],
+        },
+      },
+    },
     defaults: {
-      // authorizer: 'iam',
+      authorizer: 'UserPoolAuthorizer',
       function: {
         environment: {
           NODE_ENV: process.env.NODE_ENV,
           TG_API_BASE_URL: process.env.TG_API_BASE_URL,
           TG_BOT_CHAT_ID: process.env.TG_BOT_CHAT_ID,
           SWAGGER_EDITOR_URLS: process.env.SWAGGER_EDITOR_URLS,
+          USER_POOL_CLIENT_ID: auth.userPoolClientId,
+          COGNITO_IDENTITY_POOL_ID: auth.cognitoIdentityPoolId,
+          USER_POOL_ID: auth.userPoolId,
         },
         permissions: [table],
       },
@@ -57,12 +94,27 @@ export function MyStack({ stack }: StackContext) {
       ],
     },
     routes: {
+      // AUTH
+      'POST /signup': {
+        authorizer: 'none',
+        function: 'handlers/signup.handler',
+      },
+      'POST /login': {
+        authorizer: 'none',
+        function: 'handlers/login.handler',
+      },
+      'POST /token/refresh': {
+        authorizer: 'none',
+        function: 'handlers/refresh-tokens.handler',
+      },
+      'POST /logout': 'handlers/logout.handler',
+      'DELETE /account': 'handlers/delete-account.handler',
+
+      // APP
       'GET /bookings': 'handlers/getBookingList.handler',
       'GET /bookings/id': 'handlers/getSingleBooking.handler',
       'GET /users/{id}': 'handlers/getUser.handler',
       'GET /me': 'handlers/me.handler',
-      'POST /login': 'handlers/login.handler',
-      'POST /logout': 'handlers/logout.handler',
       'POST /bookings': 'handlers/createBooking.handler',
       'PATCH /bookings/id': 'handlers/editBooking.handler',
       'DELETE /bookings/id': 'handlers/deleteBooking.handler',
@@ -71,11 +123,8 @@ export function MyStack({ stack }: StackContext) {
     },
   });
 
-  const auth = new Cognito(stack, 'Auth', {
-    login: ['email'],
-  });
-
-  auth.attachPermissionsForAuthUsers(this, [api, 's3', 'dynamodb']);
+  auth.attachPermissionsForAuthUsers(auth, [api, 's3', 'dynamodb']);
+  api.attachPermissions(['s3', 'dynamodb', 'cognito-idp']);
 
   const {
     userPoolClientId,
