@@ -20,7 +20,7 @@
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
     "seed:dev": "NODE_ENV=dev ./seeds/seed_dev.sh",
-    "seed:qa": "NODE_ENV=qa ./seeds/seed_qa.sh",
+    "seed:qa": "NODE_ENV=qa seeds/seed_qa.sh",
     "unseed:dev": "NODE_ENV=dev ./seeds/unseed_dev.sh",
     "unseed:qa": "NODE_ENV=qa ./seeds/unseed_qa.sh"
   },
