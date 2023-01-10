@@ -82,7 +82,12 @@ export function MyStack({ stack }: StackContext) {
         'http://localhost:3000',
         ...(process.env.SWAGGER_EDITOR_URLS?.split(',') || []),
       ],
-      allowHeaders: ['Content-Type', 'api_key', 'Authorization'],
+      allowHeaders: [
+        'Content-Type',
+        'api_key',
+        'Authorization',
+        'x-refresh-token',
+      ],
       exposeHeaders: [
         'Access-Control-Allow-Origin',
         'Access-Control-Allow-Credentials',
