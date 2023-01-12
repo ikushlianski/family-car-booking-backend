@@ -112,7 +112,10 @@ export function MyStack({ stack }: StackContext) {
         authorizer: 'none',
         function: 'handlers/refresh-tokens.handler',
       },
-      'POST /logout': 'handlers/logout.handler',
+      'POST /logout': {
+        authorizer: 'none',
+        function: 'handlers/logout.handler',
+      },
       'DELETE /account': 'handlers/delete-account.handler',
 
       // APP
