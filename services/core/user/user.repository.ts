@@ -15,7 +15,7 @@ export class UserRepository {
       .create({
         firstName,
         notifications: undefined,
-        rideCompletionText: undefined,
+        rideCompletionText: 'Машина в гараже',
         roles: this.resolveUserRoles(availableCarIds, providedCarIds),
         tgEnabled: false,
         username,
