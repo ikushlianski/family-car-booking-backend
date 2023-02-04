@@ -134,6 +134,7 @@ export class BookingRepository {
         startTime: booking.startTime,
         endTime: booking.endTime,
         description: booking.description,
+        isFinished: false,
       })
       .go();
   };

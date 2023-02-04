@@ -39,7 +39,7 @@ export class BookingEntity implements IBookingDomain {
       this.bookingDescription = description;
     }
 
-    this.isFinished = data.isFinished;
+    this.isFinished = data.isFinished || false;
 
     if (user) {
       // todo hide some information about the user, use toDTO mapper

@@ -56,6 +56,7 @@ const mashasEmail = 'mariakazakova92@gmail.com';
         carId: FAMILY_HONDA_CAR_NUMBER,
         startTime: calculateFutureTimestampInSecs(new Date(), 5), // future event relative to the time of seeding, 5 days from now
         description: 'Ilya - future event',
+        isFinished: false,
       })
       .go(),
 
@@ -66,6 +67,7 @@ const mashasEmail = 'mariakazakova92@gmail.com';
         carId: FAMILY_HONDA_CAR_NUMBER,
         startTime: calculateFutureTimestampInSecs(new Date(), 2), // future event
         description: 'Papa - car repair',
+        isFinished: false,
       })
       .go(),
 
@@ -76,6 +78,7 @@ const mashasEmail = 'mariakazakova92@gmail.com';
         carId: FAMILY_HONDA_CAR_NUMBER,
         startTime: calculateFutureTimestampInSecs(new Date(), 3), // future event
         description: 'Masha - buy presents for parents',
+        isFinished: false,
       })
       .go(),
 
@@ -86,6 +89,7 @@ const mashasEmail = 'mariakazakova92@gmail.com';
         carId: FAMILY_HONDA_CAR_NUMBER,
         startTime: calculateFutureTimestampInSecs(new Date(), 3) + 3600, // future event
         description: 'Masha - visit parents',
+        isFinished: false,
       })
       .go(),
 
@@ -96,6 +100,7 @@ const mashasEmail = 'mariakazakova92@gmail.com';
         carId: FAMILY_HONDA_CAR_NUMBER,
         startTime: calculateFutureTimestampInSecs(new Date(), 6), // future event
         description: 'Зоопарк!',
+        isFinished: false,
       })
       .go(),
 
@@ -106,6 +111,7 @@ const mashasEmail = 'mariakazakova92@gmail.com';
         carId: FAMILY_HONDA_CAR_NUMBER,
         startTime: calculateFutureTimestampInSecs(new Date(), 11), // future event
         description: 'За шубой',
+        isFinished: false,
       })
       .go(),
 
@@ -116,6 +122,7 @@ const mashasEmail = 'mariakazakova92@gmail.com';
         carId: FAMILY_HONDA_CAR_NUMBER,
         startTime: calculateFutureTimestampInSecs(new Date(), 13), // future event
         description: 'К психологу в ЛОДЭ',
+        isFinished: false,
       })
       .go(),
 
@@ -126,6 +133,7 @@ const mashasEmail = 'mariakazakova92@gmail.com';
         carId: STRANGERS_BMW,
         startTime: calculateFutureTimestampInSecs(new Date(), 6), // future event
         description: 'Stranger - future event',
+        isFinished: false,
       })
       .go(),
   ]);
