@@ -122,6 +122,7 @@ export function MyStack({ stack }: StackContext) {
       'GET /bookings': 'handlers/getBookingList.handler',
       'GET /bookings/id': 'handlers/getSingleBooking.handler',
       'GET /users/{id}': 'handlers/getUser.handler',
+      'PATCH /users/{id}': 'handlers/editUser.handler',
       'GET /me': 'handlers/me.handler',
       'POST /bookings': 'handlers/createBooking.handler',
       'PATCH /bookings/id': 'handlers/editBooking.handler',

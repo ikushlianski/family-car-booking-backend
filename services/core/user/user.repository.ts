@@ -1,3 +1,4 @@
+import { Partial } from 'aws-sdk/clients/cloudsearchdomain';
 import { FAMILY_HONDA_CAR_NUMBER } from 'services/core/car/car.constants';
 import { UserRoles } from 'services/core/user/user.constants';
 import { userMapper } from 'services/core/user/user.mapper';
@@ -43,6 +44,41 @@ export class UserRepository {
     if (!userFromDb) return null;
 
     return userMapper.dbToDomain(userFromDb);
+  };
+
+  updateUser = async (username: string, data: any) => {
+    await FamilyCarBookingApp.entities.user
+      .patch({ username })
+
+      .data((a, o) => {
+        if (
+          data?.settings?.notifications?.getNotifiedWhenBookingCreated !==
+          undefined
+        ) {
+          o.set(
+            // @ts-ignore
+            a.notifications.getNotifiedWhenBookingCreated,
+            data?.settings?.notifications?.getNotifiedWhenBookingCreated,
+          );
+        }
+
+        if (
+          data?.settings?.notifications?.getNotifiedWhenBookingChanged !==
+          undefined
+        ) {
+          o.set(
+            // @ts-ignore
+            a.notifications.getNotifiedWhenBookingChanged,
+            data?.settings?.notifications?.getNotifiedWhenBookingChanged,
+          );
+        }
+
+        if (data?.settings?.rideCompletionText !== undefined) {
+          // @ts-ignore
+          o.set(a.rideCompletionText, data?.settings?.rideCompletionText);
+        }
+      })
+      .go();
   };
 
   removeUser = async (username: string) => {

@@ -1,5 +1,5 @@
 import { Entity } from 'electrodb';
-import { dynamoDBClient } from '../db.service';
+import { client } from '../db.service';
 import { ELECTRO_DB_SERVICE, TABLE_NAME } from '../db.constants';
 
 export const BookingModel = new Entity(
@@ -71,5 +71,5 @@ export const BookingModel = new Entity(
       },
     },
   },
-  { client: dynamoDBClient, table: TABLE_NAME },
+  { client, table: TABLE_NAME },
 );
