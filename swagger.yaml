@@ -292,6 +292,80 @@ paths:
                     type: string
                     example: 'Invalid credentials provided'
 
+    patch:
+      summary: Update user data
+      description: Update user data like settings etc.
+      parameters:
+        - in: header
+          name: Authorization
+          description: "Access token. The format should be `Authorization: Bearer <your-token>`"
+          required: true
+          schema:
+            type: string
+
+        - in: path
+          name: username
+          description: User's email
+          schema:
+            type: string
+          required: true
+
+      requestBody:
+        required: true
+        description: Partial settings object is also possible in one request
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                settings:
+                  $ref: '#/components/schemas/Settings'
+
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      username:
+                        type: string
+                      firstName:
+                        type: string
+                      roles:
+                        type: array
+                        items:
+                          type: string
+                        example: [ "driver", "carProvider" ]
+                      availableCars:
+                        type: array
+                        items:
+                          type: string
+                        example: [ "ho-123", "renault-789" ]
+                      providedCars:
+                        type: array
+                        items:
+                          type: string
+                        example: [ "renault-789" ]
+                      settings:
+                        $ref: '#/components/schemas/Settings'
+
+
+        '401':
+          description: Unauthorized. Invalid credentials presented.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'Invalid credentials provided'
+
   /bookings/finish/id:
     post:
       summary: Finish ride
@@ -910,8 +984,8 @@ components:
         notifications:
           type: object
           properties:
-            getNotifiedAboutBookingChanges:
+            getNotifiedWhenBookingChanged:
               type: boolean
-            getNotifiedAboutNewBookings:
+            getNotifiedWhenBookingCreated:
               type: boolean
               example: false
