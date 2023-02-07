@@ -6,11 +6,8 @@ export class UserService {
     return userRepository.getOneByUsername(username);
   };
 
-  editUser = (
-    username: string,
-    data: Partial<IUserDomain>,
-  ): Promise<Partial<IUserDomain>> => {
-    return userRepository.updateUser(username, data);
+  editUser = async (username: string, data: Partial<IUserDomain>) => {
+    await userRepository.updateUser(username, data);
   };
 }
 

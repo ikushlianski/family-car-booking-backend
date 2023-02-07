@@ -1,4 +1,3 @@
-import { Partial } from 'aws-sdk/clients/cloudsearchdomain';
 import { FAMILY_HONDA_CAR_NUMBER } from 'services/core/car/car.constants';
 import { UserRoles } from 'services/core/user/user.constants';
 import { userMapper } from 'services/core/user/user.mapper';
@@ -15,7 +14,10 @@ export class UserRepository {
     const userFromDb = await FamilyCarBookingApp.entities.user
       .create({
         firstName,
-        notifications: undefined,
+        notifications: {
+          getNotifiedWhenBookingChanged: false,
+          getNotifiedWhenBookingCreated: false,
+        },
         rideCompletionText: 'Машина в гараже',
         roles: this.resolveUserRoles(availableCarIds, providedCarIds),
         tgEnabled: false,
