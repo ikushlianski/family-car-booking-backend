@@ -28,7 +28,7 @@ export const handler = async (
   }
 
   const { carId, startTime } = query;
-  const { username, roles, sessionId } = authenticatedUser;
+  const { username, roles } = authenticatedUser;
 
   const [bookingDetailsError, booking] =
     await bookingService.getBookingDetails({

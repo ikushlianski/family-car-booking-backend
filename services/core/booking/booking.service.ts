@@ -115,12 +115,20 @@ export class BookingService {
   }: GetSingleBookingServiceParams): Promise<Maybe<BookingEntity>> => {
     // todo use roles to see whether the user can get booking details
 
+    console.log({
+      user,
+      carId,
+      startTime,
+    });
+
     try {
       const booking = await bookingRepository.getSingleBooking({
         user,
         carId,
         startTime,
       });
+
+      console.log('booking', booking);
 
       return booking
         ? [undefined, booking]
@@ -235,22 +243,43 @@ export class BookingService {
     carId,
     startTime,
     authenticatedUser,
+    finishRideData: { rideCompletionText, endDateTime },
   }: FinishRideRepositoryParams): Promise<Error | boolean> => {
     if (username !== authenticatedUser.username) {
       return permissionDenied;
     }
 
     try {
+      console.log('{ username, carId, startTime }', {
+        username,
+        carId,
+        startTime,
+      });
       const item = await FamilyCarBookingApp.entities.booking
         .get({ username, carId, startTime })
         .go();
 
+      console.log('item', item);
+
       if (!item) return bookingNotFoundError;
 
-      await FamilyCarBookingApp.entities.booking
-        .update({ username, carId, startTime })
-        .set({ isFinished: true })
-        .go();
+      const updatePromise = FamilyCarBookingApp.entities.booking.update({
+        username,
+        carId,
+        startTime,
+      });
+
+      if (rideCompletionText) {
+        updatePromise.set({
+          carLocationAfterRideText: rideCompletionText,
+        });
+      }
+
+      if (endDateTime) {
+        updatePromise.set({ endTime: endDateTime });
+      }
+
+      await updatePromise.set({ isFinished: true }).go();
 
       return true;
     } catch (error) {

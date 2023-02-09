@@ -45,6 +45,11 @@ export interface IGetBookingDto {
   isFinished?: boolean;
 }
 
+export interface IFinishBookingDto {
+  rideCompletionText?: string;
+  endDateTime?: number;
+}
+
 /**
  * Domain layer
  */
@@ -102,6 +107,7 @@ export interface FinishRideRepositoryParams {
   carId: CarId;
   startTime: number;
   authenticatedUser: IUserDomain;
+  finishRideData: IFinishBookingDto;
 }
 
 export interface GetSingleBookingRepositoryParams {

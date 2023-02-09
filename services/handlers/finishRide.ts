@@ -3,10 +3,15 @@ import { StatusCodes } from 'http-status-codes';
 import { authService } from 'services/core/auth/auth.service';
 import { bookingService } from 'services/core/booking/booking.service';
 import {
+  badRequestBooking,
   bookingNotFoundError,
   finishRideError,
   permissionDenied,
 } from 'services/core/booking/booking.errors';
+import {
+  ICreateBookingDto,
+  IFinishBookingDto,
+} from 'services/core/booking/booking.types';
 import { RequestContext } from 'services/handlers/handlers.types';
 import { responderService } from 'services/responder.service';
 
@@ -26,11 +31,23 @@ export const handler = async (
 
   const { username: whoseBooking, carId, startTime } = query;
 
+  let body: IFinishBookingDto;
+
+  try {
+    body = JSON.parse(event.body);
+  } catch (e) {
+    return responderService.toErrorResponse(
+      badRequestBooking,
+      StatusCodes.BAD_REQUEST,
+    );
+  }
+
   const finishRideResult = await bookingService.finishRide({
     username: whoseBooking,
     carId,
     startTime: +startTime,
     authenticatedUser,
+    finishRideData: body,
   });
 
   if (finishRideResult === false) {
