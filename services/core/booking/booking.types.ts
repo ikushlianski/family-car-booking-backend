@@ -27,6 +27,7 @@ export interface ICreateBookingDto {
   endDateTime?: number;
   description?: string;
   isFinished?: boolean;
+  carLocationAfterRideText?: string;
 }
 
 export interface IEditBookingDto {

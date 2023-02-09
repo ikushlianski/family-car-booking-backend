@@ -250,16 +250,9 @@ export class BookingService {
     }
 
     try {
-      console.log('{ username, carId, startTime }', {
-        username,
-        carId,
-        startTime,
-      });
       const item = await FamilyCarBookingApp.entities.booking
         .get({ username, carId, startTime })
         .go();
-
-      console.log('item', item);
 
       if (!item) return bookingNotFoundError;
 
@@ -277,6 +270,8 @@ export class BookingService {
 
       if (endDateTime) {
         updatePromise.set({ endTime: endDateTime });
+      } else {
+        updatePromise.set({ endTime: Math.ceil(Date.now() / 1000) });
       }
 
       await updatePromise.set({ isFinished: true }).go();

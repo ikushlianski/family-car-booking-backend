@@ -8,10 +8,7 @@ import {
   finishRideError,
   permissionDenied,
 } from 'services/core/booking/booking.errors';
-import {
-  ICreateBookingDto,
-  IFinishBookingDto,
-} from 'services/core/booking/booking.types';
+import { IFinishBookingDto } from 'services/core/booking/booking.types';
 import { RequestContext } from 'services/handlers/handlers.types';
 import { responderService } from 'services/responder.service';
 

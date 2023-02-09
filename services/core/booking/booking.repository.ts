@@ -32,7 +32,14 @@ export class BookingRepository {
         .go();
 
     return bookingList.map(
-      ({ carId, startTime, endTime, description, isFinished }) => {
+      ({
+        carId,
+        startTime,
+        endTime,
+        description,
+        isFinished,
+        carLocationAfterRideText,
+      }) => {
         return new BookingEntity(
           {
             username: user.username,
@@ -41,6 +48,7 @@ export class BookingRepository {
             endTime,
             description,
             isFinished: Boolean(isFinished),
+            carLocationAfterRideText,
           },
           user,
         );
@@ -103,6 +111,7 @@ export class BookingRepository {
         endTime: booking.endTime,
         description: booking.description,
         isFinished: Boolean(booking.isFinished),
+        carLocationAfterRideText: booking.carLocationAfterRideText,
       },
       user,
     );
