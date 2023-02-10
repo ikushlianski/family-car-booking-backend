@@ -39,6 +39,13 @@ export const handler = async (
     );
   }
 
+  if (!body.rideCompletionText) {
+    return responderService.toErrorResponse(
+      new Error('Ride completion text is required'),
+      StatusCodes.BAD_REQUEST,
+    );
+  }
+
   const finishRideResult = await bookingService.finishRide({
     username: whoseBooking,
     carId,

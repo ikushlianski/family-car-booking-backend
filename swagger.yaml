@@ -399,6 +399,20 @@ paths:
           schema:
             type: string
 
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rideCompletionText:
+                  type: string
+                  example: abc
+                  required: true
+                endDateTime:
+                  type: number
+                  example: 12345678
+                  required: false
       responses:
         '200':
           description: Successfully finished the ride
