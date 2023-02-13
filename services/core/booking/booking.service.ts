@@ -57,8 +57,9 @@ export class BookingService {
   }: GetBookingListByUserServiceParams): Promise<
     MaybeArray<BookingEntity>
   > => {
-    const currentDateSeconds = Date.now() / 1000;
-    const oneWeekAheadSeconds = 60 * 60 * 24 * 7;
+    const secondsInOneDay = 60 * 60 * 24;
+    const currentDateSeconds = Date.now() / 1000 - secondsInOneDay;
+    const oneWeekAheadSeconds = secondsInOneDay * 7;
     const maxDateSeconds =
       currentDateSeconds + oneWeekAheadSeconds * weekCount;
 
