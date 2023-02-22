@@ -577,6 +577,121 @@ paths:
                     type: string
                     example: 'Error getting booking details'
 
+    patch:
+      summary: Edit a booking
+      description: Edit a new booking by supplying field that you want to change
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                startDateTime:
+                  type: number
+                  example: 1666439360
+                  description: "New timestamp in seconds (!). Warning: providing Javascript milliseconds does not work!"
+                  required: false
+                endDateTime:
+                  type: number
+                  example: 1666439360
+                  description: "New timestamp of the end of ride in seconds. It is not required when creating a booking, but could be provided if known"
+                  required: false
+                description:
+                  type: string
+                  description: New name of your ride
+                  required: false
+      parameters:
+        - in: header
+          name: Authorization
+          description: "Access token. The format should be `Authorization: Bearer <your-token>`"
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: username
+          description: User's name as it appears in the DynamoDB database
+          example: maria@mail.com
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: carId
+          example: ho-123456
+          description: User's car id (license plate)
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: startTime
+          example: 1659716808
+          description: Timestamp (seconds, not JS milliseconds) of the booking start time
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful edit
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  booking:
+                    type: object
+                    properties:
+                      bookingOwnerId:
+                        type: string
+                        example: mary@gmail.com
+                      carNumber:
+                        type: string
+                        example: "ho-123456"
+                      bookingStartTime:
+                        type: string
+                        example: "2022-10-29T13:47:44.000Z"
+                      bookingDescription:
+                        type: string
+                        example: Masha - visit parents
+        '400':
+          description: Bad request. You did not provide the necessary information the successful editing of the booking.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'Bad Request'
+        '401':
+          description: Unauthorized. You likely forgot to include the cookie in the request, or the cookie is incorrect.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'Unauthorized'
+        '404':
+          description: Booking not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'Could not find booking by ID'
+        '500':
+          description: Server side error. Do not rely on the wording of these errors! They may change on the backend side any time.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'Error saving your booking'
+
     delete:
       summary: Delete ride
       description: Delete one ride of a user
@@ -808,121 +923,6 @@ paths:
                     example: 'Unauthorized'
         '404':
           description: Bookings not found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: 'Could not find booking by ID'
-        '500':
-          description: Server side error. Do not rely on the wording of these errors! They may change on the backend side any time.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: 'Error saving your booking'
-
-    patch:
-      summary: Edit a booking
-      description: Edit a new booking by supplying field that you want to change
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              properties:
-                startDateTime:
-                  type: number
-                  example: 1666439360
-                  description: "New timestamp in seconds (!). Warning: providing Javascript milliseconds does not work!"
-                  required: false
-                endDateTime:
-                  type: number
-                  example: 1666439360
-                  description: "New timestamp of the end of ride in seconds. It is not required when creating a booking, but could be provided if known"
-                  required: false
-                description:
-                  type: string
-                  description: New name of your ride
-                  required: false
-      parameters:
-        - in: header
-          name: Authorization
-          description: "Access token. The format should be `Authorization: Bearer <your-token>`"
-          required: true
-          schema:
-            type: string
-        - in: query
-          name: username
-          description: User's name as it appears in the DynamoDB database
-          example: maria@mail.com
-          schema:
-            type: string
-          required: true
-        - in: query
-          name: carId
-          example: ho-123456
-          description: User's car id (license plate)
-          required: true
-          schema:
-            type: string
-        - in: query
-          name: startTime
-          example: 1659716808
-          description: Timestamp (seconds, not JS milliseconds) of the booking start time
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Successful edit
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  booking:
-                    type: object
-                    properties:
-                      bookingOwnerId:
-                        type: string
-                        example: mary@gmail.com
-                      carNumber:
-                        type: string
-                        example: "ho-123456"
-                      bookingStartTime:
-                        type: string
-                        example: "2022-10-29T13:47:44.000Z"
-                      bookingDescription:
-                        type: string
-                        example: Masha - visit parents
-        '400':
-          description: Bad request. You did not provide the necessary information the successful editing of the booking.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: 'Bad Request'
-        '401':
-          description: Unauthorized. You likely forgot to include the cookie in the request, or the cookie is incorrect.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: 'Unauthorized'
-        '404':
-          description: Booking not found
           content:
             application/json:
               schema:

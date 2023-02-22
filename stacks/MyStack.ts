@@ -84,9 +84,16 @@ export function MyStack({ stack }: StackContext) {
       ],
       allowHeaders: [
         'Content-Type',
+        'Content-Language',
+        'Content-Length',
         'api_key',
         'Authorization',
         'x-refresh-token',
+        'accept',
+        'accept-encoding',
+        'accept-language',
+        'origin',
+        'referer',
       ],
       exposeHeaders: [
         'Access-Control-Allow-Origin',
