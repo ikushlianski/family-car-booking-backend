@@ -51,11 +51,10 @@ export class Responder {
         };
   };
 
-  getCorsHeaders() {
+  private getCorsHeaders() {
     return {
       // todo change once we have more envs
-      'Access-Control-Allow-Origin': 'http://localhost:3000',
-      'Access-Control-Allow-Credentials': true,
+      'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Headers': 'Set-Cookie',
     };
   }
